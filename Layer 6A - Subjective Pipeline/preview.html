@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>6A · Blind Pair Viewer</title>
+<style>
+  :root {
+    --bg0:#0a0c11; --bg1:#10141d; --panel:#141925; --card:#171d2a;
+    --line:#252c3a; --txt:#e8ebf2; --muted:#7e879b; --accent:#4ade80;
+    --A:#3b82f6; --B:#f59e0b;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; color:var(--txt);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { display:flex; flex-direction:column;
+    background:radial-gradient(1200px 600px at 50% -10%, #19202e 0%, var(--bg1) 45%, var(--bg0) 100%); }
+
+  /* ---------- top bar ---------- */
+  #bar { display:flex; align-items:center; gap:20px; padding:12px 20px;
+    background:rgba(20,25,37,.72); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand .dot { width:9px; height:9px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 10px var(--accent); }
+  .brand h1 { font-size:14px; font-weight:650; margin:0; letter-spacing:.2px; }
+  .brand span { font-size:11px; color:var(--muted); }
+  .spacer { flex:1; }
+  .group { display:flex; align-items:center; gap:8px; }
+  .group > .lbl { font-size:11px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.6px; }
+  select, button { background:#1c2230; color:var(--txt); border:1px solid var(--line);
+    border-radius:9px; padding:7px 12px; font-size:13px; cursor:pointer;
+    transition:all .12s ease; }
+  select:hover, button:hover { border-color:#3a4456; background:#222a3a; }
+  .seg { display:flex; background:#1c2230; border:1px solid var(--line);
+    border-radius:10px; padding:3px; gap:2px; }
+  .seg button { border:none; background:transparent; border-radius:7px; padding:6px 13px; }
+  .seg button.active { background:var(--accent); color:#06210f; font-weight:650; }
+  .nav button { padding:7px 11px; font-size:15px; line-height:1; }
+  #mid { font-size:12px; color:var(--muted); min-width:130px; text-align:center; }
+  #mid b { color:var(--txt); font-weight:600; }
+  #sync.active { background:var(--accent); color:#06210f; border-color:var(--accent);
+    font-weight:600; }
+
+  /* ---------- stage ---------- */
+  #stage { display:flex; flex:1; min-height:0; gap:14px; padding:14px; }
+  .panel { position:relative; flex:1; border:1px solid var(--line); border-radius:16px;
+    overflow:hidden; background:linear-gradient(180deg,#0e1219,#0a0d13);
+    box-shadow:0 8px 30px rgba(0,0,0,.35); }
+  .badge { position:absolute; top:14px; left:14px; z-index:5; display:flex;
+    align-items:center; gap:8px; font-size:12px; font-weight:700; letter-spacing:1.2px;
+    background:rgba(8,10,15,.6); padding:7px 13px; border-radius:10px;
+    border:1px solid var(--line); backdrop-filter:blur(4px); }
+  .badge .pip { width:9px; height:9px; border-radius:50%; }
+  .badge.A .pip { background:var(--A); box-shadow:0 0 8px var(--A); }
+  .badge.B .pip { background:var(--B); box-shadow:0 0 8px var(--B); }
+  .hint { position:absolute; bottom:12px; left:14px; z-index:5; font-size:10.5px;
+    color:var(--muted); background:rgba(8,10,15,.5); padding:4px 9px; border-radius:7px; }
+  .load { position:absolute; inset:0; display:flex; align-items:center;
+    justify-content:center; color:var(--muted); font-size:13px; z-index:4; }
+  .load .spin { width:22px; height:22px; border:2px solid var(--line);
+    border-top-color:var(--accent); border-radius:50%; margin-right:10px;
+    animation:spin 0.8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  canvas { display:block; }
+
+  /* ---------- vote ---------- */
+  #vote { display:flex; align-items:flex-end; gap:14px; margin:0 14px 14px;
+    padding:14px 18px; background:var(--card); border:1px solid var(--line);
+    border-radius:16px; flex-wrap:wrap; }
+  .vlead { font-size:11px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.6px; align-self:center; margin-right:4px; }
+  .param { display:flex; flex-direction:column; gap:6px; }
+  .param .pname { font-size:11.5px; color:var(--muted); font-weight:500; }
+  .choices { display:flex; gap:0; border:1px solid var(--line); border-radius:9px;
+    overflow:hidden; }
+  .choices button { border:none; background:#1c2230; border-radius:0; padding:7px 12px;
+    font-size:12px; min-width:38px; font-weight:600; }
+  .choices button + button { border-left:1px solid var(--line); }
+  .choices button.sel[data-c="A"]   { background:var(--A); color:#fff; }
+  .choices button.sel[data-c="B"]   { background:var(--B); color:#241400; }
+  .choices button.sel[data-c="tie"] { background:#525a6b; color:#fff; }
+  #submit { margin-left:auto; background:var(--accent); color:#06210f; font-weight:700;
+    padding:12px 22px; border-radius:11px; align-self:center; font-size:13.5px; }
+  #submit:disabled { opacity:.35; cursor:not-allowed; }
+  #vcount { font-size:12px; color:var(--muted); align-self:center; min-width:64px;
+    text-align:right; }
+  #vcount b { color:var(--accent); }
+</style>
+</head>
+<body>
+<div id="bar">
+  <div class="brand">
+    <span class="dot"></span>
+    <div><h1>3D Eval · Blind Pair Viewer</h1><span>6A subjective pipeline</span></div>
+  </div>
+
+  <div class="group nav">
+    <span class="lbl">Test case</span>
+    <select id="tcsel"></select>
+  </div>
+  <div class="group nav">
+    <span class="lbl">Matchup</span>
+    <select id="sel"></select>
+    <button id="prev" title="previous">‹</button>
+    <button id="next" title="next">›</button>
+  </div>
+  <div id="mid"></div>
+
+  <div class="spacer"></div>
+
+  <div class="group">
+    <span class="lbl">Mode</span>
+    <div class="seg" id="modes">
+      <button class="active" data-mode="textured">Textured</button>
+      <button data-mode="shaded">Shaded</button>
+      <button data-mode="wireframe">Wireframe</button>
+    </div>
+  </div>
+</div>
+
+<div id="stage">
+  <div class="panel" id="panelA">
+    <div class="badge A"><span class="pip"></span>MODEL A</div>
+    <div class="hint">drag rotate · scroll zoom · right-drag pan</div>
+    <div class="load"><span class="spin"></span>loading…</div>
+  </div>
+  <div class="panel" id="panelB">
+    <div class="badge B"><span class="pip"></span>MODEL B</div>
+    <div class="hint">drag rotate · scroll zoom · right-drag pan</div>
+    <div class="load"><span class="spin"></span>loading…</div>
+  </div>
+</div>
+
+<div id="vote"></div>
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let MODE = 'textured';
+const loader = new GLTFLoader();
+
+const CLAY = new THREE.MeshStandardMaterial({ color:0xcdd2da, roughness:0.8, metalness:0.0 });
+
+class Viewer {
+  constructor(el) {
+    this.el = el;
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
+    this.camera.position.set(0, 0, 3);
+
+    this.renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    el.appendChild(this.renderer.domElement);
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+
+    this.scene.add(new THREE.HemisphereLight(0xffffff, 0x3a3f4c, 1.15));
+    const d1 = new THREE.DirectionalLight(0xffffff, 1.5); d1.position.set(2,3,2);
+    const d2 = new THREE.DirectionalLight(0xbcd0ff, 0.5); d2.position.set(-2,-1,-2);
+    this.scene.add(d1, d2);
+
+    this.root = null;
+    this.loadEl = el.querySelector('.load');
+    this.controls.addEventListener('change', () => this.onChange && this.onChange(this));
+    this.resize();
+    new ResizeObserver(() => this.resize()).observe(el);
+  }
+
+  resize() {
+    const w = this.el.clientWidth, h = this.el.clientHeight;
+    if (!w || !h) return;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setSize(w, h, false);
+    this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
+  }
+
+  clear() {
+    if (!this.root) return;
+    // Dispose all GPU resources so navigating between heavy meshes doesn't leak
+    // (these models are 20-80 MB; leaking a few exhausts GPU memory and the
+    // next load fails with "failed to load mesh").
+    this.root.traverse(o => {
+      if (!o.isMesh) return;
+      if (o.geometry) o.geometry.dispose();
+      const mats = [o.material, o.userData.orig].flat().filter(Boolean);
+      mats.forEach(m => {
+        for (const k in m) {
+          const v = m[k];
+          if (v && v.isTexture) v.dispose();
+        }
+        if (m.dispose) m.dispose();
+      });
+    });
+    this.scene.remove(this.root);
+    this.root = null;
+  }
+
+  load(url) {
+    this.clear();
+    this.loadEl.style.display = 'flex';
+    this.loadEl.innerHTML = '<span class="spin"></span>loading…';
+    loader.load(encodeURI(url), (gltf) => {
+      const obj = gltf.scene;
+      obj.traverse(o => {
+        if (!o.isMesh) return;
+        o.userData.orig = o.material;
+        // wireframe overlay: shares geometry (cheap), shown only in wire mode
+        const wire = new THREE.Mesh(o.geometry, new THREE.MeshBasicMaterial({
+          color:0x10141c, wireframe:true, transparent:true, opacity:0.45 }));
+        wire.visible = false;
+        o.userData.wire = wire;
+        o.add(wire);
+      });
+      this.root = obj;
+      this.scene.add(obj);
+      this.frame(obj);
+      applyMode(this, MODE);
+      this.loadEl.style.display = 'none';
+    }, undefined, (err) => {
+      this.loadEl.innerHTML = 'failed to load mesh';
+      console.error(url, err);
+    });
+  }
+
+  frame(obj) {
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    obj.position.sub(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const dist = maxDim / (2 * Math.tan(THREE.MathUtils.degToRad(this.camera.fov/2)));
+    this.camera.position.set(dist*0.6, dist*0.4, dist*1.5);
+    this.camera.near = maxDim/100; this.camera.far = maxDim*100;
+    this.camera.updateProjectionMatrix();
+    this.controls.target.set(0,0,0); this.controls.update();
+  }
+
+  render() { this.controls.update(); this.renderer.render(this.scene, this.camera); }
+}
+
+function applyMode(v, mode) {
+  if (!v.root) return;
+  v.root.traverse(o => {
+    if (!o.isMesh || o.userData.orig === undefined) return;  // skip non-meshes & wire children
+    o.material = (mode === 'textured') ? o.userData.orig : CLAY;
+    if (o.userData.wire) o.userData.wire.visible = (mode === 'wireframe');
+  });
+}
+
+// Two fully independent viewers (no camera sync).
+const A = new Viewer(document.getElementById('panelA'));
+const B = new Viewer(document.getElementById('panelB'));
+
+(function loop(){ requestAnimationFrame(loop); A.render(); B.render(); })();
+
+// ---------------- data + nav (filtered by test case) ----------------
+let DATA = [];          // all matchups
+let LIST = [];          // matchups in the selected test case
+let idx = 0;            // index within LIST
+const tcsel = document.getElementById('tcsel');
+const sel = document.getElementById('sel');
+const mid = document.getElementById('mid');
+
+function _load(i) {
+  if (!LIST.length) return;
+  idx = (i + LIST.length) % LIST.length;
+  const m = LIST[idx];
+  sel.value = String(idx);
+  mid.innerHTML = `Matchup <b>#${m.matchup_id}</b> · <b>${m.prompt_id}</b> `
+    + `<span style="color:var(--muted)">(${idx + 1}/${LIST.length})</span>`;
+  A.load(m.a_glb); B.load(m.b_glb);
+}
+function loadMatchup(i){ _load(i); resetBallot(); }
+
+function selectTC(tc) {
+  LIST = DATA.filter(m => m.prompt_id === tc);
+  sel.innerHTML = LIST.map((m, i) =>
+    `<option value="${i}">Pair ${i + 1} · #${m.matchup_id}</option>`).join('');
+  loadMatchup(0);
+}
+
+tcsel.onchange = () => selectTC(tcsel.value);
+document.getElementById('prev').onclick = () => loadMatchup(idx - 1);
+document.getElementById('next').onclick = () => loadMatchup(idx + 1);
+sel.onchange = () => loadMatchup(parseInt(sel.value, 10));
+
+document.querySelectorAll('#modes button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#modes button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    MODE = btn.dataset.mode;
+    applyMode(A, MODE); applyMode(B, MODE);
+  };
+});
+
+// ---------------- voting ballot ----------------
+const PARAMS = [
+  ['visual_appeal','Visual Appeal'], ['surface_quality','Surface Quality'],
+  ['proportions','Proportions'], ['detail_level','Detail Level'],
+  ['style_accuracy','Style Accuracy'],
+];
+let ballot = {};
+const voteEl = document.getElementById('vote');
+
+function buildBallot() {
+  voteEl.innerHTML = `<span class="vlead">Vote</span>` + PARAMS.map(([k,l]) => `
+    <div class="param" data-param="${k}">
+      <span class="pname">${l}</span>
+      <div class="choices">
+        <button data-c="A">A</button><button data-c="tie">=</button><button data-c="B">B</button>
+      </div>
+    </div>`).join('') +
+    `<button id="submit" disabled>Submit &amp; Next →</button>
+     <span id="vcount">votes: <b>0</b></span>`;
+  voteEl.querySelectorAll('.choices button').forEach(btn => {
+    btn.onclick = () => {
+      const p = btn.closest('.param').dataset.param;
+      ballot[p] = btn.dataset.c;
+      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      document.getElementById('submit').disabled = Object.keys(ballot).length < PARAMS.length;
+    };
+  });
+  document.getElementById('submit').onclick = submitVote;
+}
+function resetBallot() {
+  ballot = {};
+  voteEl.querySelectorAll('.choices button').forEach(b => b.classList.remove('sel'));
+  const s = document.getElementById('submit'); if (s) s.disabled = true;
+}
+async function submitVote() {
+  const m = DATA[idx];
+  try {
+    const res = await fetch('/api/vote', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ matchup_id:m.matchup_id, ballots:ballot }) });
+    if (!res.ok) throw new Error(await res.text());
+    const j = await res.json();
+    document.getElementById('vcount').innerHTML = `votes: <b>${j.total_votes}</b>`;
+    loadMatchup(idx + 1);
+  } catch (e) {
+    alert('Vote failed (run via `python3 main.py`):\n' + e.message);
+  }
+}
+buildBallot();
+
+// ---------------- load ----------------
+fetch('viewer_data.json').then(r => r.json()).then(d => {
+  DATA = d.matchups || [];
+  if (!DATA.length) {
+    document.querySelectorAll('.load').forEach(e => e.textContent = 'no matchups — run the pipeline');
+    return;
+  }
+  const tcs = [...new Set(DATA.map(m => m.prompt_id))];   // unique test cases, in order
+  tcsel.innerHTML = tcs.map(t => `<option value="${t}">${t}</option>`).join('');
+  selectTC(tcs[0]);
+}).catch(e => {
+  document.querySelectorAll('.load').forEach(el =>
+    el.textContent = 'viewer_data.json missing — launch with: python3 main.py');
+  console.error(e);
+});
+</script>
+</body>
+</html>

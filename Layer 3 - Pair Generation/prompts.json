@@ -1,0 +1,9 @@
+{
+  "prompts": [
+    { "id": "TC001", "description": "<fill in the text prompt used for test case 1>" },
+    { "id": "TC002", "description": "<fill in the text prompt used for test case 2>" },
+    { "id": "TC003", "description": "<fill in the text prompt used for test case 3>" },
+    { "id": "TC004", "description": "<fill in the text prompt used for test case 4>" },
+    { "id": "TC005", "description": "<fill in the text prompt used for test case 5>" }
+  ]
+}
