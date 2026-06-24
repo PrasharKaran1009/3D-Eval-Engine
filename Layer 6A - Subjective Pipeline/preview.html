@@ -151,6 +151,7 @@ let MODE = 'textured';
 const loader = new GLTFLoader();
 
 const CLAY = new THREE.MeshStandardMaterial({ color:0xcdd2da, roughness:0.8, metalness:0.0 });
+const WIRE = new THREE.MeshBasicMaterial({ color:0x10141c, wireframe:true, transparent:true, opacity:0.45 });
 
 class Viewer {
   constructor(el) {
@@ -188,18 +189,17 @@ class Viewer {
 
   clear() {
     if (!this.root) return;
-    // Dispose all GPU resources so navigating between heavy meshes doesn't leak
-    // (these models are 20-80 MB; leaking a few exhausts GPU memory and the
-    // next load fails with "failed to load mesh").
+    // Free GPU resources so navigating heavy meshes (20-80 MB) doesn't leak.
+    // Dispose geometry + the GLB's own materials/textures only — never the
+    // shared CLAY/WIRE materials (those are reused across loads).
+    const seen = new Set();
     this.root.traverse(o => {
       if (!o.isMesh) return;
-      if (o.geometry) o.geometry.dispose();
-      const mats = [o.material, o.userData.orig].flat().filter(Boolean);
+      if (o.geometry && !seen.has(o.geometry)) { o.geometry.dispose(); seen.add(o.geometry); }
+      const orig = o.userData.orig;
+      const mats = Array.isArray(orig) ? orig : (orig ? [orig] : []);
       mats.forEach(m => {
-        for (const k in m) {
-          const v = m[k];
-          if (v && v.isTexture) v.dispose();
-        }
+        for (const k in m) { const v = m[k]; if (v && v.isTexture) v.dispose(); }
         if (m.dispose) m.dispose();
       });
     });
@@ -211,26 +211,42 @@ class Viewer {
     this.clear();
     this.loadEl.style.display = 'flex';
     this.loadEl.innerHTML = '<span class="spin"></span>loading…';
+    const t0 = performance.now();
     loader.load(encodeURI(url), (gltf) => {
-      const obj = gltf.scene;
-      obj.traverse(o => {
-        if (!o.isMesh) return;
-        o.userData.orig = o.material;
-        // wireframe overlay: shares geometry (cheap), shown only in wire mode
-        const wire = new THREE.Mesh(o.geometry, new THREE.MeshBasicMaterial({
-          color:0x10141c, wireframe:true, transparent:true, opacity:0.45 }));
-        wire.visible = false;
-        o.userData.wire = wire;
-        o.add(wire);
-      });
-      this.root = obj;
-      this.scene.add(obj);
-      this.frame(obj);
-      applyMode(this, MODE);
-      this.loadEl.style.display = 'none';
-    }, undefined, (err) => {
-      this.loadEl.innerHTML = 'failed to load mesh';
-      console.error(url, err);
+      try {
+        const obj = gltf.scene;
+        // Collect meshes FIRST, then add wireframe overlays. Adding children
+        // during traverse() makes it recurse into the new child (also a mesh)
+        // forever -> "Maximum call stack size exceeded".
+        const meshes = [];
+        obj.traverse(o => { if (o.isMesh) meshes.push(o); });
+        meshes.forEach(o => {
+          o.userData.orig = o.material;
+          const wire = new THREE.Mesh(o.geometry, WIRE);   // shared material
+          wire.visible = false;
+          wire.userData.isWire = true;
+          o.userData.wire = wire;
+          o.add(wire);
+        });
+        this.root = obj;
+        this.scene.add(obj);
+        this.frame(obj);
+        applyMode(this, MODE);
+        this.loadEl.style.display = 'none';
+        console.log('LOADED', url, ((performance.now()-t0)/1000).toFixed(1)+'s');
+      } catch (e) {
+        this.loadEl.innerHTML = 'render error: ' + (e.message || e);
+        console.error('onLoad threw', url, e);
+      }
+    },
+    (p) => {                                     // progress
+      if (p.total) this.loadEl.innerHTML =
+        '<span class="spin"></span>loading… ' + Math.round(100*p.loaded/p.total) + '%';
+    },
+    (err) => {                                   // error — show the REAL reason
+      const msg = (err && (err.message || err.type)) || String(err);
+      this.loadEl.innerHTML = 'load failed: ' + msg;
+      console.error('GLTF load failed', url, err);
     });
   }
 
