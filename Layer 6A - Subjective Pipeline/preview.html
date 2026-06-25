@@ -73,6 +73,8 @@
     letter-spacing:.6px; align-self:center; margin-right:4px; }
   .param { display:flex; flex-direction:column; gap:6px; }
   .param .pname { font-size:11.5px; color:var(--muted); font-weight:500; }
+  .param .pmode { color:#5a6276; font-size:9.5px; text-transform:uppercase;
+    letter-spacing:.5px; margin-left:5px; }
   .choices { display:flex; gap:0; border:1px solid var(--line); border-radius:9px;
     overflow:hidden; }
   .choices button { border:none; background:#1c2230; border-radius:0; padding:7px 12px;
@@ -105,6 +107,8 @@
     <select id="sel"></select>
     <button id="prev" title="previous">‹</button>
     <button id="next" title="next">›</button>
+    <button id="skip" title="skip without voting">Skip ⤼</button>
+    <button id="last" title="jump to last matchup">Last ⇥</button>
   </div>
   <div id="mid"></div>
 
@@ -151,7 +155,13 @@ let MODE = 'textured';
 const loader = new GLTFLoader();
 
 const CLAY = new THREE.MeshStandardMaterial({ color:0xcdd2da, roughness:0.8, metalness:0.0 });
-const WIRE = new THREE.MeshBasicMaterial({ color:0x10141c, wireframe:true, transparent:true, opacity:0.45 });
+// Wireframe mode = bright edges over a dark, unlit backing. The backing occludes
+// far-side geometry (so dense meshes read as a clean hidden-line cage instead of a
+// double-sided tangle) and gives the light edges something to contrast against.
+// polygonOffset pushes the fill behind the coplanar edges so they don't z-fight.
+const WIRE_FILL = new THREE.MeshBasicMaterial({
+  color:0x0e1320, polygonOffset:true, polygonOffsetFactor:1, polygonOffsetUnits:1 });
+const WIRE = new THREE.MeshBasicMaterial({ color:0xe6ebf5, wireframe:true });
 
 class Viewer {
   constructor(el) {
@@ -183,7 +193,11 @@ class Viewer {
     const w = this.el.clientWidth, h = this.el.clientHeight;
     if (!w || !h) return;
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.setSize(w, h, false);
+    // updateStyle MUST stay on (default true): it sets the canvas CSS size to w×h
+    // so the element matches the panel. With it off, on a 2× display the canvas
+    // lays out at 2× the panel and overflow:hidden clips it to the top-left
+    // quarter — pushing the centered model into the bottom-right corner.
+    this.renderer.setSize(w, h);
     this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
   }
 
@@ -191,7 +205,7 @@ class Viewer {
     if (!this.root) return;
     // Free GPU resources so navigating heavy meshes (20-80 MB) doesn't leak.
     // Dispose geometry + the GLB's own materials/textures only — never the
-    // shared CLAY/WIRE materials (those are reused across loads).
+    // shared CLAY/WIRE/WIRE_FILL materials (those are reused across loads).
     const seen = new Set();
     this.root.traverse(o => {
       if (!o.isMesh) return;
@@ -270,7 +284,9 @@ function applyMode(v, mode) {
   if (!v.root) return;
   v.root.traverse(o => {
     if (!o.isMesh || o.userData.orig === undefined) return;  // skip non-meshes & wire children
-    o.material = (mode === 'textured') ? o.userData.orig : CLAY;
+    o.material = mode === 'textured'  ? o.userData.orig
+               : mode === 'wireframe' ? WIRE_FILL
+               :                        CLAY;
     if (o.userData.wire) o.userData.wire.visible = (mode === 'wireframe');
   });
 }
@@ -285,9 +301,19 @@ const B = new Viewer(document.getElementById('panelB'));
 let DATA = [];          // all matchups
 let LIST = [];          // matchups in the selected test case
 let idx = 0;            // index within LIST
+let TCS = [];           // ordered unique test cases (set on load)
 const tcsel = document.getElementById('tcsel');
 const sel = document.getElementById('sel');
 const mid = document.getElementById('mid');
+
+// Remember where the reviewer was so a reload doesn't dump them back at pair 1.
+const POS_KEY = 'viewer6a:pos';
+function savePos() {
+  try { localStorage.setItem(POS_KEY, JSON.stringify({ tc: tcsel.value, idx })); } catch (e) {}
+}
+function loadPos() {
+  try { return JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch (e) { return null; }
+}
 
 function _load(i) {
   if (!LIST.length) return;
@@ -297,19 +323,38 @@ function _load(i) {
   mid.innerHTML = `Matchup <b>#${m.matchup_id}</b> · <b>${m.prompt_id}</b> `
     + `<span style="color:var(--muted)">(${idx + 1}/${LIST.length})</span>`;
   A.load(m.a_glb); B.load(m.b_glb);
+  savePos();
 }
 function loadMatchup(i){ _load(i); resetBallot(); }
 
-function selectTC(tc) {
+function selectTC(tc, start = 0) {
   LIST = DATA.filter(m => m.prompt_id === tc);
   sel.innerHTML = LIST.map((m, i) =>
     `<option value="${i}">Pair ${i + 1} · #${m.matchup_id}</option>`).join('');
-  loadMatchup(0);
+  loadMatchup(start);   // loadMatchup wraps out-of-range indices, so a stale idx is safe
+}
+
+// Forward/back that CROSS test-case boundaries: past the last matchup of a test
+// case, advance to the first matchup of the NEXT test case (wrap at the very end).
+function goNext() {
+  if (idx + 1 < LIST.length) { loadMatchup(idx + 1); return; }
+  const ti = TCS.indexOf(tcsel.value);
+  const next = TCS[(ti + 1) % TCS.length];
+  tcsel.value = next; selectTC(next, 0);
+}
+function goPrev() {
+  if (idx - 1 >= 0) { loadMatchup(idx - 1); return; }
+  const ti = TCS.indexOf(tcsel.value);
+  const prev = TCS[(ti - 1 + TCS.length) % TCS.length];
+  const prevCount = DATA.filter(m => m.prompt_id === prev).length;
+  tcsel.value = prev; selectTC(prev, prevCount - 1);
 }
 
 tcsel.onchange = () => selectTC(tcsel.value);
-document.getElementById('prev').onclick = () => loadMatchup(idx - 1);
-document.getElementById('next').onclick = () => loadMatchup(idx + 1);
+document.getElementById('prev').onclick = goPrev;
+document.getElementById('next').onclick = goNext;
+document.getElementById('skip').onclick = goNext;   // advance (cross-TC), record no vote
+document.getElementById('last').onclick = () => loadMatchup(LIST.length - 1);
 sel.onchange = () => loadMatchup(parseInt(sel.value, 10));
 
 document.querySelectorAll('#modes button').forEach(btn => {
@@ -322,18 +367,23 @@ document.querySelectorAll('#modes button').forEach(btn => {
 });
 
 // ---------------- voting ballot ----------------
+// [key, label, mode-to-judge-in]. 'overall' is the ranking axis; the rest are
+// reference/diagnostic axes (see 6A design). Mode tag tells the reviewer which
+// render mode best reveals that axis.
 const PARAMS = [
-  ['visual_appeal','Visual Appeal'], ['surface_quality','Surface Quality'],
-  ['proportions','Proportions'], ['detail_level','Detail Level'],
-  ['style_accuracy','Style Accuracy'],
+  ['prompt_alignment','Prompt Alignment','Textured'],
+  ['texture_material','Texture & Material','Textured'],
+  ['form_proportion','Form & Proportion','Shaded'],
+  ['mesh_integrity','Mesh Integrity','Wireframe'],
+  ['overall','Overall','Textured'],
 ];
 let ballot = {};
 const voteEl = document.getElementById('vote');
 
 function buildBallot() {
-  voteEl.innerHTML = `<span class="vlead">Vote</span>` + PARAMS.map(([k,l]) => `
+  voteEl.innerHTML = `<span class="vlead">Vote</span>` + PARAMS.map(([k,l,mode]) => `
     <div class="param" data-param="${k}">
-      <span class="pname">${l}</span>
+      <span class="pname">${l}<em class="pmode">${mode}</em></span>
       <div class="choices">
         <button data-c="A">A</button><button data-c="tie">=</button><button data-c="B">B</button>
       </div>
@@ -357,15 +407,15 @@ function resetBallot() {
   const s = document.getElementById('submit'); if (s) s.disabled = true;
 }
 async function submitVote() {
-  const m = DATA[idx];
+  const m = LIST[idx];   // idx indexes LIST (filtered by test case), not DATA
   try {
     const res = await fetch('/api/vote', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ matchup_id:m.matchup_id, ballots:ballot }) });
+      body: JSON.stringify({ matchup_id:m.matchup_id, ballots:ballot, voter:'human' }) });
     if (!res.ok) throw new Error(await res.text());
     const j = await res.json();
     document.getElementById('vcount').innerHTML = `votes: <b>${j.total_votes}</b>`;
-    loadMatchup(idx + 1);
+    goNext();   // advance across test-case boundaries too
   } catch (e) {
     alert('Vote failed (run via `python3 main.py`):\n' + e.message);
   }
@@ -379,9 +429,12 @@ fetch('viewer_data.json').then(r => r.json()).then(d => {
     document.querySelectorAll('.load').forEach(e => e.textContent = 'no matchups — run the pipeline');
     return;
   }
-  const tcs = [...new Set(DATA.map(m => m.prompt_id))];   // unique test cases, in order
-  tcsel.innerHTML = tcs.map(t => `<option value="${t}">${t}</option>`).join('');
-  selectTC(tcs[0]);
+  TCS = [...new Set(DATA.map(m => m.prompt_id))];          // unique test cases, in order
+  tcsel.innerHTML = TCS.map(t => `<option value="${t}">${t}</option>`).join('');
+  const saved = loadPos();                                // resume where we left off
+  const startTC = (saved && TCS.includes(saved.tc)) ? saved.tc : TCS[0];
+  tcsel.value = startTC;
+  selectTC(startTC, saved && saved.tc === startTC ? saved.idx : 0);
 }).catch(e => {
   document.querySelectorAll('.load').forEach(el =>
     el.textContent = 'viewer_data.json missing — launch with: python3 main.py');

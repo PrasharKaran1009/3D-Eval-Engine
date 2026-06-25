@@ -94,20 +94,43 @@ class ViewerHandler(SimpleHTTPRequestHandler):
     """Static file server + a POST /api/vote endpoint for the 6A ballot."""
 
     def do_POST(self):
-        if self.path != "/api/vote":
-            self.send_error(404); return
+        if self.path == "/api/vote":
+            self._respond(self._do_vote)
+        elif self.path == "/api/refresh":
+            self._respond(self._do_refresh)
+        else:
+            self.send_error(404)
+
+    def _respond(self, fn):
         try:
-            n = int(self.headers.get("Content-Length", 0))
-            payload = json.loads(self.rfile.read(n))
-            result = record_vote(payload)
+            result = fn()
             body = json.dumps(result).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
-        except Exception as e:                       # noqa: BLE001
+        except (KeyError, ValueError) as e:
             self.send_error(400, str(e))
+        except Exception as e:                       # noqa: BLE001
+            self.send_error(500, str(e))
+
+    def _do_vote(self):
+        n = int(self.headers.get("Content-Length", 0))
+        payload = json.loads(self.rfile.read(n))
+        return record_vote(payload)
+
+    def _do_refresh(self):
+        """Recompute the leaderboard from EXISTING votes (no re-voting)."""
+        import subprocess
+        for script in ("Layer 6A - Subjective Pipeline/aggregate.py",
+                       "Layer 7 - Fusion/fuse.py",
+                       "Layer 8 - Leaderboard/build_leaderboard.py"):
+            r = subprocess.run([sys.executable, os.path.join(ROOT, script)],
+                               cwd=ROOT, capture_output=True, text=True)
+            if r.returncode != 0:
+                raise RuntimeError(f"{script}: {(r.stderr or '')[-200:]}")
+        return {"ok": True}
 
     def log_message(self, *a):                       # keep console quiet
         pass

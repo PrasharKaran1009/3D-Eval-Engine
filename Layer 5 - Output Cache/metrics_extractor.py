@@ -82,6 +82,27 @@ def _uv_stretch(mesh: trimesh.Trimesh) -> dict:
     return {"has_uv": True, "uv_stretch_cv": _safe(cv)}
 
 
+def _texture_metrics(mesh: trimesh.Trimesh) -> dict:
+    """
+    Base-color texture resolution (feeds 6B 'Texturing Quality' -- detail capacity
+    that the perceptual 6A pass can't measure from a render). None if untextured.
+    """
+    w = h = None
+    mat = getattr(getattr(mesh, "visual", None), "material", None)
+    if mat is not None:
+        img = getattr(mat, "baseColorTexture", None) or getattr(mat, "image", None)
+        size = getattr(img, "size", None)
+        if size and len(size) == 2:
+            w, h = int(size[0]), int(size[1])
+    px = (w * h) if (w and h) else None
+    return {
+        "texture_width": w,
+        "texture_height": h,
+        "texture_pixels": px,
+        "has_texture": bool(px),
+    }
+
+
 def _pymeshlab_metrics(mesh: trimesh.Trimesh) -> dict:
     """Topology integrity via a geometry-only PLY bridge."""
     tmp = os.path.join(tempfile.gettempdir(), f"_l5_{os.getpid()}.ply")
@@ -155,6 +176,7 @@ def extract_metrics(glb_path: str) -> dict:
     metrics = {}
     metrics.update(_trimesh_metrics(mesh))
     metrics.update(_uv_stretch(mesh))
+    metrics.update(_texture_metrics(mesh))
     metrics.update(_pymeshlab_metrics(mesh))
     metrics.update(_symmetry(mesh))
     return metrics

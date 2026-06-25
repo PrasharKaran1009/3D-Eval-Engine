@@ -100,6 +100,11 @@ Layer 3 - Pair Generation/matchups.json
 Layer 4 - Generation Scheduler/manifest.json
 Layer 6A - Subjective Pipeline/viewer_data.json
 Layer 6A - Subjective Pipeline/votes.json
+Layer 6A - Subjective Pipeline/elos.json
+Layer 6A - Subjective Pipeline/renders/
+Layer 6B - Objective Pipeline/objective_scores.json
+Layer 7 - Fusion/fused_scores.json
+Layer 8 - Leaderboard/leaderboard.html
 frontend/app_data.json
 
 # 3D Model Large Assets
