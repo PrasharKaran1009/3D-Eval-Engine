@@ -1265,14 +1265,14 @@
     "model_a": "M1",
     "model_b": "M2",
     "ballots": {
-      "prompt_alignment": "tie",
+      "prompt_alignment": "B",
       "texture_material": "A",
-      "form_proportion": "A",
-      "mesh_integrity": "tie",
+      "form_proportion": "tie",
+      "mesh_integrity": "B",
       "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 43,
@@ -1283,11 +1283,11 @@
       "prompt_alignment": "A",
       "texture_material": "A",
       "form_proportion": "A",
-      "mesh_integrity": "tie",
+      "mesh_integrity": "A",
       "overall": "A"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 44,
@@ -1295,14 +1295,14 @@
     "model_a": "M1",
     "model_b": "M4",
     "ballots": {
-      "prompt_alignment": "tie",
-      "texture_material": "tie",
-      "form_proportion": "tie",
+      "prompt_alignment": "A",
+      "texture_material": "B",
+      "form_proportion": "A",
       "mesh_integrity": "A",
-      "overall": "tie"
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 45,
@@ -1310,14 +1310,14 @@
     "model_a": "M1",
     "model_b": "M5",
     "ballots": {
-      "prompt_alignment": "B",
+      "prompt_alignment": "A",
       "texture_material": "A",
       "form_proportion": "A",
-      "mesh_integrity": "A",
+      "mesh_integrity": "tie",
       "overall": "A"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 46,
@@ -1325,14 +1325,14 @@
     "model_a": "M1",
     "model_b": "M6",
     "ballots": {
-      "prompt_alignment": "A",
-      "texture_material": "tie",
-      "form_proportion": "tie",
-      "mesh_integrity": "A",
-      "overall": "tie"
+      "prompt_alignment": "tie",
+      "texture_material": "B",
+      "form_proportion": "B",
+      "mesh_integrity": "B",
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 47,
@@ -1343,11 +1343,11 @@
       "prompt_alignment": "A",
       "texture_material": "tie",
       "form_proportion": "tie",
-      "mesh_integrity": "tie",
-      "overall": "tie"
+      "mesh_integrity": "A",
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 48,
@@ -1355,14 +1355,14 @@
     "model_a": "M2",
     "model_b": "M3",
     "ballots": {
-      "prompt_alignment": "B",
+      "prompt_alignment": "A",
       "texture_material": "A",
-      "form_proportion": "B",
-      "mesh_integrity": "tie",
-      "overall": "B"
+      "form_proportion": "A",
+      "mesh_integrity": "A",
+      "overall": "A"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 49,
@@ -1371,13 +1371,13 @@
     "model_b": "M4",
     "ballots": {
       "prompt_alignment": "A",
-      "texture_material": "A",
-      "form_proportion": "tie",
-      "mesh_integrity": "B",
-      "overall": "B"
+      "texture_material": "B",
+      "form_proportion": "A",
+      "mesh_integrity": "A",
+      "overall": "tie"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 50,
@@ -1385,14 +1385,14 @@
     "model_a": "M2",
     "model_b": "M5",
     "ballots": {
-      "prompt_alignment": "B",
+      "prompt_alignment": "A",
       "texture_material": "A",
       "form_proportion": "A",
-      "mesh_integrity": "B",
+      "mesh_integrity": "A",
       "overall": "A"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 51,
@@ -1402,12 +1402,12 @@
     "ballots": {
       "prompt_alignment": "A",
       "texture_material": "B",
-      "form_proportion": "A",
-      "mesh_integrity": "B",
+      "form_proportion": "B",
+      "mesh_integrity": "tie",
       "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 52,
@@ -1415,14 +1415,14 @@
     "model_a": "M2",
     "model_b": "M7",
     "ballots": {
-      "prompt_alignment": "tie",
+      "prompt_alignment": "A",
       "texture_material": "B",
-      "form_proportion": "A",
-      "mesh_integrity": "tie",
-      "overall": "B"
+      "form_proportion": "tie",
+      "mesh_integrity": "A",
+      "overall": "tie"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 53,
@@ -1430,14 +1430,14 @@
     "model_a": "M3",
     "model_b": "M4",
     "ballots": {
-      "prompt_alignment": "tie",
-      "texture_material": "A",
-      "form_proportion": "B",
-      "mesh_integrity": "A",
-      "overall": "tie"
+      "prompt_alignment": "B",
+      "texture_material": "B",
+      "form_proportion": "tie",
+      "mesh_integrity": "B",
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 54,
@@ -1445,14 +1445,14 @@
     "model_a": "M3",
     "model_b": "M5",
     "ballots": {
-      "prompt_alignment": "B",
+      "prompt_alignment": "A",
       "texture_material": "tie",
-      "form_proportion": "tie",
+      "form_proportion": "A",
       "mesh_integrity": "B",
       "overall": "tie"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 55,
@@ -1460,14 +1460,14 @@
     "model_a": "M3",
     "model_b": "M6",
     "ballots": {
-      "prompt_alignment": "A",
-      "texture_material": "tie",
-      "form_proportion": "A",
-      "mesh_integrity": "A",
-      "overall": "tie"
+      "prompt_alignment": "B",
+      "texture_material": "B",
+      "form_proportion": "B",
+      "mesh_integrity": "B",
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 56,
@@ -1475,14 +1475,14 @@
     "model_a": "M3",
     "model_b": "M7",
     "ballots": {
-      "prompt_alignment": "A",
+      "prompt_alignment": "B",
       "texture_material": "B",
-      "form_proportion": "A",
-      "mesh_integrity": "A",
-      "overall": "A"
+      "form_proportion": "B",
+      "mesh_integrity": "B",
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 57,
@@ -1490,14 +1490,14 @@
     "model_a": "M4",
     "model_b": "M5",
     "ballots": {
-      "prompt_alignment": "B",
-      "texture_material": "B",
-      "form_proportion": "B",
-      "mesh_integrity": "tie",
-      "overall": "B"
+      "prompt_alignment": "A",
+      "texture_material": "A",
+      "form_proportion": "A",
+      "mesh_integrity": "B",
+      "overall": "A"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 58,
@@ -1505,14 +1505,14 @@
     "model_a": "M4",
     "model_b": "M6",
     "ballots": {
-      "prompt_alignment": "A",
-      "texture_material": "B",
+      "prompt_alignment": "B",
+      "texture_material": "tie",
       "form_proportion": "B",
-      "mesh_integrity": "A",
-      "overall": "tie"
+      "mesh_integrity": "B",
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 59,
@@ -1520,14 +1520,14 @@
     "model_a": "M4",
     "model_b": "M7",
     "ballots": {
-      "prompt_alignment": "B",
-      "texture_material": "tie",
-      "form_proportion": "tie",
+      "prompt_alignment": "A",
+      "texture_material": "A",
+      "form_proportion": "B",
       "mesh_integrity": "tie",
-      "overall": "A"
+      "overall": "tie"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 60,
@@ -1535,14 +1535,14 @@
     "model_a": "M5",
     "model_b": "M6",
     "ballots": {
-      "prompt_alignment": "tie",
-      "texture_material": "tie",
-      "form_proportion": "A",
-      "mesh_integrity": "tie",
-      "overall": "tie"
+      "prompt_alignment": "B",
+      "texture_material": "B",
+      "form_proportion": "B",
+      "mesh_integrity": "B",
+      "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 61,
@@ -1550,14 +1550,14 @@
     "model_a": "M5",
     "model_b": "M7",
     "ballots": {
-      "prompt_alignment": "A",
-      "texture_material": "A",
+      "prompt_alignment": "B",
+      "texture_material": "B",
       "form_proportion": "B",
-      "mesh_integrity": "B",
+      "mesh_integrity": "A",
       "overall": "B"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   },
   {
     "matchup_id": 62,
@@ -1565,13 +1565,13 @@
     "model_a": "M6",
     "model_b": "M7",
     "ballots": {
-      "prompt_alignment": "tie",
-      "texture_material": "tie",
-      "form_proportion": "tie",
+      "prompt_alignment": "A",
+      "texture_material": "A",
+      "form_proportion": "A",
       "mesh_integrity": "A",
-      "overall": "tie"
+      "overall": "A"
     },
-    "voter": "random",
-    "ts": "2026-06-26T10:34:22.252914+00:00"
+    "voter": "pattern",
+    "ts": "2026-06-26T10:38:31.897408+00:00"
   }
 ]
