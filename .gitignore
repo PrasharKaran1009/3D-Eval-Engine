@@ -99,7 +99,7 @@ Layer 3 - Pair Generation/pairs.json
 Layer 3 - Pair Generation/matchups.json
 Layer 4 - Generation Scheduler/manifest.json
 Layer 6A - Subjective Pipeline/viewer_data.json
-Layer 6A - Subjective Pipeline/votes.json
+Layer 6A - Subjective Pipeline/votes_backup.json
 Layer 6A - Subjective Pipeline/elos.json
 Layer 6A - Subjective Pipeline/renders/
 Layer 6B - Objective Pipeline/objective_scores.json
