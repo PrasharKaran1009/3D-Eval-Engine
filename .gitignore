@@ -1,0 +1,121 @@
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+*~
+
+# Python cache & build files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Python Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing and Coverage
+.cache/
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Node & Frontend (for frontend folder)
+node_modules/
+jspm_packages/
+.npm
+.eslintcache
+.stylelintcache
+.next/
+.nuxt/
+out/
+.docusaurus/
+.yarn-clean
+yarn-error.log
+npm-debug.log
+pnpm-debug.log
+
+# Environment variables and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# Local/IDE specific tool directories
+.claude/
+.gemini/
+.agents/
+daily_logs/
+
+# Generated pipeline artifacts (regenerable via main.py)
+Layer 5 - Output Cache/cache/
+enriched_matchups.json
+Layer 3 - Pair Generation/pairs.json
+Layer 3 - Pair Generation/matchups.json
+Layer 4 - Generation Scheduler/manifest.json
+Layer 6A - Subjective Pipeline/viewer_data.json
+Layer 6A - Subjective Pipeline/votes_backup.json
+Layer 6A - Subjective Pipeline/elos.json
+Layer 6A - Subjective Pipeline/renders/
+Layer 6B - Objective Pipeline/objective_scores.json
+Layer 7 - Fusion/fused_scores.json
+Layer 8 - Leaderboard/leaderboard.html
+frontend/app_data.json
+
+# 3D Model Large Assets
+TEST CASES/
+
+*.glb
+*.gltf
+*.bin
+*.obj
+*.fbx
+*.stl
+*.ply
+*.3ds
+*.blend
