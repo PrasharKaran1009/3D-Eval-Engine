@@ -8,7 +8,7 @@ A comprehensive, state-of-the-art evaluation pipeline for benchmarking 3D genera
 
 The system processes 3D model generation tasks through an 8-stage pipeline, maximizing efficiency via lazy generation and caching while ensuring rigorous evaluation.
 
-![3D Model Evaluation Leaderboard Architecture](./architecture.png)
+![3D Model Evaluation Leaderboard Architecture](./updated.png)
 
 ---
 
