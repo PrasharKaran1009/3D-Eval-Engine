@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>3D Eval · Setup Studio</title>
+<style>
+  :root {
+    --bg0:#0a0c11; --bg1:#10141d; --panel:#141925; --card:#171d2a; --card2:#1c2333;
+    --line:#252c3a; --line2:#2f3849; --txt:#e8ebf2; --muted:#7e879b; --muted2:#5a6276;
+    --accent:#4ade80; --accent-d:#06210f;
+    /* updated.png legend colors */
+    --input:#5b8bf0; --storage:#5fd07a; --process:#f0a94a; --eval:#a78bfa; --output:#c9d0dc;
+    --A:#3b82f6; --B:#f59e0b; --gold:#e0a32e; --danger:#f2555a;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; min-height:100%; color:var(--txt);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { background:radial-gradient(1200px 700px at 50% -10%, #19202e 0%, var(--bg1) 45%, var(--bg0) 100%);
+    background-attachment:fixed; }
+  a { color:var(--input); }
+  .mono { font-family:ui-monospace,"SF Mono",Menlo,monospace; letter-spacing:.4px; }
+
+  /* ---------- top bar ---------- */
+  #bar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:16px;
+    padding:12px 22px; background:rgba(16,20,29,.82); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line); }
+  .brand { display:flex; align-items:center; gap:11px; }
+  .brand .dot { width:10px; height:10px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 12px var(--accent); }
+  .brand h1 { font-size:15px; font-weight:680; margin:0; letter-spacing:.2px; }
+  .brand span { font-size:11px; color:var(--muted); }
+  .spacer { flex:1; }
+  .mockpill { font-size:10px; color:#ffcf87; background:rgba(240,169,74,.12);
+    border:1px solid rgba(240,169,74,.4); padding:5px 11px; border-radius:20px; font-weight:600;
+    letter-spacing:.5px; }
+  #resetBtn { background:#1c2230; color:var(--muted); border:1px solid var(--line);
+    border-radius:8px; padding:7px 13px; font-size:12px; cursor:pointer; }
+  #resetBtn:hover { border-color:var(--danger); color:var(--danger); }
+
+  /* ---------- layout ---------- */
+  #shell { display:flex; gap:0; align-items:flex-start; }
+  #nav { position:sticky; top:57px; width:290px; flex:none; padding:22px 16px 40px;
+    height:calc(100vh - 57px); overflow-y:auto; border-right:1px solid var(--line); }
+  #nav .navlead { font-size:10.5px; color:var(--muted2); text-transform:uppercase;
+    letter-spacing:1.2px; margin:0 0 12px 10px; }
+  .navstep { display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:11px;
+    cursor:pointer; margin-bottom:3px; border:1px solid transparent; transition:all .12s; }
+  .navstep:hover { background:#161c29; }
+  .navstep.active { background:#1a2233; border-color:var(--line2); }
+  .navstep.locked { opacity:.4; cursor:not-allowed; }
+  .navstep .ni { width:26px; height:26px; border-radius:8px; flex:none; display:flex;
+    align-items:center; justify-content:center; font-size:12px; font-weight:700;
+    background:#1c2432; border:1px solid var(--line2); color:var(--muted); }
+  .navstep.active .ni { background:var(--accent); color:var(--accent-d); border-color:var(--accent); }
+  .navstep.done .ni { background:#16351f; color:var(--accent); border-color:#1f5230; }
+  .navstep .nt { font-size:13px; font-weight:560; }
+  .navstep .ns { font-size:10.5px; color:var(--muted2); margin-top:1px; }
+  .navstep .lc { width:8px; height:8px; border-radius:2px; margin-left:auto; flex:none; }
+
+  #main { flex:1; min-width:0; padding:30px 40px 90px; max-width:1180px; margin:0 auto; }
+  .stephead { display:flex; align-items:flex-start; gap:16px; margin-bottom:6px; }
+  .steptag { font-size:11px; font-weight:700; letter-spacing:1px; padding:6px 12px;
+    border-radius:8px; margin-bottom:10px; display:inline-block; }
+  .stephead h2 { font-size:25px; font-weight:730; margin:0 0 6px; }
+  .stephead p.lead { color:var(--muted); font-size:14px; margin:0; max-width:720px; line-height:1.55; }
+  .stepicon { width:52px; height:52px; border-radius:14px; flex:none; display:flex;
+    align-items:center; justify-content:center; font-size:24px; margin-left:auto; }
+
+  /* ---------- generic cards ---------- */
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:22px 24px; margin-top:18px; }
+  .card.tint-input   { border-top:3px solid var(--input); }
+  .card.tint-storage { border-top:3px solid var(--storage); }
+  .card.tint-process { border-top:3px solid var(--process); }
+  .card.tint-eval    { border-top:3px solid var(--eval); }
+  .card.tint-output  { border-top:3px solid var(--output); }
+  .card h3 { margin:0 0 4px; font-size:16px; font-weight:650; display:flex; align-items:center; gap:9px; }
+  .card .desc { color:var(--muted); font-size:12.5px; margin:0 0 16px; line-height:1.5; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:900px){ .grid2,.grid3{ grid-template-columns:1fr; } #nav{ display:none; } }
+
+  /* ---------- forms ---------- */
+  label.fld { display:block; margin-bottom:14px; }
+  label.fld .lt { font-size:11.5px; color:var(--muted); display:block; margin-bottom:6px;
+    text-transform:uppercase; letter-spacing:.5px; }
+  input[type=text], input[type=number], input[type=password], select, textarea {
+    width:100%; background:#0f1420; color:var(--txt); border:1px solid var(--line2);
+    border-radius:9px; padding:10px 12px; font-size:13px; font-family:inherit; }
+  textarea { resize:vertical; min-height:70px; }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--input); }
+  .hintline { font-size:11px; color:var(--muted2); margin-top:5px; }
+
+  /* buttons */
+  button { font-family:inherit; }
+  .btn { background:#1c2230; color:var(--txt); border:1px solid var(--line2);
+    border-radius:10px; padding:9px 16px; font-size:13px; cursor:pointer; transition:all .12s; }
+  .btn:hover { border-color:#3a4456; background:#222a3a; }
+  .btn.primary { background:var(--accent); color:var(--accent-d); border-color:var(--accent); font-weight:680; }
+  .btn.primary:hover { filter:brightness(1.08); }
+  .btn.ghost { background:transparent; }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
+  .btn.sm { padding:6px 11px; font-size:12px; }
+
+  /* choice tiles (BYOA/BYOM, judge type) */
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; }
+  .tile { border:1.5px solid var(--line2); border-radius:14px; padding:18px; cursor:pointer;
+    background:#141a26; transition:all .14s; position:relative; }
+  .tile:hover { border-color:#3f4a5e; transform:translateY(-1px); }
+  .tile.sel { border-color:var(--accent); background:#13241a; box-shadow:0 0 0 1px var(--accent) inset; }
+  .tile .ttl { font-size:14.5px; font-weight:650; display:flex; align-items:center; gap:8px; }
+  .tile .tsub { font-size:12px; color:var(--muted); margin-top:6px; line-height:1.45; }
+  .tile .tcheck { position:absolute; top:12px; right:12px; width:20px; height:20px; border-radius:50%;
+    border:1.5px solid var(--line2); display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:transparent; }
+  .tile.sel .tcheck { background:var(--accent); border-color:var(--accent); color:var(--accent-d); }
+
+  /* pills / tags */
+  .pill { display:inline-flex; align-items:center; gap:6px; font-size:11px; padding:4px 10px;
+    border-radius:20px; border:1px solid var(--line2); color:var(--muted); }
+  .pill.ok { color:var(--accent); border-color:#1f5230; background:#0f1f15; }
+  .pill.warn { color:#ffcf87; border-color:rgba(240,169,74,.4); background:rgba(240,169,74,.08); }
+  .pill.bad { color:var(--danger); border-color:rgba(242,85,90,.4); background:rgba(242,85,90,.08); }
+
+  /* tables */
+  table.tbl { width:100%; border-collapse:collapse; margin-top:4px; }
+  table.tbl th { text-align:left; font-size:10.5px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.8px; padding:9px 12px; border-bottom:1px solid var(--line); font-weight:600; }
+  table.tbl td { padding:11px 12px; border-bottom:1px solid #1a2130; font-size:13px; vertical-align:middle; }
+  table.tbl tr:last-child td { border-bottom:none; }
+  .modelchip { display:inline-flex; align-items:center; gap:8px; }
+  .modelchip .mid { font-size:10px; color:var(--muted); background:#0f1420; border:1px solid var(--line);
+    border-radius:5px; padding:2px 6px; font-family:ui-monospace,monospace; }
+  .xbtn { background:none; border:none; color:var(--muted2); cursor:pointer; font-size:15px; }
+  .xbtn:hover { color:var(--danger); }
+
+  /* tabs */
+  .tabs { display:flex; gap:6px; border-bottom:1px solid var(--line); margin-bottom:2px; flex-wrap:wrap; }
+  .tab { padding:10px 15px; font-size:13px; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent;
+    margin-bottom:-1px; }
+  .tab:hover { color:var(--txt); }
+  .tab.active { color:var(--txt); border-bottom-color:var(--accent); font-weight:600; }
+  .tab .b { display:inline-block; min-width:18px; text-align:center; font-size:10px; background:#222a3a;
+    border-radius:10px; padding:1px 6px; margin-left:6px; color:var(--muted); }
+
+  /* dropzone */
+  .drop { border:2px dashed var(--line2); border-radius:16px; padding:38px 20px; text-align:center;
+    background:#0f1420; transition:all .15s; cursor:pointer; }
+  .drop:hover, .drop.over { border-color:var(--accent); background:#0f1c14; }
+  .drop .di { font-size:40px; margin-bottom:10px; }
+  .drop .dt { font-size:15px; font-weight:600; }
+  .drop .ds { font-size:12px; color:var(--muted); margin-top:6px; }
+
+  /* upload cards */
+  .ucards { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-top:16px; }
+  .ucard { border:1px solid var(--line2); border-radius:13px; background:#141a26; overflow:hidden; }
+  .ucard .uthumb { height:150px; background:#0b0f18; display:flex; align-items:center; justify-content:center;
+    position:relative; border-bottom:1px solid var(--line); }
+  .ucard .uthumb canvas { display:block; }
+  .ucard .uthumb .ph { color:var(--muted2); font-size:12px; }
+  .ucard .ubody { padding:12px 13px; }
+  .ucard .un { font-size:12.5px; font-weight:600; word-break:break-all; }
+  .ucard .um { font-size:11px; color:var(--muted); margin-top:4px; display:flex; gap:8px; flex-wrap:wrap; }
+  .ucard .urow { display:flex; align-items:center; justify-content:space-between; margin-top:9px; }
+
+  /* pair graph */
+  .pairwrap { display:grid; grid-template-columns:340px 1fr; gap:22px; align-items:start; }
+  @media (max-width:820px){ .pairwrap{ grid-template-columns:1fr; } }
+  .pairlist { max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:12px; }
+  .pairlist .pr { display:flex; align-items:center; gap:10px; padding:9px 13px; font-size:12.5px;
+    border-bottom:1px solid #1a2130; }
+  .pairlist .pr:last-child { border-bottom:none; }
+  .pairlist .pn { color:var(--muted2); font-family:ui-monospace,monospace; font-size:11px; width:34px; }
+
+  /* scheduler log */
+  .log { font-family:ui-monospace,"SF Mono",monospace; font-size:12px; background:#0b0f18;
+    border:1px solid var(--line); border-radius:12px; padding:16px 18px; max-height:340px;
+    overflow-y:auto; line-height:1.7; }
+  .log .lg { color:var(--muted2); } .log .lok { color:var(--accent); } .log .lwarn { color:#ffcf87; }
+  .log .lstore { color:var(--storage); } .log .lproc { color:var(--process); }
+
+  /* stat tiles */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
+  .stat { background:#141a26; border:1px solid var(--line2); border-radius:13px; padding:16px 18px; }
+  .stat .sv { font-size:26px; font-weight:730; } .stat .sl { font-size:11.5px; color:var(--muted); margin-top:3px; }
+
+  /* progress bar */
+  .pbar { height:8px; background:#0f1420; border-radius:6px; overflow:hidden; border:1px solid var(--line); }
+  .pbar > div { height:100%; background:linear-gradient(90deg,var(--process),#f7c877); width:0; transition:width .2s; }
+
+  /* footer nav */
+  #foot { position:fixed; bottom:0; left:0; right:0; z-index:20; display:flex; align-items:center; gap:14px;
+    padding:14px 40px; background:rgba(16,20,29,.9); backdrop-filter:blur(10px);
+    border-top:1px solid var(--line); }
+  #foot .fprog { font-size:12px; color:var(--muted); }
+  #foot .fprog b { color:var(--txt); }
+
+  /* charts */
+  .chartcard { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px 22px; }
+  .chartcard h4 { margin:0 0 3px; font-size:14px; font-weight:640; }
+  .chartcard .csub { font-size:11.5px; color:var(--muted); margin:0 0 14px; }
+  svg text { fill:var(--muted); }
+  .legendrow { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; font-size:11.5px; color:var(--muted); }
+  .legendrow .lk { display:inline-flex; align-items:center; gap:6px; }
+  .legendrow .sw { width:11px; height:11px; border-radius:3px; }
+
+  .overviewflow { display:flex; flex-direction:column; gap:2px; margin-top:10px; }
+  .ovrow { display:flex; align-items:center; gap:14px; padding:13px 16px; border:1px solid var(--line);
+    border-radius:12px; background:#141a26; }
+  .ovrow .oi { width:34px; height:34px; border-radius:9px; flex:none; display:flex; align-items:center;
+    justify-content:center; font-size:16px; }
+  .ovrow .ot { font-size:13.5px; font-weight:600; } .ovrow .od { font-size:11.5px; color:var(--muted); margin-top:2px; }
+  .ovrow .obadge { margin-left:auto; font-size:10px; color:var(--muted2); text-transform:uppercase; letter-spacing:1px; }
+  .ovarrow { text-align:center; color:var(--muted2); font-size:13px; line-height:1; padding:1px; }
+  .built { color:var(--accent); border-color:#1f5230 !important; }
+
+  .callout { display:flex; gap:12px; padding:14px 16px; border-radius:12px; background:#141a26;
+    border:1px solid var(--line2); font-size:12.5px; color:var(--muted); line-height:1.55; margin-top:16px; }
+  .callout .ci { font-size:18px; }
+  .kbd { font-family:ui-monospace,monospace; background:#0f1420; border:1px solid var(--line2);
+    border-radius:5px; padding:1px 6px; font-size:11.5px; color:var(--txt); }
+</style>
+</head>
+<body>
+<div id="bar">
+  <div class="brand">
+    <span class="dot"></span>
+    <div><h1>3D Eval · Setup Studio</h1><span>Registry → Input → Pairs → Schedule → Evaluate → Leaderboard</span></div>
+  </div>
+  <div class="spacer"></div>
+  <span class="mockpill" title="REST calls are simulated client-side for this prototype">◍ MOCK BACKEND</span>
+  <button id="resetBtn">Reset demo</button>
+</div>
+
+<div id="shell">
+  <nav id="nav"><div class="navlead">Pipeline setup</div><div id="navlist"></div></nav>
+  <main id="main"><div id="content"></div></main>
+</div>
+
+<div id="foot">
+  <button class="btn ghost" id="backBtn">‹ Back</button>
+  <div class="fprog">Step <b id="fstep">1</b> of <b id="ftot">8</b> · <span id="fname"></span></div>
+  <div class="spacer" style="flex:1"></div>
+  <button class="btn primary" id="nextBtn">Continue ›</button>
+</div>
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ============================================================= *
+ *  BAKED PROJECT DATA (real values from the running pipeline)   *
+ * ============================================================= */
+const MODELS = [
+  { id:'M1', name:'Trellis 2',          vendor:'Microsoft', credits:78 },
+  { id:'M2', name:'Tripo 3D-2.5',       vendor:'Tripo',     credits:78 },
+  { id:'M3', name:'Meshy 6 Preview',    vendor:'Meshy',     credits:208 },
+  { id:'M4', name:'Hyper 3D Rodin 2',   vendor:'Deemos',    credits:104 },
+  { id:'M5', name:'Hyper 3D Rodin 2.5', vendor:'Deemos',    credits:104 },
+  { id:'M6', name:'Hunyuan 3D Pro',     vendor:'Tencent',   credits:104 },
+  { id:'M7', name:'Pixal 3D',           vendor:'Pixal',     credits:94 },
+];
+const TESTCASES = [
+  { id:'TC001', name:'Chair'  }, { id:'TC002', name:'Sword' },
+  { id:'TC003', name:'Robot'  }, { id:'TC004', name:'Car'   },
+  { id:'TC005', name:'Dragon' },
+];
+// a couple of small real sample GLBs (served from project root) for the upload demo
+const SAMPLE_GLBS = [
+  { label:'Meshy · Chair (5 MB)', file:'/TEST CASES/TC001 GLB/TC001_Meshy 6 Preview.glb', model:'M3', tc:'TC001' },
+  { label:'Tripo · Chair (8 MB)', file:'/TEST CASES/TC001 GLB/ TC001_Tripo 3D-2.5.glb',   model:'M2', tc:'TC001' },
+];
+const FUSED = [
+  { rank:1, model:'M6', fused:1566.5, sub:1602.4, obj:63.7, worst:1407 },
+  { rank:2, model:'M2', fused:1435.9, sub:1364.4, obj:60.7, worst:1220 },
+  { rank:3, model:'M4', fused:1289.8, sub:1404.9, obj:34.0, worst:1210 },
+  { rank:4, model:'M3', fused:1229.9, sub:1079.0, obj:49.1, worst:955  },
+  { rank:5, model:'M1', fused:1219.7, sub:1278.4, obj:32.3, worst:1332 },
+  { rank:6, model:'M7', fused:1196.2, sub:1353.3, obj:22.8, worst:1214 },
+  { rank:7, model:'M5', fused:1162.0, sub:1017.6, obj:42.8, worst:1033 },
+];
+const DIMS = {"M1":{"integrity":22.5,"texturing":58.3,"symmetry":43.9,"efficiency":57.1},"M2":{"integrity":73.6,"texturing":52.6,"symmetry":50.5,"efficiency":43.9},"M3":{"integrity":44.8,"texturing":60.0,"symmetry":50.5,"efficiency":100.0},"M4":{"integrity":24.9,"texturing":49.2,"symmetry":53.8,"efficiency":40.6},"M5":{"integrity":27.4,"texturing":71.5,"symmetry":70.3,"efficiency":15.9},"M6":{"integrity":48.9,"texturing":85.6,"symmetry":80.2,"efficiency":15.9},"M7":{"integrity":24.9,"texturing":62.9,"symmetry":4.3,"efficiency":80.2}};
+const PARAM_ELO = {"M1":{"form_proportion":1336,"mesh_integrity":1332,"overall":1278,"prompt_alignment":1423,"texture_material":1340},"M2":{"form_proportion":1339,"mesh_integrity":1506,"overall":1364,"prompt_alignment":1508,"texture_material":1220},"M3":{"form_proportion":1195,"mesh_integrity":955,"overall":1079,"prompt_alignment":1149,"texture_material":1098},"M4":{"form_proportion":1210,"mesh_integrity":1246,"overall":1405,"prompt_alignment":1333,"texture_material":1549},"M5":{"form_proportion":1080,"mesh_integrity":1349,"overall":1018,"prompt_alignment":1033,"texture_material":1062},"M6":{"form_proportion":1597,"mesh_integrity":1499,"overall":1602,"prompt_alignment":1407,"texture_material":1524},"M7":{"form_proportion":1343,"mesh_integrity":1214,"overall":1353,"prompt_alignment":1248,"texture_material":1308}};
+const PARAMS = [['prompt_alignment','Prompt'],['texture_material','Texture'],['form_proportion','Form'],['mesh_integrity','Mesh'],['overall','Overall']];
+// baseName resolves the BAKED reference models (used only by the Results/charts step,
+// which previews the real project leaderboard). The Registry list is user-entered.
+const baseName = id => (MODELS.find(m=>m.id===id)||{}).name || id;
+const escapeHtml = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// user-registered models -> positional id (M1..) + display label
+function userModels(){ return state.reg.models.map((m,i)=>({ ...m, id:'M'+(i+1), label:(m.name||'').trim()||('Model '+(i+1)) })); }
+function validModels(){ return userModels().filter(m=>(m.name||'').trim()); }
+function benchCases(){ return state.bench.cases; }
+function setTCCount(n){
+  n=Math.max(1,Math.min(50, Math.floor(n)||1));
+  const cur=state.bench.cases||[]; const arr=[];
+  for(let i=0;i<n;i++) arr.push(cur[i] || { id:'TC'+String(i+1).padStart(3,'0'), label:'' });
+  state.bench.cases=arr;
+}
+
+/* ============================================================= *
+ *  FAKE / MOCK REST LAYER                                        *
+ *  (each returns a Promise, mimicking a network round-trip)     *
+ * ============================================================= */
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+const api = {
+  async saveRegistry(payload){ await wait(350); return { ok:true, saved:payload, id:'reg_demo' }; },
+  async validateInput(payload){ await wait(300);
+    return { ok:true, checks:[
+      { k:'API key valid',        pass:true },
+      { k:'Endpoint reachable',   pass:true },
+      { k:'Required fields filled',pass:true },
+      { k:'Rate limit OK',        pass:true },
+    ]}; },
+  async generatePairs(models){ await wait(400);
+    const pairs=[]; for(let i=0;i<models.length;i++) for(let j=i+1;j<models.length;j++)
+      pairs.push([models[i], models[j]]);
+    return { ok:true, n:models.length, total:pairs.length, pairs }; },
+  async schedule(){ await wait(200); return { ok:true }; },
+};
+
+/* ============================================================= *
+ *  STATE                                                        *
+ * ============================================================= */
+const LS_KEY = 'setupstudio:v3';
+const defaultState = () => ({
+  step:0,
+  maxStep:0,
+  path:'BYOM',                              // chosen on Welcome: 'BYOM' | 'BYOA'
+  judge:{ type:'hybrid', provider:'GPT-5.5', maxTokens:1024 },   // chosen on Welcome
+  reg:{ models: [] },                       // user fills by hand: [{name,vendor,credits,endpoint,apiKey}]
+  bench:{ cases: [{ id:'TC001', label:'' }] },   // count is asked on the Input step
+  settings:{ wSub:60, wObj:40, mcda:'TOPSIS' },  // handled in the real fusion layer; kept for Results text
+  uploads:[],        // BYOM: {name,tc,modelId,model,size,ok,warn,url,ext,isSample}
+  inputs:{},         // BYOA: `${tcId}|${modelId}` -> {prompt,seed,guidance}
+  scheduled:false,
+});
+let state = load();
+function load(){ try{ const s=JSON.parse(localStorage.getItem(LS_KEY)); return s&&s.reg&&s.path ? s : defaultState(); }catch(e){ return defaultState(); } }
+function save(){ const {uploads,...rest}=state; // don't persist blob urls
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({...rest, uploads:uploads.map(u=>({name:u.name,tc:u.tc,modelId:u.modelId,model:u.model,size:u.size,ok:u.ok,warn:u.warn}))})); }catch(e){} }
+
+/* ============================================================= *
+ *  STEP DEFINITIONS                                             *
+ * ============================================================= */
+const STEPS = [
+  { key:'welcome',  tag:'START',            title:'Welcome',                   sub:'How the evaluation works',        icon:'👋', tint:'input',   color:'var(--input)' },
+  { key:'registry', tag:'1 · REGISTRY',     title:'Registry Layer',            sub:'Models · Judges · Benchmarks',    icon:'🗂️', tint:'input',   color:'var(--input)' },
+  { key:'input',    tag:'2 · INPUT',        title:'Input Layer',               sub:'Upload models / connect APIs',    icon:'📥', tint:'input',   color:'var(--input)' },
+  { key:'pairs',    tag:'3 · PAIRS',        title:'Round-Robin Pair Generator',sub:'All nC2 matchups',                icon:'🔀', tint:'input',   color:'var(--input)' },
+  { key:'schedule', tag:'4 · SCHEDULER',    title:'Generation / Prep Scheduler',sub:'Lazy gen + caching',             icon:'⚙️', tint:'process', color:'var(--process)' },
+  { key:'cache',    tag:'CACHE',            title:'Cache / Storage Layer',     sub:'Meshes · previews · metadata',    icon:'💾', tint:'storage', color:'var(--storage)' },
+  { key:'evaluate', tag:'5 · EVALUATE',     title:'Subjective + Objective',    sub:'Voting & mesh analysis (built)',  icon:'⚖️', tint:'eval',    color:'var(--eval)' },
+  { key:'results',  tag:'6–8 · RESULTS',    title:'Fusion · Leaderboard · Viz',sub:'MCDA scores & charts',            icon:'🏆', tint:'output',  color:'var(--output)' },
+];
+
+/* ============================================================= *
+ *  RENDER SHELL                                                 *
+ * ============================================================= */
+const content = document.getElementById('content');
+const navlist = document.getElementById('navlist');
+
+function renderNav(){
+  navlist.innerHTML = STEPS.map((s,i)=>{
+    const locked = i>state.maxStep+0 && i>state.step ? '' : ''; // all reachable once visited; keep simple
+    const cls = ['navstep', i===state.step?'active':'', i<state.step||i<=state.maxStep&&i!==state.step?'':''].join(' ');
+    const done = i<state.step ? 'done':'';
+    return `<div class="navstep ${i===state.step?'active':''} ${i<=state.maxStep&&i<state.step?'done':''}" data-i="${i}">
+      <div class="ni">${i<state.step ? '✓' : (i===0?'★':i)}</div>
+      <div><div class="nt">${s.title}</div><div class="ns">${s.sub}</div></div>
+      <span class="lc" style="background:${s.color}"></span>
+    </div>`;
+  }).join('');
+  navlist.querySelectorAll('.navstep').forEach(el=>{
+    el.onclick=()=>{ const i=+el.dataset.i; if(i<=state.maxStep) go(i); };
+  });
+}
+
+function go(i){
+  i = Math.max(0, Math.min(STEPS.length-1, i));
+  state.step=i; state.maxStep=Math.max(state.maxStep,i); save();
+  renderNav(); renderStep();
+  document.getElementById('fstep').textContent=i+1;
+  document.getElementById('ftot').textContent=STEPS.length;
+  document.getElementById('fname').textContent=STEPS[i].title;
+  document.getElementById('backBtn').disabled = i===0;
+  const nb=document.getElementById('nextBtn');
+  nb.textContent = i===STEPS.length-1 ? 'Finish ✓' : 'Continue ›';
+  window.scrollTo({top:0, behavior:'smooth'});
+  teardownViewers();
+}
+
+function stepHeader(s){
+  return `<div class="stephead">
+    <div style="flex:1">
+      <span class="steptag" style="color:${s.color}; background:${s.color}1f">${s.tag}</span>
+      <h2>${s.title}</h2>
+      <p class="lead" id="leadP"></p>
+    </div>
+    <div class="stepicon" style="background:${s.color}1f">${s.icon}</div>
+  </div>`;
+}
+
+function renderStep(){
+  const s=STEPS[state.step];
+  const fn = RENDERERS[s.key];
+  content.innerHTML = stepHeader(s) + `<div id="stepbody"></div>`;
+  document.getElementById('leadP').textContent = LEADS[s.key];
+  fn(document.getElementById('stepbody'));
+}
+
+const LEADS = {
+  welcome:'Start by choosing your path — bring your own API (BYOA) or your own models (BYOM) — and how matchups will be judged. Everything after this adapts to those two choices.',
+  registry:'Register the 3D generators for the path you chose — type the names in yourself. BYOA also collects API access; BYOM collects the credit cost per generation.',
+  input:'Pick how many examples (test cases) you\'re evaluating, name them, then provide each model\'s input per example — a prompt (BYOA) or a mesh (BYOM). BYOM also takes one zip per example.',
+  pairs:'Every model is compared against every other on each test case — n(n−1)/2 unique matchups. These pairs drive both blind voting and objective analysis.',
+  schedule:'The scheduler resolves each matchup. BYOM reads your uploaded meshes; BYOA lazily generates each model once and caches it — so only n generations run, never nC2.',
+  cache:'Everything produced is stored once and reused: meshes, preview renders, mesh statistics, and per-pair intermediate results.',
+  evaluate:'This is where the already-built lower pipeline takes over — blind pairwise voting (Bradley-Terry ELO) and automated mesh analysis run per matchup.',
+  results:'The Fusion layer combines subjective ELO and objective scores via MCDA into one ranked leaderboard, with visual breakdowns.',
+};
+
+/* ============================================================= *
+ *  RENDERERS PER STEP                                           *
+ * ============================================================= */
+const RENDERERS = {};
+
+/* ---- 0. WELCOME — pick PATH + JUDGE ---- */
+const JUDGE_TYPES = [
+  ['human','👤','Human','Human judges cast every vote in the blind pair viewer.'],
+  ['vlm','🤖','VLM (AI judge)','A vision-language model votes automatically as LLM-as-a-Judge.'],
+  ['hybrid','👤+🤖','Hybrid','VLM does a first pass; a human overwrites / accepts / modifies the final vote.'],
+];
+// VLMs suitable as judges (strong multi-image / spatial reasoning)
+const SUITABLE_JUDGES = ['GPT-5.5','Gemini 2.5 (vision)','Claude Opus 4.8','Qwen-VL'];
+
+RENDERERS.welcome = (el)=>{
+  el.innerHTML = `
+  <div class="card tint-input">
+    <h3>1 · Select your path</h3>
+    <p class="desc">How do the models enter the benchmark? This one choice decides what the Registry and Input steps ask you for.</p>
+    <div class="tiles" id="pathTiles">
+      <div class="tile ${state.path==='BYOA'?'sel':''}" data-p="BYOA">
+        <div class="tcheck">✓</div><div class="ttl">☁️ BYOA</div>
+        <div class="tsub">Bring Your Own <b>API</b> — models are generated on demand via each provider's endpoint. You'll give names + API keys, then prompts per example.</div>
+      </div>
+      <div class="tile ${state.path==='BYOM'?'sel':''}" data-p="BYOM">
+        <div class="tcheck">✓</div><div class="ttl">📦 BYOM</div>
+        <div class="tsub">Bring Your Own <b>Models</b> — you upload pre-generated <span class="kbd">.glb</span> meshes. You'll give names + credit cost, then drop meshes per example.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card tint-eval">
+    <h3>2 · How will matchups be judged?</h3>
+    <p class="desc">Pick the voting source. VLM and Hybrid use a vision-language model as the judge.</p>
+    <div class="tiles" id="jt">${JUDGE_TYPES.map(([k,ic,ttl,sub])=>`
+      <div class="tile ${state.judge.type===k?'sel':''}" data-k="${k}">
+        <div class="tcheck">✓</div><div class="ttl">${ic} ${ttl}</div><div class="tsub">${sub}</div>
+      </div>`).join('')}</div>
+    <div id="vlmcfg" style="margin-top:18px; ${state.judge.type==='human'?'display:none':''}">
+      <div style="font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:8px">Suitable VLM judges</div>
+      <div class="legendrow" style="margin:0 0 16px">${SUITABLE_JUDGES.map(j=>`<span class="pill ${state.judge.provider===j.split(' ')[0]||state.judge.provider===j?'ok':''}" data-jp="${j}" style="cursor:pointer">${j}</span>`).join('')}</div>
+      <div class="grid3">
+        <label class="fld"><span class="lt">Chosen judge</span>
+          <select id="jprov">${SUITABLE_JUDGES.map(p=>`<option ${state.judge.provider===p?'selected':''}>${p}</option>`).join('')}</select></label>
+        <label class="fld"><span class="lt">Max tokens</span><input type="number" id="jtok" value="${state.judge.maxTokens}"></label>
+        <label class="fld"><span class="lt">Judge endpoint</span><input type="text" placeholder="https://api.provider.ai/v1/vision"></label>
+      </div>
+      ${state.judge.type==='hybrid'?`<div class="callout"><span class="ci">🔁</span><div><b>Hybrid flow:</b> VLM votes (first pass) → human review (overwrite / accept / modify) → final vote recorded.</div></div>`:''}
+    </div>
+  </div>
+
+  <div style="margin-top:18px; display:flex; align-items:center; gap:14px">
+    <button class="btn primary" id="startBtn">Continue to Registry →</button>
+    <span class="hintline" style="margin:0">Path: <b style="color:var(--txt)">${state.path}</b> · Judge: <b style="color:var(--txt)">${state.judge.type}</b></span>
+  </div>`;
+
+  el.querySelectorAll('#pathTiles .tile').forEach(tl=>tl.onclick=()=>{ state.path=tl.dataset.p; save(); RENDERERS.welcome(el); });
+  el.querySelectorAll('#jt .tile').forEach(tl=>tl.onclick=()=>{ state.judge.type=tl.dataset.k; save(); RENDERERS.welcome(el); });
+  el.querySelectorAll('[data-jp]').forEach(p=>p.onclick=()=>{ state.judge.provider=p.dataset.jp; save(); RENDERERS.welcome(el); });
+  const prov=el.querySelector('#jprov'); if(prov) prov.onchange=()=>{ state.judge.provider=prov.value; save(); RENDERERS.welcome(el); };
+  const tok=el.querySelector('#jtok'); if(tok) tok.onchange=()=>{ state.judge.maxTokens=+tok.value; save(); };
+  el.querySelector('#startBtn').onclick=()=>go(1);
+};
+
+/* ---- 1. REGISTRY — single screen for the chosen path ---- */
+RENDERERS.registry = (el)=>{
+  const byoa = state.path==='BYOA';
+  const ms = state.reg.models;
+  const cols = byoa
+    ? `<th>API endpoint</th><th>API key</th><th>Cost / gen</th>`
+    : `<th>Vendor</th><th>Credits / gen</th>`;
+  const rowCells = (m,i)=> byoa
+    ? `<td><input type="text" data-f="endpoint" data-i="${i}" placeholder="https://api.…/generate" value="${escapeHtml(m.endpoint)}"></td>
+       <td><input type="password" data-f="apiKey" data-i="${i}" placeholder="sk-••••" value="${escapeHtml(m.apiKey)}"></td>
+       <td><input type="number" data-f="credits" data-i="${i}" placeholder="cr" value="${escapeHtml(m.credits)}" style="max-width:80px"></td>`
+    : `<td><input type="text" data-f="vendor" data-i="${i}" placeholder="e.g. Tripo" value="${escapeHtml(m.vendor)}"></td>
+       <td><input type="number" data-f="credits" data-i="${i}" placeholder="cr" value="${escapeHtml(m.credits)}" style="max-width:90px"></td>`;
+  el.innerHTML = `
+  <div class="card tint-input">
+    <h3>${byoa?'☁️ BYOA registry — models & API access':'📦 BYOM registry — models & credits'}
+      <span class="pill ${byoa?'':'ok'}">${state.path}</span></h3>
+    <p class="desc">${byoa
+      ? 'Register each generator with its API endpoint + key. On the Input step you\'ll enter prompts per model and we\'ll call these APIs.'
+      : 'Register each generator\'s name and its credit cost per generation. You\'ll upload the meshes per model on the Input step.'}
+      Type the names in yourself — nothing is pre-filled. <a id="switchPath" style="cursor:pointer">← change path</a></p>
+    <table class="tbl"><thead><tr><th style="width:44px">ID</th><th>Model name</th>${cols}<th style="width:40px"></th></tr></thead>
+    <tbody id="mrows">${ms.length ? ms.map((m,i)=>`
+      <tr>
+        <td class="mono" style="color:var(--muted)">M${i+1}</td>
+        <td><input type="text" data-f="name" data-i="${i}" placeholder="e.g. Tripo 3D-2.5" value="${escapeHtml(m.name)}"></td>
+        ${rowCells(m,i)}
+        <td><button class="xbtn" data-del="${i}" title="remove">✕</button></td>
+      </tr>`).join('') : `<tr><td colspan="${byoa?6:5}" style="color:var(--muted2); text-align:center; padding:22px">No models yet — click “+ Add model” to start.</td></tr>`}
+    </tbody></table>
+    <div style="margin-top:14px; display:flex; align-items:center; gap:12px">
+      <button class="btn sm" id="addm">+ Add model</button>
+      <span class="pill" id="mcount">${ms.length} model${ms.length===1?'':'s'}</span>
+      ${ms.length<2?'<span class="hintline" style="margin:0">Add at least 2 to generate matchups.</span>':''}
+    </div>
+  </div>`;
+  el.querySelector('#switchPath').onclick=()=>go(0);
+  el.querySelectorAll('#mrows input').forEach(inp=>inp.oninput=()=>{
+    state.reg.models[+inp.dataset.i][inp.dataset.f]=inp.value; save();
+  });
+  el.querySelectorAll('#mrows [data-del]').forEach(b=>b.onclick=()=>{
+    state.reg.models.splice(+b.dataset.del,1); save(); RENDERERS.registry(el);
+  });
+  el.querySelector('#addm').onclick=()=>{
+    state.reg.models.push({name:'',vendor:'',credits:'',endpoint:'',apiKey:''}); save(); RENDERERS.registry(el);
+  };
+};
+
+/* ---- 2. INPUT — pick #examples, then per-example / per-model input ---- */
+const EG_LABELS=['Chair','Sword','Robot','Car','Dragon','Teapot','Vase','Helmet'];
+
+RENDERERS.input = (el)=>{
+  const byoa = state.path==='BYOA';
+  const models = validModels();
+  const cases = benchCases();
+  el.innerHTML = `
+  <div class="card tint-input">
+    <h3>How many examples (test cases)?</h3>
+    <p class="desc">An example is one prompt/target every model is evaluated on (a folder like <span class="kbd">TC001</span>). Set the count and name them — the per-model input rows below repeat for each example.</p>
+    <div style="display:flex; gap:18px; align-items:flex-end; flex-wrap:wrap">
+      <label class="fld" style="max-width:200px; margin:0"><span class="lt">Number of examples</span>
+        <input type="number" id="tccount" min="1" max="50" value="${cases.length}"></label>
+      <div class="hintline" style="margin:0 0 4px">IDs auto-generate <span class="kbd">TC001…TC${String(cases.length).padStart(3,'0')}</span>. Path: <b style="color:var(--txt)">${state.path}</b>.</div>
+    </div>
+  </div>
+  ${models.length<1
+    ? `<div class="callout"><span class="ci">⚠️</span><div>No models registered — go back to the <b>Registry</b> step and add at least one. Each example then asks for one input per model.</div></div>`
+    : `<div id="examples"></div>`}`;
+  const cnt=el.querySelector('#tccount');
+  cnt.onchange=()=>{ setTCCount(+cnt.value); save(); renderInput(); };
+  const host=el.querySelector('#examples');
+  if(host) cases.forEach((tc,i)=> host.appendChild(exampleBlock(tc,i,models,byoa)) );
+};
+
+function renderInput(){ teardownViewers(); RENDERERS.input(document.getElementById('stepbody')); }
+
+// One card per example; header + (BYOM) bulk-zip dropbox + one input row per model.
+function exampleBlock(tc, idx, models, byoa){
+  const div=document.createElement('div'); div.className='card'; div.style.cssText='margin-top:16px';
+  const filled = byoa
+    ? models.filter(m=>{ const v=state.inputs[tc.id+'|'+m.id]; return v && (v.prompt||'').trim(); }).length
+    : models.filter(m=> state.uploads.some(u=>u.tc===tc.id && u.modelId===m.id && u.ok)).length;
+  div.innerHTML = `
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px">
+      <span class="mid mono" style="font-size:12px">${tc.id}</span>
+      <input type="text" data-lbl style="max-width:220px" placeholder="label e.g. ${EG_LABELS[idx]||'—'}" value="${escapeHtml(tc.label)}">
+      <span style="flex:1"></span>
+      <span class="pill ${filled===models.length?'ok':''}">${filled} / ${models.length} ${byoa?'prompts':'meshes'}</span>
+    </div>
+    ${!byoa ? `
+    <div class="drop" data-bulk style="padding:20px 18px; margin-bottom:6px">
+      <div class="di" style="font-size:26px">🗜️</div>
+      <div class="dt" style="font-size:13.5px">Drop <b>${tc.id}</b>.zip — fills every model at once</div>
+      <div class="ds">each .glb is matched to a model by the name in its filename · or drop per model below</div>
+    </div>
+    <input type="file" data-bulkfile accept=".glb,.gltf,.obj,.fbx,.zip" multiple style="display:none">
+    <div class="hintline" style="margin:0 0 6px">— or drop each model's mesh individually —</div>` : ''}
+    <div data-rows></div>`;
+  div.querySelector('[data-lbl]').oninput=e=>{ tc.label=e.target.value; save(); };
+  if(!byoa){
+    const bulk=div.querySelector('[data-bulk]'), bf=div.querySelector('[data-bulkfile]');
+    bulk.onclick=()=>bf.click();
+    bf.onchange=()=>{ ingestFiles(bf.files, tc.id, {match:true}, bulk); bf.value=''; };
+    bulk.ondragover=e=>{e.preventDefault();bulk.classList.add('over');};
+    bulk.ondragleave=()=>bulk.classList.remove('over');
+    bulk.ondrop=e=>{e.preventDefault();bulk.classList.remove('over');ingestFiles(e.dataTransfer.files, tc.id, {match:true}, bulk);};
+  }
+  const rows=div.querySelector('[data-rows]');
+  models.forEach(m=> rows.appendChild(byoa ? byoaModelRow(tc,m) : byomModelRow(tc,m)) );
+  return div;
+}
+
+// BYOM: model row = an uploaded-mesh card, or a small drop target for that model's .glb.
+function byomModelRow(tc,m){
+  const u=state.uploads.find(x=>x.tc===tc.id && x.modelId===m.id);
+  const row=document.createElement('div');
+  row.style.cssText='display:flex; align-items:center; gap:14px; padding:10px 0; border-top:1px solid var(--line)';
+  row.innerHTML=`<div style="width:160px; flex:none"><span class="mid mono">${m.id}</span> <span style="font-size:13px">${escapeHtml(m.label)}</span></div><div style="flex:1" data-cell></div>`;
+  const cell=row.querySelector('[data-cell]');
+  if(u){
+    cell.innerHTML=`<div class="ucard" style="max-width:300px">
+      <div class="uthumb" data-view style="height:120px"><span class="ph">${u.ok?'▶ click to render':'—'}</span></div>
+      <div class="ubody"><div class="un">${escapeHtml(u.name)}</div>
+        <div class="urow">${u.ok?'<span class="pill ok">valid</span>':`<span class="pill bad">${escapeHtml(u.warn)||'invalid'}</span>`}
+        <button class="xbtn" data-del title="remove">✕</button></div></div></div>`;
+    cell.querySelector('[data-del]').onclick=()=>{ try{if(u.url.startsWith('blob:'))URL.revokeObjectURL(u.url);}catch(e){} state.uploads.splice(state.uploads.indexOf(u),1); save(); renderInput(); };
+    const th=cell.querySelector('[data-view]');
+    if(u.ok){ th.style.cursor='pointer'; th.onclick=()=>{ if(th.dataset.rendered)return; th.dataset.rendered='1'; th.innerHTML=''; mountThumb(th,u.url); }; }
+  } else {
+    cell.innerHTML=`<div class="drop" data-drop style="padding:13px 16px; text-align:left; display:flex; align-items:center; gap:12px">
+        <span style="font-size:20px">⬆️</span>
+        <span style="font-size:12.5px; color:var(--muted)">drop <b>${escapeHtml(m.label)}</b>'s .glb · <a data-sample style="cursor:pointer; color:var(--input)">use sample</a></span>
+      </div><input type="file" data-file accept=".glb,.gltf,.obj,.fbx" style="display:none">`;
+    const drop=cell.querySelector('[data-drop]'), file=cell.querySelector('[data-file]');
+    drop.onclick=e=>{ if(e.target.dataset.sample!==undefined) return; file.click(); };
+    cell.querySelector('[data-sample]').onclick=e=>{ e.stopPropagation(); loadSampleInto(tc.id, m.id); };
+    file.onchange=()=>{ ingestFiles(file.files, tc.id, {forceModelId:m.id}, drop); file.value=''; };
+    drop.ondragover=e=>{e.preventDefault();drop.classList.add('over');};
+    drop.ondragleave=()=>drop.classList.remove('over');
+    drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');ingestFiles(e.dataTransfer.files, tc.id, {forceModelId:m.id}, drop);};
+  }
+  return row;
+}
+
+// BYOA: model row = a prompt + per-model params (fetched from that model's API in the real thing).
+function byoaModelRow(tc,m){
+  const key=tc.id+'|'+m.id;
+  const v=state.inputs[key]||(state.inputs[key]={prompt:'',seed:42,guidance:7.5});
+  const row=document.createElement('div');
+  row.style.cssText='display:flex; align-items:flex-start; gap:14px; padding:12px 0; border-top:1px solid var(--line)';
+  row.innerHTML=`
+    <div style="width:160px; flex:none; padding-top:7px"><span class="mid mono">${m.id}</span> <span style="font-size:13px">${escapeHtml(m.label)}</span></div>
+    <div style="flex:1">
+      <input type="text" data-f="prompt" placeholder="prompt for ${escapeHtml(m.label)} · ${escapeHtml(tc.label||tc.id)}" value="${escapeHtml(v.prompt)}" style="margin-bottom:8px">
+      <div style="display:flex; gap:10px; align-items:flex-end">
+        <label class="fld" style="margin:0; width:110px"><span class="lt">seed</span><input type="number" data-f="seed" value="${escapeHtml(v.seed)}"></label>
+        <label class="fld" style="margin:0; width:120px"><span class="lt">guidance</span><input type="number" step="0.5" data-f="guidance" value="${escapeHtml(v.guidance)}"></label>
+        <div class="hintline" style="margin:0 0 10px">params fetched from ${escapeHtml(m.label)}'s API</div>
+      </div>
+    </div>`;
+  row.querySelectorAll('[data-f]').forEach(inp=>inp.oninput=()=>{ v[inp.dataset.f]=inp.value; save(); });
+  return row;
+}
+
+// parse a file name OR full zip path -> {model, tc}. Accepts both "Meshy_tc001.glb"
+// and benchmark-style "TC001 GLB/TC001_Meshy 6 Preview.glb" (tc anywhere in the path).
+function parseName(path){
+  const full=String(path).replace(/\\/g,'/');
+  const base=full.split('/').pop().replace(/\.[^.]+$/,'');
+  let tc=null;
+  const m=full.match(/tc0*?(\d{1,3})/i);          // search the whole path (covers folders)
+  if(m) tc='TC'+String(+m[1]).padStart(3,'0');
+  let model=base.replace(/tc0*\d{1,3}/i,'').replace(/^[_\-\s]+|[_\-\s]+$/g,'').trim();
+  if(!model) model=base;
+  const warn = !tc ? 'no test-case id (tc00x) found' : null;
+  return {tc, model, warn};
+}
+
+// Match a parsed model name / filename to one of the registered models (fuzzy, case-insensitive).
+function matchModel(parsed, fileName){
+  const models=validModels(); const p=(parsed||'').toLowerCase(); const f=(fileName||'').toLowerCase();
+  return models.find(m=>{ const l=(m.label||'').toLowerCase(); return l && (f.includes(l) || (p && (l.includes(p)||p.includes(l)))); }) || null;
+}
+
+// Ingest dropped files/zip into an example (tcId).
+//   opts.forceModelId -> assign every file to that model cell (per-model drop)
+//   opts.match        -> match each file to a registered model by name (bulk zip)
+async function ingestFiles(fileList, tcId, opts, dropEl){
+  const unmatched=[];
+  for(const f of [...fileList]){
+    if(/\.zip$/i.test(f.name) || /zip/i.test(f.type||'')){
+      const saved=dropEl?dropEl.innerHTML:'';
+      if(dropEl) dropEl.innerHTML='<div class="di" style="font-size:26px">🗜️</div><div class="dt" style="font-size:13.5px">Unzipping '+escapeHtml(f.name)+'…</div><div class="ds">reading archive in-browser…</div>';
+      try{
+        const entries=await extractZip(f);
+        if(!entries.length) alert('No .glb / .obj / .fbx files found inside '+f.name);
+        entries.forEach(e=>{ const u=addUploadRec(e.name, e.blob, tcId, opts); if(u) unmatched.push(u); });
+      }catch(err){ console.error(err); alert('Could not read '+f.name+':\n'+err.message); }
+      if(dropEl) dropEl.innerHTML=saved;
+    } else { const u=addUploadRec(f.name, f, tcId, opts); if(u) unmatched.push(u); }
+  }
+  if(unmatched.length) alert('These files didn\'t match any registered model name (skipped):\n• '+unmatched.join('\n• ')
+    +'\n\nRename so the model name appears in the filename, or drop them into a model row directly.');
+  save(); renderInput();
+}
+
+// Adds/replaces the upload for a (tcId, modelId) cell. Returns a filename string if it
+// couldn't be matched to a model (bulk mode only), else null.
+function addUploadRec(path, blob, tcId, opts){
+  const name=String(path).replace(/\\/g,'/').split('/').pop();
+  const ext=(name.split('.').pop()||'').toLowerCase();
+  const okFmt=['glb','gltf','obj','fbx'].includes(ext);
+  const parsed=parseName(path);
+  let modelId=opts.forceModelId||null;
+  if(!modelId && opts.match){ const m=matchModel(parsed.model, name); if(m) modelId=m.id; else return name; }
+  if(modelId){ // one mesh per (tc, model): replace any existing
+    const ix=state.uploads.findIndex(u=>u.tc===tcId && u.modelId===modelId);
+    if(ix>=0){ try{ if(state.uploads[ix].url.startsWith('blob:')) URL.revokeObjectURL(state.uploads[ix].url); }catch(e){} state.uploads.splice(ix,1); }
+  }
+  const url=URL.createObjectURL(blob);
+  state.uploads.push({ name, size:blob.size||0, tc:tcId, modelId, model:parsed.model,
+    ok:okFmt, ext, warn: okFmt?null:'unsupported format', url, isSample:false });
+  return null;
+}
+
+// Minimal in-browser ZIP reader (no library). Handles stored (0) + deflate (8) entries,
+// which is what macOS "Compress" and `zip` produce. Uses native DecompressionStream.
+async function extractZip(file){
+  const buf=new Uint8Array(await file.arrayBuffer());
+  const dv=new DataView(buf.buffer);
+  let eocd=-1; const floor=Math.max(0, buf.length-65557-22);
+  for(let i=buf.length-22; i>=floor; i--){ if(dv.getUint32(i,true)===0x06054b50){ eocd=i; break; } }
+  if(eocd<0) throw new Error('not a valid .zip (no end-of-central-directory)');
+  const count=dv.getUint16(eocd+10,true);
+  let off=dv.getUint32(eocd+16,true);
+  const raw=[];
+  for(let n=0;n<count && off+46<=buf.length;n++){
+    if(dv.getUint32(off,true)!==0x02014b50) break;           // central directory header
+    const method=dv.getUint16(off+10,true);
+    const compSize=dv.getUint32(off+20,true);
+    const nameLen=dv.getUint16(off+28,true);
+    const extraLen=dv.getUint16(off+30,true);
+    const commentLen=dv.getUint16(off+32,true);
+    const localOff=dv.getUint32(off+42,true);
+    const name=new TextDecoder().decode(buf.subarray(off+46, off+46+nameLen));
+    off+=46+nameLen+extraLen+commentLen;
+    if(name.endsWith('/') || name.split('/').pop().startsWith('.')) continue;  // dirs, __MACOSX/._ junk
+    const ext=(name.split('/').pop().split('.').pop()||'').toLowerCase();
+    if(!['glb','gltf','obj','fbx'].includes(ext)) continue;
+    raw.push({name, method, compSize, localOff});
+  }
+  const out=[];
+  for(const e of raw){
+    const lhNameLen=dv.getUint16(e.localOff+26,true);
+    const lhExtraLen=dv.getUint16(e.localOff+28,true);
+    const dataStart=e.localOff+30+lhNameLen+lhExtraLen;
+    const comp=buf.subarray(dataStart, dataStart+e.compSize);
+    let data;
+    if(e.method===0) data=comp;                              // stored
+    else if(e.method===8) data=await inflateRaw(comp);       // deflate
+    else continue;                                           // unsupported method
+    out.push({name:e.name, blob:new Blob([data])});
+  }
+  return out;
+}
+
+async function inflateRaw(bytes){
+  if(typeof DecompressionStream==='undefined') throw new Error('this browser lacks DecompressionStream — use a stored/uncompressed zip');
+  const s=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+
+// Quick-test convenience: load one real benchmark GLB into a specific (example, model) cell.
+async function loadSampleInto(tcId, modelId){
+  const s=SAMPLE_GLBS[0];
+  const ix=state.uploads.findIndex(u=>u.tc===tcId && u.modelId===modelId);
+  if(ix>=0){ try{ if(state.uploads[ix].url.startsWith('blob:')) URL.revokeObjectURL(state.uploads[ix].url); }catch(e){} state.uploads.splice(ix,1); }
+  state.uploads.push({ name:'sample_'+tcId+'_'+modelId+'.glb', size:0, tc:tcId, modelId, model:'sample', ok:true, ext:'glb', warn:null, url:encodeURI(s.file), isSample:true });
+  save(); renderInput();
+}
+
+/* ---- 3. PAIRS ---- */
+RENDERERS.pairs = (el)=>{
+  const models=validModels();
+  if(models.length<2){
+    el.innerHTML=`<div class="card tint-input"><h3>Not enough models yet</h3>
+      <p class="desc">You have ${models.length} registered model${models.length===1?'':'s'}. Go back to the <b>Registry</b> step and add at least 2 to generate matchups.</p></div>`;
+    return;
+  }
+  const pairs=[]; for(let i=0;i<models.length;i++) for(let j=i+1;j<models.length;j++) pairs.push([models[i],models[j]]);
+  const n=models.length, total=pairs.length, perTC=state.bench.cases.length;
+  el.innerHTML=`
+  <div class="card tint-input">
+    <div class="stats" style="margin-bottom:20px">
+      <div class="stat"><div class="sv">${n}</div><div class="sl">models</div></div>
+      <div class="stat"><div class="sv">${total}</div><div class="sl">unique pairs · n(n−1)/2</div></div>
+      <div class="stat"><div class="sv">${perTC}</div><div class="sl">test cases</div></div>
+      <div class="stat"><div class="sv" style="color:var(--accent)">${total*perTC}</div><div class="sl">total matchups</div></div>
+    </div>
+    <div class="pairwrap">
+      <div>
+        <h3 style="font-size:14px; margin-bottom:10px">Matchup list</h3>
+        <div class="pairlist">${pairs.map((p,i)=>`
+          <div class="pr"><span class="pn">#${String(i+1).padStart(2,'0')}</span>
+            <span class="pill" style="color:var(--A); border-color:var(--A)">${escapeHtml(p[0].label)}</span>
+            <span style="color:var(--muted2)">vs</span>
+            <span class="pill" style="color:var(--B); border-color:var(--B)">${escapeHtml(p[1].label)}</span>
+          </div>`).join('')}</div>
+      </div>
+      <div>
+        <h3 style="font-size:14px; margin-bottom:10px">Round-robin graph</h3>
+        <div id="graph"></div>
+        <div class="hintline">Each node is a model; each edge is a matchup. A complete graph K<sub>${n}</sub> = ${total} edges.</div>
+      </div>
+    </div>
+  </div>`;
+  drawGraph(el.querySelector('#graph'), models);
+};
+
+function drawGraph(host, models){
+  const N=models.length, W=440, H=380, cx=W/2, cy=H/2, R=Math.min(W,H)/2-46;
+  const pts=models.map((m,i)=>{ const a=-Math.PI/2 + i*2*Math.PI/N; return {id:m.id,x:cx+R*Math.cos(a),y:cy+R*Math.sin(a)}; });
+  let edges='';
+  for(let i=0;i<N;i++) for(let j=i+1;j<N;j++)
+    edges+=`<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[j].x}" y2="${pts[j].y}" stroke="#2b3446" stroke-width="1"/>`;
+  const nodes=pts.map(p=>`
+    <g><circle cx="${p.x}" cy="${p.y}" r="19" fill="#1c2432" stroke="#4ade80" stroke-width="1.5"/>
+    <text x="${p.x}" y="${p.y+4}" text-anchor="middle" font-size="11" font-family="ui-monospace,monospace" fill="#e8ebf2">${p.id}</text></g>`).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">${edges}${nodes}</svg>`;
+}
+
+/* ---- 4. SCHEDULER ---- */
+RENDERERS.schedule = (el)=>{
+  const byom=state.path==='BYOM';
+  const n=validModels().length, tc=state.bench.cases.length;
+  el.innerHTML=`
+  <div class="card tint-process">
+    <h3>${byom?'📦 BYOM — Use uploaded models':'☁️ BYOA — Lazy generation + caching'}</h3>
+    <p class="desc">${byom
+      ? 'No generation runs. Each uploaded mesh is read, its metadata extracted, and stored to the cache for evaluation.'
+      : 'Each model is generated exactly once and cached. Later matchups reuse the cache — so only <b>n</b> generations run instead of nC2.'}</p>
+    <div class="stats" style="margin-bottom:18px">
+      <div class="stat"><div class="sv">${byom?n:('n = '+n)}</div><div class="sl">${byom?'meshes to read':'generations (not '+(n*(n-1)/2)+')'}</div></div>
+      <div class="stat"><div class="sv">${n*tc}</div><div class="sl">assets resolved</div></div>
+      <div class="stat"><div class="sv" id="pdone">0</div><div class="sl">processed</div></div>
+    </div>
+    <div class="pbar" style="margin-bottom:16px"><div id="pfill"></div></div>
+    <div class="log" id="log"></div>
+    <div style="margin-top:16px"><button class="btn primary" id="run">${state.scheduled?'Re-run scheduler':'Run scheduler'}</button></div>
+  </div>`;
+  el.querySelector('#run').onclick=()=>runScheduler(el, byom);
+  if(state.scheduled){ // show completed state statically
+    const log=el.querySelector('#log'); log.innerHTML=`<div class="lok">✓ scheduler already run — click to replay</div>`;
+    el.querySelector('#pfill').style.width='100%'; el.querySelector('#pdone').textContent=n*tc;
+  }
+};
+
+async function runScheduler(el, byom){
+  const btn=el.querySelector('#run'); btn.disabled=true;
+  const log=el.querySelector('#log'); log.innerHTML='';
+  const fill=el.querySelector('#pfill'); const pdone=el.querySelector('#pdone');
+  const models=validModels(), tcs=state.bench.cases;
+  const line=(html)=>{ log.innerHTML+=html+'<br>'; log.scrollTop=log.scrollHeight; };
+  const total=models.length*tcs.length; let done=0;
+  if(!total){ line('<span class="lwarn">nothing to schedule — register models first</span>'); el.querySelector('#run').disabled=false; return; }
+  line(`<span class="lg">[L4] scheduling ${total} assets across ${tcs.length} test case(s)…</span>`);
+  const genSeen=new Set();
+  for(const tc of tcs){
+    line(`<span class="lg">— ${tc.id} —</span>`);
+    for(const m of models){
+      await wait(90);
+      if(byom){
+        line(`<span class="lstore">read</span> <span class="lg">${escapeHtml(m.label)} · ${tc.id}</span> → extract metadata → cache <span class="lok">✓</span>`);
+      } else {
+        if(!genSeen.has(m.id)){ genSeen.add(m.id);
+          line(`<span class="lproc">generate</span> <span class="lg">${escapeHtml(m.label)}</span> (first use) → cache <span class="lok">✓</span>`);
+        } else {
+          line(`<span class="lg">cache hit · ${escapeHtml(m.label)} · ${tc.id}</span> <span class="lok">✓</span>`);
+        }
+      }
+      done++; pdone.textContent=done; fill.style.width=(100*done/total).toFixed(1)+'%';
+    }
+  }
+  await api.schedule();
+  line(byom?`<span class="lok">✓ all meshes cached — ready for evaluation</span>`
+           :`<span class="lok">✓ total generations = ${genSeen.size} (n) · everything else served from cache</span>`);
+  state.scheduled=true; save(); btn.disabled=false; btn.textContent='Re-run scheduler';
+}
+
+/* ---- 5. CACHE ---- */
+RENDERERS.cache = (el)=>{
+  const n=validModels().length, tc=state.bench.cases.length;
+  const items=[
+    ['💾','Generated / uploaded meshes','GLB / OBJ / FBB',`${n*tc} files`],
+    ['🖼️','Preview images','high-quality renders',`${n*tc} thumbs`],
+    ['📊','Mesh statistics','vertices, faces, watertight',`${n*tc} rows`],
+    ['🧾','Metadata & configs','prompt hash, model version, cost','per asset'],
+    ['🔗','Pair results (intermediate)','resolved matchup assets',`${n*(n-1)/2*tc} pairs`],
+    ['📝','Logs & reports','scheduler + validation trace','append-only'],
+  ];
+  el.innerHTML=`
+  <div class="card tint-storage">
+    <h3>💾 Cache / Storage Layer</h3>
+    <p class="desc">Written once, reused everywhere downstream. This is the boundary between the setup layers and the evaluation pipeline.</p>
+    <div class="grid3">${items.map(it=>`
+      <div class="stat"><div style="font-size:22px">${it[0]}</div>
+        <div class="ot" style="font-weight:600; font-size:13.5px; margin-top:8px">${it[1]}</div>
+        <div class="sl">${it[2]}</div>
+        <div class="pill ok" style="margin-top:10px">${it[3]}</div>
+      </div>`).join('')}</div>
+    <div class="callout"><span class="ci">📁</span><div>In the real project this maps to <span class="kbd">Layer 5 - Output Cache/cache/&lt;TC&gt;/&lt;model&gt;/</span>, populated by <span class="kbd">cache.py</span> + <span class="kbd">metrics_extractor.py</span>.</div></div>
+  </div>`;
+};
+
+/* ---- 6. EVALUATE (handoff) ---- */
+RENDERERS.evaluate = (el)=>{
+  el.innerHTML=`
+  <div class="grid2">
+    <div class="card tint-eval">
+      <h3>⚖️ 6A · Subjective Pipeline <span class="pill ok">built</span></h3>
+      <p class="desc">Blind side-by-side pair viewer (Three.js). Judges (${state.judge.type}) vote per parameter; Bradley-Terry MLE turns the pairwise matrix into per-parameter ELO scores.</p>
+      <div class="legendrow" style="margin-top:0">${PARAMS.map(p=>`<span class="lk"><span class="sw" style="background:var(--eval)"></span>${p[1]} ELO</span>`).join('')}</div>
+      <div style="margin-top:16px"><a class="btn sm" href="/Layer 6A - Subjective Pipeline/preview.html" target="_blank">Open blind pair viewer ↗</a></div>
+    </div>
+    <div class="card tint-eval">
+      <h3>🔬 6B · Objective Pipeline <span class="pill ok">built</span></h3>
+      <p class="desc">Automated mesh analysis — integrity, watertightness, UV quality, symmetry, polygon count — normalized to a 0–100 rubric per dimension.</p>
+      <table class="tbl"><thead><tr><th>Dimension</th><th>Weight</th></tr></thead><tbody>
+        <tr><td>Integrity</td><td class="mono">0.50</td></tr>
+        <tr><td>Texturing</td><td class="mono">0.35</td></tr>
+        <tr><td>Symmetry</td><td class="mono">0.15</td></tr>
+        <tr><td>Efficiency</td><td class="mono">0.00</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="callout"><span class="ci">🧩</span><div>These two layers already run end-to-end in the project (105 matchups, 105 votes verified). The setup you just completed is what feeds them. Continue to see the fused results.</div></div>`;
+};
+
+/* ---- 7. RESULTS + VIZ ---- */
+RENDERERS.results = (el)=>{
+  el.innerHTML=`
+  <div class="card tint-output" style="margin-bottom:20px">
+    <h3>🏆 Final composite leaderboard</h3>
+    <p class="desc">Fusion (Layer 7) combines subjective ELO and objective score via ${state.settings.mcda}, weighted ${state.settings.wSub}/${state.settings.wObj}, centered on a 1300 ELO scale. <b>Your registered models will appear here once the pipeline runs</b> — the charts below preview the format using the project's current computed results.</p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:4px">
+      <button class="btn sm" id="expCsv">⭳ Export CSV</button>
+      <button class="btn sm" id="expJson">⭳ Export JSON</button>
+      <a class="btn sm" href="/Layer 8 - Leaderboard/leaderboard.html" target="_blank">Open full leaderboard ↗</a>
+    </div>
+  </div>
+  <div class="chartcard" style="margin-bottom:20px">
+    <h4>Fused score · all models</h4><p class="csub">Bradley-Terry subjective + objective geometry, MCDA-fused</p>
+    <div id="barchart"></div>
+  </div>
+  <div class="grid2">
+    <div class="chartcard"><h4>Per-parameter ELO</h4><p class="csub">Subjective strengths — top 3 models</p><div id="radar"></div>
+      <div class="legendrow" id="radarleg"></div></div>
+    <div class="chartcard"><h4>Cost vs quality</h4><p class="csub">Credits per generation vs fused score</p><div id="scatter"></div></div>
+  </div>
+  <div class="chartcard" style="margin-top:20px">
+    <h4>Objective dimension breakdown</h4><p class="csub">Mean 0–100 rubric per model (Layer 6B)</p><div id="dimchart"></div>
+    <div class="legendrow" id="dimleg"></div>
+  </div>
+  <div class="chartcard" style="margin-top:20px">
+    <h4>Ranked table</h4><p class="csub">Sorted by fused score</p>
+    <table class="tbl"><thead><tr><th>#</th><th>Model</th><th>Fused</th><th>Subjective ELO</th><th>Objective</th><th>Worst axis</th><th>Credits</th></tr></thead>
+    <tbody>${FUSED.map(r=>{const m=MODELS.find(x=>x.id===r.model);return `<tr>
+      <td class="mono" style="color:var(--muted)">${String(r.rank).padStart(2,'0')}</td>
+      <td><span class="modelchip"><span class="mid">${r.model}</span> ${m.name}</span></td>
+      <td class="mono" style="color:var(--gold); font-weight:700">${r.fused.toFixed(0)}</td>
+      <td class="mono">${r.sub.toFixed(0)}</td><td class="mono">${r.obj.toFixed(1)}</td>
+      <td class="mono" style="color:var(--muted)">${r.worst}</td><td class="mono">${m.credits} cr</td></tr>`;}).join('')}
+    </tbody></table>
+  </div>`;
+  drawBar(el.querySelector('#barchart'));
+  drawRadar(el.querySelector('#radar'), el.querySelector('#radarleg'));
+  drawScatter(el.querySelector('#scatter'));
+  drawDims(el.querySelector('#dimchart'), el.querySelector('#dimleg'));
+  el.querySelector('#expCsv').onclick=()=>exportData('csv');
+  el.querySelector('#expJson').onclick=()=>exportData('json');
+};
+
+/* ============================================================= *
+ *  CHARTS (pure SVG)                                            *
+ * ============================================================= */
+const PAL=['#4ade80','#5b8bf0','#f0a94a','#a78bfa','#f2555a','#4dd0e1','#e0a32e'];
+
+function drawBar(host){
+  const data=[...FUSED]; const W=880,H=data.length*46+30, L=170, R=70;
+  const min=Math.min(...data.map(d=>d.fused)), max=Math.max(...data.map(d=>d.fused));
+  const span=(max-min)||1; const bw=W-L-R;
+  const rows=data.map((d,i)=>{
+    const y=i*46+14; const pct=0.18+0.82*(d.fused-min)/span; const w=bw*pct;
+    const c=d.rank===1?'var(--gold)':'#3a5f8f';
+    return `<text x="${L-12}" y="${y+21}" text-anchor="end" font-size="12" fill="#e8ebf2">${d.rank}. ${baseName(d.model)}</text>
+      <rect x="${L}" y="${y+6}" width="${bw}" height="22" rx="6" fill="#0f1420"/>
+      <rect x="${L}" y="${y+6}" width="${w}" height="22" rx="6" fill="${c}"/>
+      <text x="${L+w+8}" y="${y+21}" font-size="12" font-family="ui-monospace,monospace" fill="${d.rank===1?'var(--gold)':'#8a93a6'}">${d.fused.toFixed(0)}</text>`;
+  }).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%">${rows}</svg>`;
+}
+
+function drawRadar(host, leg){
+  const top=FUSED.slice(0,3).map(d=>d.model);
+  const axes=PARAMS; const N=axes.length; const W=440,H=360,cx=W/2,cy=H/2+6,R=125;
+  const lo=900,hi=1650; const norm=v=>(v-lo)/(hi-lo);
+  const ang=i=>-Math.PI/2 + i*2*Math.PI/N;
+  let grid='';
+  for(let g=1;g<=4;g++){ const rr=R*g/4;
+    grid+=`<polygon points="${axes.map((_,i)=>`${cx+rr*Math.cos(ang(i))},${cy+rr*Math.sin(ang(i))}`).join(' ')}" fill="none" stroke="#232b3a" stroke-width="1"/>`; }
+  const labels=axes.map((a,i)=>{ const x=cx+(R+22)*Math.cos(ang(i)), y=cy+(R+22)*Math.sin(ang(i));
+    return `<text x="${x}" y="${y+4}" text-anchor="middle" font-size="11">${a[1]}</text>`; }).join('');
+  const polys=top.map((mid,k)=>{
+    const pts=axes.map((a,i)=>{ const r=R*Math.max(0,Math.min(1,norm(PARAM_ELO[mid][a[0]]))); return `${cx+r*Math.cos(ang(i))},${cy+r*Math.sin(ang(i))}`; }).join(' ');
+    return `<polygon points="${pts}" fill="${PAL[k]}22" stroke="${PAL[k]}" stroke-width="2"/>`;
+  }).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">${grid}${labels}${polys}</svg>`;
+  leg.innerHTML=top.map((mid,k)=>`<span class="lk"><span class="sw" style="background:${PAL[k]}"></span>${baseName(mid)}</span>`).join('');
+}
+
+function drawScatter(host){
+  const W=440,H=340, pad=48;
+  const xs=FUSED.map(d=>MODELS.find(m=>m.id===d.model).credits);
+  const ys=FUSED.map(d=>d.fused);
+  const xmin=Math.min(...xs)-15,xmax=Math.max(...xs)+15, ymin=Math.min(...ys)-40,ymax=Math.max(...ys)+40;
+  const X=v=>pad+(W-pad-16)*(v-xmin)/(xmax-xmin);
+  const Y=v=>H-pad-(H-pad-16)*(v-ymin)/(ymax-ymin);
+  let grid='';
+  for(let i=0;i<=4;i++){ const y=pad+i*(H-pad-16)/4; grid+=`<line x1="${pad}" y1="${y}" x2="${W-16}" y2="${y}" stroke="#1c2330"/>`; }
+  const axis=`<line x1="${pad}" y1="${H-pad}" x2="${W-16}" y2="${H-pad}" stroke="#2f3849"/>
+    <line x1="${pad}" y1="16" x2="${pad}" y2="${H-pad}" stroke="#2f3849"/>
+    <text x="${(W)/2}" y="${H-12}" text-anchor="middle" font-size="11">credits / generation →</text>
+    <text x="16" y="${H/2}" text-anchor="middle" font-size="11" transform="rotate(-90 16 ${H/2})">fused score →</text>`;
+  const dots=FUSED.map((d,i)=>{ const m=MODELS.find(x=>x.id===d.model); const x=X(m.credits),y=Y(d.fused);
+    const c=d.rank===1?'var(--gold)':PAL[i%PAL.length];
+    return `<circle cx="${x}" cy="${y}" r="8" fill="${c}cc" stroke="${c}"/>
+      <text x="${x+11}" y="${y+4}" font-size="10.5" fill="#c9d0dc">${d.model}</text>`; }).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">${grid}${axis}${dots}</svg>`;
+}
+
+function drawDims(host, leg){
+  const dims=['integrity','texturing','symmetry','efficiency'];
+  const order=FUSED.map(d=>d.model);
+  const W=880, groupW=(W-40)/order.length, bw=groupW/(dims.length+1), H=260, base=H-30;
+  let bars='';
+  order.forEach((mid,gi)=>{
+    const gx=20+gi*groupW;
+    dims.forEach((dm,di)=>{ const v=DIMS[mid][dm]; const h=(base-20)*v/100;
+      bars+=`<rect x="${gx+di*bw+6}" y="${base-h}" width="${bw-3}" height="${h}" rx="2" fill="${PAL[di]}"/>`; });
+    bars+=`<text x="${gx+groupW/2}" y="${base+16}" text-anchor="middle" font-size="10.5" fill="#8a93a6">${mid}</text>`;
+  });
+  bars+=`<line x1="20" y1="${base}" x2="${W-10}" y2="${base}" stroke="#2f3849"/>`;
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%">${bars}</svg>`;
+  leg.innerHTML=dims.map((d,i)=>`<span class="lk"><span class="sw" style="background:${PAL[i]}"></span>${d}</span>`).join('');
+}
+
+function exportData(fmt){
+  let blob;
+  if(fmt==='json') blob=new Blob([JSON.stringify(FUSED,null,2)],{type:'application/json'});
+  else { const head='rank,model,name,fused,subjective_elo,objective,credits\n';
+    const body=FUSED.map(r=>{const m=MODELS.find(x=>x.id===r.model);return [r.rank,r.model,m.name,r.fused,r.sub,r.obj,m.credits].join(',');}).join('\n');
+    blob=new Blob([head+body],{type:'text/csv'}); }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='leaderboard.'+fmt; a.click();
+}
+
+/* ============================================================= *
+ *  THREE.JS THUMBNAIL VIEWERS (BYOM preview)                    *
+ * ============================================================= */
+let VIEWERS=[];
+const loader=new GLTFLoader();
+function mountThumb(host, url){
+  const w=host.clientWidth||220, h=host.clientHeight||150;
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(45, w/h, 0.01, 100); cam.position.set(0,0,3);
+  const rnd=new THREE.WebGLRenderer({antialias:true, alpha:true});
+  rnd.outputColorSpace=THREE.SRGBColorSpace; rnd.setPixelRatio(Math.min(devicePixelRatio,2)); rnd.setSize(w,h);
+  host.appendChild(rnd.domElement);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x3a3f4c,1.2));
+  const d1=new THREE.DirectionalLight(0xffffff,1.4); d1.position.set(2,3,2); scene.add(d1);
+  const ctr=new OrbitControls(cam, rnd.domElement); ctr.enableDamping=true; ctr.autoRotate=true; ctr.autoRotateSpeed=2.2;
+  const load=document.createElement('div'); load.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#7e879b;font-size:12px';
+  load.textContent='loading…'; host.appendChild(load);
+  const rec={rnd, alive:true};
+  VIEWERS.push(rec);
+  loader.load(url,(g)=>{
+    const obj=g.scene; const box=new THREE.Box3().setFromObject(obj); const size=box.getSize(new THREE.Vector3());
+    const ctr2=box.getCenter(new THREE.Vector3()); obj.position.sub(ctr2);
+    const md=Math.max(size.x,size.y,size.z)||1; const dist=md/(2*Math.tan(THREE.MathUtils.degToRad(22.5)));
+    cam.position.set(dist*0.5,dist*0.35,dist*1.4); cam.near=md/100; cam.far=md*100; cam.updateProjectionMatrix();
+    scene.add(obj); load.remove();
+  }, undefined, (e)=>{ load.textContent='load failed'; console.error(url,e); });
+  (function loop(){ if(!rec.alive) return; requestAnimationFrame(loop); ctr.update(); rnd.render(scene,cam); })();
+}
+function teardownViewers(){ VIEWERS.forEach(v=>{ v.alive=false; try{v.rnd.dispose();}catch(e){} }); VIEWERS=[]; }
+
+/* ============================================================= *
+ *  WIRING                                                       *
+ * ============================================================= */
+document.getElementById('nextBtn').onclick=()=>{ if(state.step<STEPS.length-1) go(state.step+1); };
+document.getElementById('backBtn').onclick=()=>{ if(state.step>0) go(state.step-1); };
+document.getElementById('resetBtn').onclick=()=>{
+  if(!confirm('Reset the demo? Clears registry choices and uploads.')) return;
+  teardownViewers(); state=defaultState(); save(); go(0);
+};
+
+renderNav(); go(state.step||0);
+</script>
+</body>
+</html>
