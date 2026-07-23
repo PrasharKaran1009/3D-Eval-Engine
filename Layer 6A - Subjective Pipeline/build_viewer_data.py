@@ -19,10 +19,22 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 ENRICHED = os.path.join(ROOT, "enriched_matchups.json")
+VOTES = os.path.join(HERE, "votes.json")
 OUT = os.path.join(HERE, "viewer_data.json")
 
 # Where Layer 5 caches each model.glb, as a URL path from the server root.
 CACHE_URL = "/Layer 5 - Output Cache/cache/{prompt}/{model}/model.glb"
+
+
+def _vlm_ballots(votes_path: str = VOTES) -> dict:
+    """matchup_id -> latest VLM first-pass ballot (for the hybrid review step)."""
+    if not os.path.exists(votes_path):
+        return {}
+    out: dict = {}
+    for r in json.load(open(votes_path)):
+        if str(r.get("voter", "")).startswith("vlm"):
+            out[r["matchup_id"]] = r.get("ballots", {})   # last one wins
+    return out
 
 
 def build(enriched_path: str = ENRICHED, out_path: str = OUT) -> int:
@@ -34,6 +46,8 @@ def build(enriched_path: str = ENRICHED, out_path: str = OUT) -> int:
     with open(enriched_path) as f:
         matchups = json.load(f)
 
+    vlm = _vlm_ballots()
+
     entries = []
     for m in matchups:
         if m.get("status") != "cached":
@@ -44,6 +58,8 @@ def build(enriched_path: str = ENRICHED, out_path: str = OUT) -> int:
             # URLs the browser loads (root-absolute; spaces encoded client-side)
             "a_glb": CACHE_URL.format(prompt=m["prompt_id"], model=m["model_a"]),
             "b_glb": CACHE_URL.format(prompt=m["prompt_id"], model=m["model_b"]),
+            # VLM first-pass ballot (hybrid): pre-fills the human review, or null
+            "vlm_ballot": vlm.get(m["matchup_id"]),
             # hidden — for server-side vote mapping later, UI never shows these
             "_a_model": m["model_a"],
             "_b_model": m["model_b"],

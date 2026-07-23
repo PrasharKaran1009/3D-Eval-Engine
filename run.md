@@ -2,8 +2,9 @@
 
 All commands run from the project root:
 ```bash
-cd "/Users/intern/Desktop/3D model evalution leaderboard"
+cd "/Users/intern/Desktop/3d/3D-model-evaluation-leaderboard-main"
 ```
+> New here? See the **🚀 Getting Started** section in [README.md](./README.md) first.
 
 ## 1. Start the server (serves the voting + leaderboard pages)
 ```bash

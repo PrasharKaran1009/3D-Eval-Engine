@@ -13,11 +13,13 @@ full 7x5 grid is present, and writes an asset manifest that downstream layers
 (5 storage, 5A voting, 5B metrics) use to locate files.
 
 Why keyword matching (not exact filenames):
-    The real filenames are inconsistent — letter 'O' instead of zero
-    ("TCOO2_..."), a leading space, "Hyper Rodin 2.5" missing its "3D",
-    "Pixal 3d" lowercased. Exact matching would silently drop files. Instead we
-    derive the test-case id from the *folder* name and match each model by a
-    unique keyword, which is robust to all those typos.
+    Filenames are now normalized to `TC00x_ModelName.glb`, but display names
+    still differ from what's on disk in minor ways — e.g. "Hyper 3D Rodin 2.5"
+    is filed as "Hyper Rodin 2.5" (no "3D"), "Pixal 3D" is lowercased "Pixal 3d".
+    Exact matching would silently drop those files. Instead we derive the
+    test-case id from the *folder* name and match each model by unique keywords.
+    Those keywords now live in the Registry (Layer 3 `models.json`, each model's
+    `match: {all, none}` block) so the registry is the single source of truth.
 
 Usage:
     python asset_indexer.py
@@ -36,31 +38,28 @@ LAYER3_MODELS = os.path.join(
 )
 DEFAULT_ROOT = os.path.join(os.path.dirname(__file__), "..", "TEST CASES")
 
-# Match rules: a filename (lowercased) matches a model id if it contains ALL of
-# `all` and NONE of `none`. Brand words are unique except Rodin 2 vs 2.5, which
-# we split on the "2.5" token.
-MATCH_RULES = {
-    "M1": {"all": ["trellis"]},
-    "M2": {"all": ["tripo"]},
-    "M3": {"all": ["meshy"]},
-    "M4": {"all": ["rodin"], "none": ["2.5"]},
-    "M5": {"all": ["rodin", "2.5"]},
-    "M6": {"all": ["hunyuan"]},
-    "M7": {"all": ["pixal"]},
-}
+# Match rules now live in the Registry (models.json), one `match: {all, none}`
+# block per model: a filename (lowercased) matches a model id if it contains ALL
+# of `all` and NONE of `none`. Brand words are unique except Rodin 2 vs 2.5,
+# which split on the "2.5" token.
 
 
 def load_roster(path: str = LAYER3_MODELS) -> list[dict]:
-    """Load [{'id','name'}, ...] from Layer 3's models.json."""
+    """Load the model registry entries [{'id','name','match',...}, ...]."""
     with open(path) as f:
         return json.load(f)["models"]
 
 
-def match_model(filename: str) -> str | None:
-    """Return the model id whose rule matches this filename, or None."""
+def match_rules(roster: list[dict]) -> dict[str, dict]:
+    """Build {model_id: {'all':[...], 'none':[...]}} from the registry roster."""
+    return {m["id"]: m.get("match", {}) for m in roster}
+
+
+def match_model(filename: str, rules: dict[str, dict]) -> str | None:
+    """Return the model id whose registry rule matches this filename, or None."""
     f = filename.lower()
     hits = []
-    for model_id, rule in MATCH_RULES.items():
+    for model_id, rule in rules.items():
         if all(tok in f for tok in rule.get("all", [])) and \
            not any(tok in f for tok in rule.get("none", [])):
             hits.append(model_id)
@@ -84,6 +83,11 @@ def build_index(root: str, roster: list[dict]) -> tuple[dict, list[str]]:
     index: dict[str, dict[str, str]] = {}
     problems: list[str] = []
 
+    # Registry-driven: match keywords and accepted file formats both come from
+    # models.json, so this layer never hardcodes model knowledge.
+    rules = match_rules(roster)
+    valid_exts = tuple(sorted({"." + m.get("format", "glb").lower() for m in roster}))
+
     for entry in sorted(os.listdir(root)):
         folder = os.path.join(root, entry)
         if not os.path.isdir(folder):
@@ -94,9 +98,9 @@ def build_index(root: str, roster: list[dict]) -> tuple[dict, list[str]]:
         index.setdefault(tc, {})
 
         for fname in sorted(os.listdir(folder)):
-            if not fname.lower().endswith(".glb"):
+            if not fname.lower().endswith(valid_exts):
                 continue  # skips .DS_Store and anything else
-            model_id = match_model(fname)
+            model_id = match_model(fname, rules)
             rel = os.path.join(root, entry, fname)
             if model_id is None:
                 problems.append(f"UNMATCHED: {rel}")

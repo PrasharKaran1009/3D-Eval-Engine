@@ -1,0 +1,240 @@
+{
+  "source": "Pixazo 3D models tool Testing Data.xlsx",
+  "test_cases": {
+    "TC001": {
+      "subject": "Mecha Dragon",
+      "per_model": {
+        "M2": {
+          "model_name": "Tripo 3D-2.5",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 34 seconds",
+          "prompt_override": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance."
+        },
+        "M1": {
+          "model_name": "Trellis 2",
+          "input_type": "Single Image to 3D",
+          "generation_time": "2 minutes 32 seconds",
+          "prompt_override": null
+        },
+        "M4": {
+          "model_name": "Hyper 3D Rodin 2",
+          "input_type": "Multiple images of different angles to 3D + Optional Text",
+          "generation_time": "4 minutes 10 seconds",
+          "prompt_override": null
+        },
+        "M3": {
+          "model_name": "Meshy 6 Preview",
+          "input_type": "Text to 3D",
+          "generation_time": "4 minutes 6 seconds",
+          "prompt_override": null
+        },
+        "M6": {
+          "model_name": "Hunyuan 3D Pro",
+          "input_type": "Text to 3D",
+          "generation_time": "3 minutes 12 seconds",
+          "prompt_override": null
+        },
+        "M7": {
+          "model_name": "Pixal 3d",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 21 seconds",
+          "prompt_override": null
+        },
+        "M5": {
+          "model_name": "Hyper Rodin 2.5",
+          "input_type": "Text to 3D",
+          "generation_time": "3 minutes 53 seconds",
+          "prompt_override": null
+        }
+      }
+    },
+    "TC002": {
+      "subject": "Treasure Chest",
+      "per_model": {
+        "M2": {
+          "model_name": "Tripo 3D-2.5",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 57 seconds",
+          "prompt_override": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene."
+        },
+        "M1": {
+          "model_name": "Trellis 2",
+          "input_type": "Single Image to 3D",
+          "generation_time": "6 minutes 8 seconds",
+          "prompt_override": null
+        },
+        "M4": {
+          "model_name": "Hyper 3D Rodin 2",
+          "input_type": "Multiple images of different angles to 3D + Optional Text",
+          "generation_time": "4 minutes 14 seconds",
+          "prompt_override": null
+        },
+        "M3": {
+          "model_name": "Meshy 6 Preview",
+          "input_type": "Text to 3D",
+          "generation_time": "4 minutes 39 seconds",
+          "prompt_override": null
+        },
+        "M6": {
+          "model_name": "Hunyuan 3D Pro",
+          "input_type": "Text to 3D",
+          "generation_time": "4 minutes 32 seconds",
+          "prompt_override": null
+        },
+        "M7": {
+          "model_name": "Pixal 3d",
+          "input_type": "Single Image to 3D",
+          "generation_time": "2 minutes 7 seconds",
+          "prompt_override": null
+        },
+        "M5": {
+          "model_name": "Hyper Rodin 2.5",
+          "input_type": "Text to 3D",
+          "generation_time": "4 minutes 58 seconds",
+          "prompt_override": null
+        }
+      }
+    },
+    "TC003": {
+      "subject": "Saguaro Cactus",
+      "per_model": {
+        "M2": {
+          "model_name": "Tripo 3D-2.5",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 53 seconds",
+          "prompt_override": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces."
+        },
+        "M1": {
+          "model_name": "Trellis 2",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 33 seconds",
+          "prompt_override": null
+        },
+        "M4": {
+          "model_name": "Hyper 3D Rodin 2",
+          "input_type": "Multiple images of different angles to 3D + Optional Text",
+          "generation_time": "3 minutes 52 seconds",
+          "prompt_override": null
+        },
+        "M3": {
+          "model_name": "Meshy 6 Preview",
+          "input_type": "Text to 3D",
+          "generation_time": "4 minutes 11 seconds",
+          "prompt_override": null
+        },
+        "M6": {
+          "model_name": "Hunyuan 3D Pro",
+          "input_type": "Text to 3D",
+          "generation_time": "3 minutes 20 seconds",
+          "prompt_override": null
+        },
+        "M7": {
+          "model_name": "Pixal 3d",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 35 seconds",
+          "prompt_override": null
+        },
+        "M5": {
+          "model_name": "Hyper Rodin 2.5",
+          "input_type": "Text to 3D",
+          "generation_time": "5 minutes 14 seconds",
+          "prompt_override": null
+        }
+      }
+    },
+    "TC004": {
+      "subject": "Knight Armor",
+      "per_model": {
+        "M2": {
+          "model_name": "Tripo 3D-2.5",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 50 seconds",
+          "prompt_override": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight’s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor."
+        },
+        "M1": {
+          "model_name": "Trellis 2",
+          "input_type": "Single Image to 3D",
+          "generation_time": "2 minutes 38 seconds",
+          "prompt_override": null
+        },
+        "M4": {
+          "model_name": "Hyper 3D Rodin 2",
+          "input_type": "Multiple images of different angles to 3D + Optional Text",
+          "generation_time": "3 minutes 15 seconds",
+          "prompt_override": null
+        },
+        "M3": {
+          "model_name": "Meshy 6 Preview",
+          "input_type": "Text to 3D",
+          "generation_time": "3 minutes 46 seconds",
+          "prompt_override": null
+        },
+        "M6": {
+          "model_name": "Hunyuan 3D Pro",
+          "input_type": "Text to 3D",
+          "generation_time": "3 minutes 39 seconds",
+          "prompt_override": null
+        },
+        "M7": {
+          "model_name": "Pixal 3d",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 54 seconds",
+          "prompt_override": null
+        },
+        "M5": {
+          "model_name": "Hyper Rodin 2.5",
+          "input_type": "Text to 3D",
+          "generation_time": "5 minutes 26 seconds",
+          "prompt_override": null
+        }
+      }
+    },
+    "TC005": {
+      "subject": "McLaren Spider",
+      "per_model": {
+        "M2": {
+          "model_name": "Tripo 3D-2.5",
+          "input_type": "Single Image to 3D",
+          "generation_time": "2 minutes 10 seconds",
+          "prompt_override": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette."
+        },
+        "M1": {
+          "model_name": "Trellis 2",
+          "input_type": "Single Image to 3D",
+          "generation_time": "3 minutes 47 seconds",
+          "prompt_override": null
+        },
+        "M4": {
+          "model_name": "Hyper 3D Rodin 2",
+          "input_type": "Multiple images of different angles to 3D + Optional Text",
+          "generation_time": "4 minutes 6 seconds",
+          "prompt_override": null
+        },
+        "M3": {
+          "model_name": "Meshy 6 Preview",
+          "input_type": "Text to 3D",
+          "generation_time": "4 minutes 28 seconds",
+          "prompt_override": null
+        },
+        "M6": {
+          "model_name": "Hunyuan 3D Pro",
+          "input_type": "Text to 3D",
+          "generation_time": "3 minutes 54 seconds",
+          "prompt_override": "Create a meticulously detailed, production-ready 3D model of a McLaren 765LT Spider in a striking lime green color. This model should accurately replicate the car's dynamic aerodynamic features including its aggressive, low-slung stance, intricately sculpted hood, and slim LED headlights. It should also feature large front air intakes, a carbon-fiber front splitter, elegantly flowing side channels, deep side air intakes, an open cockpit with detailed two sport seats, a precisely designed windshield frame, rear deck, and an integrated rear spoiler. Additionally, the model should include a quad center-mounted exhaust, rear diffuser, slim LED taillights, black multi-spoke alloy wheels with low-profile performance tires, aerodynamically optimized side mirrors, and realistic panel gaps to enhance its authenticity. The 3D model must exhibit a clean topology, accurate geometry with sharp body lines, smoothly curved surfaces, and maintain a realistic automotive scale."
+        },
+        "M7": {
+          "model_name": "Pixal 3d",
+          "input_type": "Single Image to 3D",
+          "generation_time": "1 minute 54 seconds",
+          "prompt_override": null
+        },
+        "M5": {
+          "model_name": "Hyper Rodin 2.5",
+          "input_type": "Text to 3D",
+          "generation_time": "3 minutes 57 seconds",
+          "prompt_override": "Generate a highly detailed 3D model of a lime green McLaren 765LT Spider convertible. Preserve the low aerodynamic stance, sculpted hood, slim LED headlights, large front air intakes, carbon-fiber front splitter, flowing side body lines, deep side air intakes, open cockpit with two sport seats, windshield frame, rear spoiler, rear diffuser, quad center exhaust, black multi-spoke wheels, low-profile tires, and realistic proportions. Ensure clean geometry, accurate topology, smooth surfaces, sharp panel lines, high geometric fidelity, and a watertight, production-ready mesh."
+        }
+      }
+    }
+  }
+}

@@ -229,7 +229,7 @@
     <div><h1>3D Eval · Setup Studio</h1><span>Registry → Input → Pairs → Schedule → Evaluate → Leaderboard</span></div>
   </div>
   <div class="spacer"></div>
-  <span class="mockpill" title="REST calls are simulated client-side for this prototype">◍ MOCK BACKEND</span>
+  <span class="mockpill" id="livepill" title="Connecting to the live pipeline…">◍ CONNECTING…</span>
   <button id="resetBtn">Reset demo</button>
 </div>
 
@@ -260,7 +260,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 /* ============================================================= *
  *  BAKED PROJECT DATA (real values from the running pipeline)   *
  * ============================================================= */
-const MODELS = [
+let MODELS = [
   { id:'M1', name:'Trellis 2',          vendor:'Microsoft', credits:78 },
   { id:'M2', name:'Tripo 3D-2.5',       vendor:'Tripo',     credits:78 },
   { id:'M3', name:'Meshy 6 Preview',    vendor:'Meshy',     credits:208 },
@@ -269,7 +269,7 @@ const MODELS = [
   { id:'M6', name:'Hunyuan 3D Pro',     vendor:'Tencent',   credits:104 },
   { id:'M7', name:'Pixal 3D',           vendor:'Pixal',     credits:94 },
 ];
-const TESTCASES = [
+let TESTCASES = [
   { id:'TC001', name:'Chair'  }, { id:'TC002', name:'Sword' },
   { id:'TC003', name:'Robot'  }, { id:'TC004', name:'Car'   },
   { id:'TC005', name:'Dragon' },
@@ -279,7 +279,7 @@ const SAMPLE_GLBS = [
   { label:'Meshy · Chair (5 MB)', file:'/TEST CASES/TC001 GLB/TC001_Meshy 6 Preview.glb', model:'M3', tc:'TC001' },
   { label:'Tripo · Chair (8 MB)', file:'/TEST CASES/TC001 GLB/ TC001_Tripo 3D-2.5.glb',   model:'M2', tc:'TC001' },
 ];
-const FUSED = [
+let FUSED = [
   { rank:1, model:'M6', fused:1566.5, sub:1602.4, obj:63.7, worst:1407 },
   { rank:2, model:'M2', fused:1435.9, sub:1364.4, obj:60.7, worst:1220 },
   { rank:3, model:'M4', fused:1289.8, sub:1404.9, obj:34.0, worst:1210 },
@@ -288,8 +288,8 @@ const FUSED = [
   { rank:6, model:'M7', fused:1196.2, sub:1353.3, obj:22.8, worst:1214 },
   { rank:7, model:'M5', fused:1162.0, sub:1017.6, obj:42.8, worst:1033 },
 ];
-const DIMS = {"M1":{"integrity":22.5,"texturing":58.3,"symmetry":43.9,"efficiency":57.1},"M2":{"integrity":73.6,"texturing":52.6,"symmetry":50.5,"efficiency":43.9},"M3":{"integrity":44.8,"texturing":60.0,"symmetry":50.5,"efficiency":100.0},"M4":{"integrity":24.9,"texturing":49.2,"symmetry":53.8,"efficiency":40.6},"M5":{"integrity":27.4,"texturing":71.5,"symmetry":70.3,"efficiency":15.9},"M6":{"integrity":48.9,"texturing":85.6,"symmetry":80.2,"efficiency":15.9},"M7":{"integrity":24.9,"texturing":62.9,"symmetry":4.3,"efficiency":80.2}};
-const PARAM_ELO = {"M1":{"form_proportion":1336,"mesh_integrity":1332,"overall":1278,"prompt_alignment":1423,"texture_material":1340},"M2":{"form_proportion":1339,"mesh_integrity":1506,"overall":1364,"prompt_alignment":1508,"texture_material":1220},"M3":{"form_proportion":1195,"mesh_integrity":955,"overall":1079,"prompt_alignment":1149,"texture_material":1098},"M4":{"form_proportion":1210,"mesh_integrity":1246,"overall":1405,"prompt_alignment":1333,"texture_material":1549},"M5":{"form_proportion":1080,"mesh_integrity":1349,"overall":1018,"prompt_alignment":1033,"texture_material":1062},"M6":{"form_proportion":1597,"mesh_integrity":1499,"overall":1602,"prompt_alignment":1407,"texture_material":1524},"M7":{"form_proportion":1343,"mesh_integrity":1214,"overall":1353,"prompt_alignment":1248,"texture_material":1308}};
+let DIMS = {"M1":{"integrity":22.5,"texturing":58.3,"symmetry":43.9,"efficiency":57.1},"M2":{"integrity":73.6,"texturing":52.6,"symmetry":50.5,"efficiency":43.9},"M3":{"integrity":44.8,"texturing":60.0,"symmetry":50.5,"efficiency":100.0},"M4":{"integrity":24.9,"texturing":49.2,"symmetry":53.8,"efficiency":40.6},"M5":{"integrity":27.4,"texturing":71.5,"symmetry":70.3,"efficiency":15.9},"M6":{"integrity":48.9,"texturing":85.6,"symmetry":80.2,"efficiency":15.9},"M7":{"integrity":24.9,"texturing":62.9,"symmetry":4.3,"efficiency":80.2}};
+let PARAM_ELO = {"M1":{"form_proportion":1336,"mesh_integrity":1332,"overall":1278,"prompt_alignment":1423,"texture_material":1340},"M2":{"form_proportion":1339,"mesh_integrity":1506,"overall":1364,"prompt_alignment":1508,"texture_material":1220},"M3":{"form_proportion":1195,"mesh_integrity":955,"overall":1079,"prompt_alignment":1149,"texture_material":1098},"M4":{"form_proportion":1210,"mesh_integrity":1246,"overall":1405,"prompt_alignment":1333,"texture_material":1549},"M5":{"form_proportion":1080,"mesh_integrity":1349,"overall":1018,"prompt_alignment":1033,"texture_material":1062},"M6":{"form_proportion":1597,"mesh_integrity":1499,"overall":1602,"prompt_alignment":1407,"texture_material":1524},"M7":{"form_proportion":1343,"mesh_integrity":1214,"overall":1353,"prompt_alignment":1248,"texture_material":1308}};
 const PARAMS = [['prompt_alignment','Prompt'],['texture_material','Texture'],['form_proportion','Form'],['mesh_integrity','Mesh'],['overall','Overall']];
 // baseName resolves the BAKED reference models (used only by the Results/charts step,
 // which previews the real project leaderboard). The Registry list is user-entered.
@@ -311,21 +311,43 @@ function setTCCount(n){
  *  (each returns a Promise, mimicking a network round-trip)     *
  * ============================================================= */
 const wait = ms => new Promise(r=>setTimeout(r,ms));
+let LIVE = false;   // flips true once the backend (main.py) answers
+async function getJSON(url){ const r=await fetch(url); if(!r.ok) throw new Error(url+' → '+r.status); return r.json(); }
 const api = {
-  async saveRegistry(payload){ await wait(350); return { ok:true, saved:payload, id:'reg_demo' }; },
-  async validateInput(payload){ await wait(300);
-    return { ok:true, checks:[
-      { k:'API key valid',        pass:true },
-      { k:'Endpoint reachable',   pass:true },
-      { k:'Required fields filled',pass:true },
-      { k:'Rate limit OK',        pass:true },
-    ]}; },
-  async generatePairs(models){ await wait(400);
-    const pairs=[]; for(let i=0;i<models.length;i++) for(let j=i+1;j<models.length;j++)
-      pairs.push([models[i], models[j]]);
-    return { ok:true, n:models.length, total:pairs.length, pairs }; },
+  registry(){ return getJSON('/api/registry'); },
+  validate(){ return getJSON('/api/validate'); },
+  pairs(){ return getJSON('/api/pairs'); },
+  results(){ return getJSON('/api/results'); },
   async schedule(){ await wait(200); return { ok:true }; },
 };
+
+/* Pull the REAL registry + computed results from the pipeline so the whole
+   wizard runs live. Falls back to baked data if the server isn't reachable. */
+async function boot(){
+  try{
+    const reg = await api.registry();
+    state.path = reg.path || 'BYOM';
+    state.reg.models = reg.models.map(m=>({
+      name:m.name, vendor:(m.metadata&&m.metadata.vendor)||'', credits:'',
+      source:m.source, format:m.format }));
+    state.bench.cases = reg.benchmark.map(b=>({ id:b.id, label:b.subject||'' }));
+    const res = await api.results();
+    MODELS = res.models.map((m,i)=>({ id:m.id||('M'+(i+1)), name:m.name, vendor:'',
+      credits: Math.round((res.gen_seconds&&res.gen_seconds[m.id])||0) }));
+    FUSED = res.fused.map(r=>({ rank:r.rank, model:r.model, fused:r.fused,
+      sub:r.sub, obj:r.obj, worst:r.worst }));
+    DIMS = res.dims; PARAM_ELO = res.param_elo;
+    LIVE = true;
+  }catch(e){ console.warn('backend unavailable — using baked fallback data', e); }
+  const pill=document.getElementById('livepill');
+  if(pill){
+    if(LIVE){ pill.textContent='● LIVE'; pill.style.color='#4ade80'; pill.style.borderColor='#4ade80';
+              pill.title='Wired to the running pipeline (main.py)'; }
+    else    { pill.textContent='◍ OFFLINE (baked)';
+              pill.title='Backend not reachable — start it with: python3 main.py'; }
+  }
+  save();
+}
 
 /* ============================================================= *
  *  STATE                                                        *
@@ -419,7 +441,7 @@ function renderStep(){
 
 const LEADS = {
   welcome:'Start by choosing your path — bring your own API (BYOA) or your own models (BYOM) — and how matchups will be judged. Everything after this adapts to those two choices.',
-  registry:'Register the 3D generators for the path you chose — type the names in yourself. BYOA also collects API access; BYOM collects the credit cost per generation.',
+  registry:'The 3D generators for the path you chose. BYOM loads them live from the pipeline registry (models.json); BYOA collects API access. Edits here stay local to the wizard.',
   input:'Pick how many examples (test cases) you\'re evaluating, name them, then provide each model\'s input per example — a prompt (BYOA) or a mesh (BYOM). BYOM also takes one zip per example.',
   pairs:'Every model is compared against every other on each test case — n(n−1)/2 unique matchups. These pairs drive both blind voting and objective analysis.',
   schedule:'The scheduler resolves each matchup. BYOM reads your uploaded meshes; BYOA lazily generates each model once and caches it — so only n generations run, never nC2.',
@@ -512,7 +534,7 @@ RENDERERS.registry = (el)=>{
     <p class="desc">${byoa
       ? 'Register each generator with its API endpoint + key. On the Input step you\'ll enter prompts per model and we\'ll call these APIs.'
       : 'Register each generator\'s name and its credit cost per generation. You\'ll upload the meshes per model on the Input step.'}
-      Type the names in yourself — nothing is pre-filled. <a id="switchPath" style="cursor:pointer">← change path</a></p>
+      ${LIVE?'Loaded live from the pipeline registry (<span class="kbd">models.json</span>) — edits here are local to the wizard.':'Type the names in yourself.'} <a id="switchPath" style="cursor:pointer">← change path</a></p>
     <table class="tbl"><thead><tr><th style="width:44px">ID</th><th>Model name</th>${cols}<th style="width:40px"></th></tr></thead>
     <tbody id="mrows">${ms.length ? ms.map((m,i)=>`
       <tr>
@@ -557,6 +579,10 @@ RENDERERS.input = (el)=>{
       <div class="hintline" style="margin:0 0 4px">IDs auto-generate <span class="kbd">TC001…TC${String(cases.length).padStart(3,'0')}</span>. Path: <b style="color:var(--txt)">${state.path}</b>.</div>
     </div>
   </div>
+  ${!byoa && LIVE ? `<div class="card tint-input" id="l2val">
+    <h3>Input validation <span class="pill">Layer 2 · live</span></h3>
+    <p class="desc">Live pre-flight check of the uploaded model set against the registry (naming · format · duplicates · full coverage), served by <span class="kbd">byom_validator.py</span>.</p>
+    <div id="l2rows"><span class="hintline" style="margin:0">running checks…</span></div></div>` : ''}
   ${models.length<1
     ? `<div class="callout"><span class="ci">⚠️</span><div>No models registered — go back to the <b>Registry</b> step and add at least one. Each example then asks for one input per model.</div></div>`
     : `<div id="examples"></div>`}`;
@@ -564,6 +590,15 @@ RENDERERS.input = (el)=>{
   cnt.onchange=()=>{ setTCCount(+cnt.value); save(); renderInput(); };
   const host=el.querySelector('#examples');
   if(host) cases.forEach((tc,i)=> host.appendChild(exampleBlock(tc,i,models,byoa)) );
+  const vrows=el.querySelector('#l2rows');
+  if(vrows) api.validate().then(rep=>{
+    vrows.innerHTML = `<div style="margin-bottom:10px"><span class="pill ${rep.ok?'ok':''}" style="${rep.ok?'':'color:var(--B);border-color:var(--B)'}">${rep.ok?'✓ ALL CHECKS PASSED':'✗ VALIDATION FAILED'}</span></div>`
+      + rep.checks.map(c=>`<div class="pr" style="justify-content:flex-start; gap:10px">
+          <span class="pill ${c.ok?'ok':''}" style="${c.ok?'':'color:var(--B);border-color:var(--B)'}">${c.ok?'PASS':'FAIL'}</span>
+          <span>${escapeHtml(c.name)}</span>
+          ${c.details&&c.details.length?`<span class="hintline" style="margin:0">— ${escapeHtml(c.details.length+' issue(s)')}</span>`:''}
+        </div>`).join('');
+  }).catch(()=>{ vrows.innerHTML='<span class="lwarn">validator unreachable</span>'; });
 };
 
 function renderInput(){ teardownViewers(); RENDERERS.input(document.getElementById('stepbody')); }
@@ -935,7 +970,7 @@ RENDERERS.results = (el)=>{
   el.innerHTML=`
   <div class="card tint-output" style="margin-bottom:20px">
     <h3>🏆 Final composite leaderboard</h3>
-    <p class="desc">Fusion (Layer 7) combines subjective ELO and objective score via ${state.settings.mcda}, weighted ${state.settings.wSub}/${state.settings.wObj}, centered on a 1300 ELO scale. <b>Your registered models will appear here once the pipeline runs</b> — the charts below preview the format using the project's current computed results.</p>
+    <p class="desc">Fusion (Layer 7) combines subjective ELO and objective score via ${state.settings.mcda}, weighted ${state.settings.wSub}/${state.settings.wObj}, centered on a 1300 ELO scale. ${LIVE?'<b>These are the live computed results</b> from the running pipeline (Layers 6A/6B/7).':'<b>Your registered models will appear here once the pipeline runs.</b>'}</p>
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:4px">
       <button class="btn sm" id="expCsv">⭳ Export CSV</button>
       <button class="btn sm" id="expJson">⭳ Export JSON</button>
@@ -949,7 +984,7 @@ RENDERERS.results = (el)=>{
   <div class="grid2">
     <div class="chartcard"><h4>Per-parameter ELO</h4><p class="csub">Subjective strengths — top 3 models</p><div id="radar"></div>
       <div class="legendrow" id="radarleg"></div></div>
-    <div class="chartcard"><h4>Cost vs quality</h4><p class="csub">Credits per generation vs fused score</p><div id="scatter"></div></div>
+    <div class="chartcard"><h4>Speed vs quality</h4><p class="csub">Avg generation time (s) vs fused score</p><div id="scatter"></div></div>
   </div>
   <div class="chartcard" style="margin-top:20px">
     <h4>Objective dimension breakdown</h4><p class="csub">Mean 0–100 rubric per model (Layer 6B)</p><div id="dimchart"></div>
@@ -957,13 +992,13 @@ RENDERERS.results = (el)=>{
   </div>
   <div class="chartcard" style="margin-top:20px">
     <h4>Ranked table</h4><p class="csub">Sorted by fused score</p>
-    <table class="tbl"><thead><tr><th>#</th><th>Model</th><th>Fused</th><th>Subjective ELO</th><th>Objective</th><th>Worst axis</th><th>Credits</th></tr></thead>
+    <table class="tbl"><thead><tr><th>#</th><th>Model</th><th>Fused</th><th>Subjective ELO</th><th>Objective</th><th>Worst axis</th><th>Gen time</th></tr></thead>
     <tbody>${FUSED.map(r=>{const m=MODELS.find(x=>x.id===r.model);return `<tr>
       <td class="mono" style="color:var(--muted)">${String(r.rank).padStart(2,'0')}</td>
       <td><span class="modelchip"><span class="mid">${r.model}</span> ${m.name}</span></td>
       <td class="mono" style="color:var(--gold); font-weight:700">${r.fused.toFixed(0)}</td>
       <td class="mono">${r.sub.toFixed(0)}</td><td class="mono">${r.obj.toFixed(1)}</td>
-      <td class="mono" style="color:var(--muted)">${r.worst}</td><td class="mono">${m.credits} cr</td></tr>`;}).join('')}
+      <td class="mono" style="color:var(--muted)">${r.worst}</td><td class="mono">${m.credits}s</td></tr>`;}).join('')}
     </tbody></table>
   </div>`;
   drawBar(el.querySelector('#barchart'));
@@ -1023,7 +1058,7 @@ function drawScatter(host){
   for(let i=0;i<=4;i++){ const y=pad+i*(H-pad-16)/4; grid+=`<line x1="${pad}" y1="${y}" x2="${W-16}" y2="${y}" stroke="#1c2330"/>`; }
   const axis=`<line x1="${pad}" y1="${H-pad}" x2="${W-16}" y2="${H-pad}" stroke="#2f3849"/>
     <line x1="${pad}" y1="16" x2="${pad}" y2="${H-pad}" stroke="#2f3849"/>
-    <text x="${(W)/2}" y="${H-12}" text-anchor="middle" font-size="11">credits / generation →</text>
+    <text x="${(W)/2}" y="${H-12}" text-anchor="middle" font-size="11">avg generation time (s) →</text>
     <text x="16" y="${H/2}" text-anchor="middle" font-size="11" transform="rotate(-90 16 ${H/2})">fused score →</text>`;
   const dots=FUSED.map((d,i)=>{ const m=MODELS.find(x=>x.id===d.model); const x=X(m.credits),y=Y(d.fused);
     const c=d.rank===1?'var(--gold)':PAL[i%PAL.length];
@@ -1051,7 +1086,7 @@ function drawDims(host, leg){
 function exportData(fmt){
   let blob;
   if(fmt==='json') blob=new Blob([JSON.stringify(FUSED,null,2)],{type:'application/json'});
-  else { const head='rank,model,name,fused,subjective_elo,objective,credits\n';
+  else { const head='rank,model,name,fused,subjective_elo,objective,gen_time_s\n';
     const body=FUSED.map(r=>{const m=MODELS.find(x=>x.id===r.model);return [r.rank,r.model,m.name,r.fused,r.sub,r.obj,m.credits].join(',');}).join('\n');
     blob=new Blob([head+body],{type:'text/csv'}); }
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='leaderboard.'+fmt; a.click();
@@ -1092,12 +1127,13 @@ function teardownViewers(){ VIEWERS.forEach(v=>{ v.alive=false; try{v.rnd.dispos
  * ============================================================= */
 document.getElementById('nextBtn').onclick=()=>{ if(state.step<STEPS.length-1) go(state.step+1); };
 document.getElementById('backBtn').onclick=()=>{ if(state.step>0) go(state.step-1); };
-document.getElementById('resetBtn').onclick=()=>{
-  if(!confirm('Reset the demo? Clears registry choices and uploads.')) return;
-  teardownViewers(); state=defaultState(); save(); go(0);
+document.getElementById('resetBtn').onclick=async ()=>{
+  if(!confirm('Reset the demo? Reloads the live registry and clears uploads.')) return;
+  teardownViewers(); state=defaultState(); await boot(); go(0);
 };
 
-renderNav(); go(state.step||0);
+/* Entry point: always open on the Welcome page (pick BYOM + judge). */
+boot().then(()=>{ state.step=0; renderNav(); go(0); });
 </script>
 </body>
 </html>

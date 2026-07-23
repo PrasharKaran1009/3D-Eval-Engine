@@ -12,6 +12,66 @@ The system processes 3D model generation tasks through an 8-stage pipeline, maxi
 
 ---
 
+## 🚀 Getting Started
+
+### Prerequisites
+- **Python 3.9+**
+- Install the Python dependencies:
+  ```bash
+  pip install trimesh numpy scipy openpyxl
+  ```
+- *Optional:* `pip install pymeshlab` — only needed to regenerate objective mesh
+  metrics from scratch. The pipeline runs fine on the cached metrics without it.
+
+### Run the whole thing (one command)
+From the project root:
+```bash
+cd "/Users/intern/Desktop/3d/3D-model-evaluation-leaderboard-main"
+python3 main.py
+```
+This runs the full pipeline — **Layer 2 input validation → Layer 3 matchups →
+Layer 4/5 scheduling + metric caching** — then opens the **Setup Studio** in your
+browser, starting on the **Welcome** page (pick BYOM + the judge).
+
+### The web UIs
+While the server is running, open:
+| Page | URL |
+| :--- | :--- |
+| **Entry — Setup Studio** (starts on Welcome) | `http://127.0.0.1:8000/` |
+| **Voting** (blind A/B pair viewer) | `http://127.0.0.1:8000/Layer 6A - Subjective Pipeline/preview.html` |
+| **Leaderboard** | `http://127.0.0.1:8000/Layer 8 - Leaderboard/leaderboard.html` |
+
+The root URL redirects to the wizard; every step reads live data from the running
+server (registry, validation, pairs, results).
+
+### Useful commands
+| Command | What it does |
+| :--- | :--- |
+| `python3 main.py` | Validate → run pipeline → launch viewer |
+| `python3 main.py --no-viewer` | Run the pipeline only (no browser) |
+| `python3 main.py --viewer-only` | Just serve the UIs (uses existing cache) |
+| `python3 main.py --skip-validation` | Bypass the Layer 2 input-validation gate |
+| `python3 "Layer 2 - Input Normalization/byom_validator.py"` | Run BYOM input validation on its own |
+| `python3 "Layer 2 - Input Normalization/byom_validator.py" --json` | Same, as machine-readable JSON |
+
+If port 8000 is busy: `lsof -ti:8000 | xargs kill`.
+
+### Update the leaderboard after voting
+Votes are saved to `Layer 6A - Subjective Pipeline/votes.json`. To recompute the
+leaderboard from existing votes, click **↻ REFRESH** on the leaderboard page, or:
+```bash
+python3 "Layer 6A - Subjective Pipeline/aggregate.py" && \
+python3 "Layer 7 - Fusion/fuse.py" && \
+python3 "Layer 8 - Leaderboard/build_leaderboard.py"
+```
+
+> The benchmark test cases, prompts, and models are defined in the **Registry**
+> (`Layer 3 - Pair Generation/models.json` and `prompts.json`). Model assets live
+> in `TEST CASES/TC00x GLB/` named `TC00x_ModelName.glb`; the Layer 2 validator
+> enforces that naming + full coverage before any run.
+
+---
+
 ## 🔍 Detailed Pipeline Description
 
 ### 1. Input Layer

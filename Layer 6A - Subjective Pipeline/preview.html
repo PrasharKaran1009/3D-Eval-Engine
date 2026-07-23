@@ -325,7 +325,7 @@ function _load(i) {
   A.load(m.a_glb); B.load(m.b_glb);
   savePos();
 }
-function loadMatchup(i){ _load(i); resetBallot(); }
+function loadMatchup(i){ _load(i); resetBallot(LIST[idx] && LIST[idx].vlm_ballot); }
 
 function selectTC(tc, start = 0) {
   LIST = DATA.filter(m => m.prompt_id === tc);
@@ -389,7 +389,8 @@ function buildBallot() {
       </div>
     </div>`).join('') +
     `<button id="submit" disabled>Submit &amp; Next →</button>
-     <span id="vcount">votes: <b>0</b></span>`;
+     <span id="vcount">votes: <b>0</b></span>
+     <span id="vlmnote" style="display:none; color:var(--B); font-size:11px; margin-left:10px">🤖 VLM first pass — review &amp; confirm / modify</span>`;
   voteEl.querySelectorAll('.choices button').forEach(btn => {
     btn.onclick = () => {
       const p = btn.closest('.param').dataset.param;
@@ -401,10 +402,27 @@ function buildBallot() {
   });
   document.getElementById('submit').onclick = submitVote;
 }
-function resetBallot() {
+function resetBallot(prefill) {
   ballot = {};
   voteEl.querySelectorAll('.choices button').forEach(b => b.classList.remove('sel'));
-  const s = document.getElementById('submit'); if (s) s.disabled = true;
+  const note = document.getElementById('vlmnote');
+  // Hybrid: if a VLM first-pass ballot exists, pre-select it so the human
+  // REVIEWS (accept / modify / overwrite) rather than voting from scratch.
+  if (prefill && typeof prefill === 'object') {
+    PARAMS.forEach(([k]) => {
+      const c = prefill[k];
+      if (c === 'A' || c === 'B' || c === 'tie') {
+        ballot[k] = c;
+        const btn = voteEl.querySelector(`.param[data-param="${k}"] button[data-c="${c}"]`);
+        if (btn) btn.classList.add('sel');
+      }
+    });
+    if (note) note.style.display = '';
+  } else if (note) {
+    note.style.display = 'none';
+  }
+  const s = document.getElementById('submit');
+  if (s) s.disabled = Object.keys(ballot).length < PARAMS.length;
 }
 async function submitVote() {
   const m = LIST[idx];   // idx indexes LIST (filtered by test case), not DATA

@@ -45,7 +45,22 @@ OUT_PATH = os.path.join(HERE, "fused_scores.json")
 
 BASELINE = 1300.0
 SCALE = 400.0 / math.log(10.0)          # ELO-like spread, so fused score reads like an ELO
-W_PRIMARY = 0.5                          # subjective weight; objective = 1 - it
+
+# ---- Weights Config (Layer 7) -------------------------------------------- #
+# PRIMARY split between the two cores. Diagram default: subjective 60 / obj 40.
+W_PRIMARY = 0.60                         # subjective weight; objective = 1 - it
+# Per-parameter weights INSIDE the subjective core: the subjective ELO is a
+# weighted blend of the 5 pairwise-voted parameters instead of the raw Overall.
+# Weights are normalized at use, so they need not sum to exactly 1.
+PARAM_WEIGHTS = {
+    "prompt_alignment": 0.30,
+    "texture_material": 0.20,
+    "form_proportion":  0.20,
+    "mesh_integrity":   0.15,
+    "overall":          0.15,
+}
+# ------------------------------------------------------------------------- #
+
 SENS_SUBJECTIVE = [0.7, 0.6, 0.5, 0.4, 0.3]   # weight-sensitivity sweep
 COMPONENTS = ["prompt_alignment", "texture_material", "form_proportion", "mesh_integrity"]
 
@@ -71,6 +86,25 @@ def worst_axis(elos: dict, models: list) -> dict:
     return out
 
 
+def subjective_blend(elos: dict, models: list) -> dict:
+    """Weighted subjective ELO per model: PARAM_WEIGHTS-weighted mean of each
+    parameter's cross-test-case mean ELO (normalized over the params present)."""
+    vals = defaultdict(lambda: defaultdict(list))
+    for _tc, params in elos.get("by_test_case", {}).items():
+        for param, per_model in params.items():
+            for m, e in per_model.items():
+                vals[m][param].append(e)
+    out = {}
+    for m in models:
+        num = den = 0.0
+        for p, w in PARAM_WEIGHTS.items():
+            if vals[m].get(p):
+                num += w * statistics.mean(vals[m][p])
+                den += w
+        out[m] = round(num / den, 1) if den else None
+    return out
+
+
 def main() -> None:
     if not (os.path.exists(ELOS_PATH) and os.path.exists(OBJ_PATH)):
         raise SystemExit("Need elos.json (run 6A aggregate.py) and "
@@ -78,9 +112,10 @@ def main() -> None:
     elos = json.load(open(ELOS_PATH))
     obj = json.load(open(OBJ_PATH))
 
-    sub = {r["model"]: r["overall_elo"] for r in elos["overall_leaderboard"]}
+    sub_models = [r["model"] for r in elos["overall_leaderboard"]]
+    sub = subjective_blend(elos, sub_models)       # per-parameter weighted subjective ELO
     objc = {r["model"]: r["obj_score"] for r in obj["objective_leaderboard"]}
-    models = sorted(set(sub) & set(objc))          # rank only models present in both
+    models = sorted(m for m in (set(sub) & set(objc)) if sub[m] is not None)
     if not models:
         raise SystemExit("No models common to 6A and 6B.")
 
@@ -118,6 +153,7 @@ def main() -> None:
     out = {
         "method": "SAW (z-normalized weighted sum) -> 1300-centered ELO scale",
         "primary_weights": {"subjective": W_PRIMARY, "objective": round(1 - W_PRIMARY, 2)},
+        "parameter_weights": PARAM_WEIGHTS,
         "leaderboard": leaderboard,
         "sensitivity_ranks": sens,
         "sensitivity_stability": stability,
