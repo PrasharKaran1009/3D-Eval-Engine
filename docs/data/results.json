@@ -1,0 +1,559 @@
+{
+ "models": [
+  {
+   "id": "M1",
+   "name": "Trellis 2",
+   "source": "BYOM",
+   "format": "glb",
+   "match": {
+    "all": [
+     "trellis"
+    ]
+   },
+   "metadata": {}
+  },
+  {
+   "id": "M2",
+   "name": "Tripo 3D-2.5",
+   "source": "BYOM",
+   "format": "glb",
+   "match": {
+    "all": [
+     "tripo"
+    ]
+   },
+   "metadata": {}
+  },
+  {
+   "id": "M3",
+   "name": "Meshy 6 Preview",
+   "source": "BYOM",
+   "format": "glb",
+   "match": {
+    "all": [
+     "meshy"
+    ]
+   },
+   "metadata": {}
+  },
+  {
+   "id": "M4",
+   "name": "Hyper 3D Rodin 2",
+   "source": "BYOM",
+   "format": "glb",
+   "match": {
+    "all": [
+     "rodin"
+    ],
+    "none": [
+     "2.5"
+    ]
+   },
+   "metadata": {}
+  },
+  {
+   "id": "M5",
+   "name": "Hyper 3D Rodin 2.5",
+   "source": "BYOM",
+   "format": "glb",
+   "match": {
+    "all": [
+     "rodin",
+     "2.5"
+    ]
+   },
+   "metadata": {}
+  },
+  {
+   "id": "M6",
+   "name": "Hunyuan 3D Pro",
+   "source": "BYOM",
+   "format": "glb",
+   "match": {
+    "all": [
+     "hunyuan"
+    ]
+   },
+   "metadata": {}
+  },
+  {
+   "id": "M7",
+   "name": "Pixal 3D",
+   "source": "BYOM",
+   "format": "glb",
+   "match": {
+    "all": [
+     "pixal"
+    ]
+   },
+   "metadata": {}
+  }
+ ],
+ "fused": [
+  {
+   "rank": 1,
+   "model": "M6",
+   "name": "Hunyuan 3D Pro",
+   "fused": 1607.6,
+   "sub": 1511.4,
+   "obj": 63.7,
+   "worst": 1407.0
+  },
+  {
+   "rank": 2,
+   "model": "M2",
+   "name": "Tripo 3D-2.5",
+   "fused": 1470.9,
+   "sub": 1394.7,
+   "obj": 60.7,
+   "worst": 1220.0
+  },
+  {
+   "rank": 3,
+   "model": "M4",
+   "name": "Hyper 3D Rodin 2",
+   "fused": 1311.7,
+   "sub": 1349.2,
+   "obj": 34.0,
+   "worst": 1210.0
+  },
+  {
+   "rank": 4,
+   "model": "M1",
+   "name": "Trellis 2",
+   "fused": 1301.0,
+   "sub": 1353.5,
+   "obj": 32.3,
+   "worst": 1332.0
+  },
+  {
+   "rank": 5,
+   "model": "M7",
+   "name": "Pixal 3D",
+   "fused": 1200.8,
+   "sub": 1289.7,
+   "obj": 22.8,
+   "worst": 1214.0
+  },
+  {
+   "rank": 6,
+   "model": "M3",
+   "name": "Meshy 6 Preview",
+   "fused": 1122.0,
+   "sub": 1108.2,
+   "obj": 49.1,
+   "worst": 955.0
+  },
+  {
+   "rank": 7,
+   "model": "M5",
+   "name": "Hyper 3D Rodin 2.5",
+   "fused": 1086.0,
+   "sub": 1093.5,
+   "obj": 42.8,
+   "worst": 1033.0
+  }
+ ],
+ "param_elo": {
+  "M1": {
+   "prompt_alignment": 1422.7,
+   "texture_material": 1339.6,
+   "form_proportion": 1336.2,
+   "mesh_integrity": 1331.5,
+   "overall": 1278.4
+  },
+  "M2": {
+   "prompt_alignment": 1507.6,
+   "texture_material": 1220.4,
+   "form_proportion": 1339.0,
+   "mesh_integrity": 1505.9,
+   "overall": 1364.4
+  },
+  "M3": {
+   "prompt_alignment": 1148.8,
+   "texture_material": 1097.6,
+   "form_proportion": 1194.7,
+   "mesh_integrity": 954.8,
+   "overall": 1079.0
+  },
+  "M4": {
+   "prompt_alignment": 1332.8,
+   "texture_material": 1548.8,
+   "form_proportion": 1210.0,
+   "mesh_integrity": 1245.6,
+   "overall": 1404.9
+  },
+  "M5": {
+   "prompt_alignment": 1033.5,
+   "texture_material": 1061.5,
+   "form_proportion": 1080.4,
+   "mesh_integrity": 1349.3,
+   "overall": 1017.6
+  },
+  "M6": {
+   "prompt_alignment": 1406.7,
+   "texture_material": 1524.3,
+   "form_proportion": 1596.5,
+   "mesh_integrity": 1498.9,
+   "overall": 1602.4
+  },
+  "M7": {
+   "prompt_alignment": 1248.0,
+   "texture_material": 1307.8,
+   "form_proportion": 1343.2,
+   "mesh_integrity": 1214.0,
+   "overall": 1353.3
+  }
+ },
+ "dims": {
+  "M1": {
+   "integrity": 22.5,
+   "texturing": 58.3,
+   "symmetry": 43.9,
+   "efficiency": 57.1
+  },
+  "M2": {
+   "integrity": 73.6,
+   "texturing": 52.6,
+   "symmetry": 50.5,
+   "efficiency": 43.9
+  },
+  "M3": {
+   "integrity": 44.8,
+   "texturing": 60.0,
+   "symmetry": 50.5,
+   "efficiency": 100.0
+  },
+  "M4": {
+   "integrity": 24.9,
+   "texturing": 49.2,
+   "symmetry": 53.8,
+   "efficiency": 40.6
+  },
+  "M5": {
+   "integrity": 27.4,
+   "texturing": 71.5,
+   "symmetry": 70.3,
+   "efficiency": 15.9
+  },
+  "M6": {
+   "integrity": 48.9,
+   "texturing": 85.6,
+   "symmetry": 80.2,
+   "efficiency": 15.9
+  },
+  "M7": {
+   "integrity": 24.9,
+   "texturing": 62.9,
+   "symmetry": 4.3,
+   "efficiency": 80.2
+  }
+ },
+ "params": [
+  "prompt_alignment",
+  "texture_material",
+  "form_proportion",
+  "mesh_integrity",
+  "overall"
+ ],
+ "gen_seconds": {
+  "M1": 199.6,
+  "M2": 112.8,
+  "M3": 254.0,
+  "M4": 235.4,
+  "M5": 281.6,
+  "M6": 223.4,
+  "M7": 106.2
+ },
+ "weights": {
+  "subjective": 0.6,
+  "objective": 0.4
+ },
+ "pairwise": {
+  "prompt_alignment": {
+   "wins": {
+    "M2": {
+     "M1": 4.0,
+     "M3": 5.0,
+     "M5": 4.0,
+     "M6": 2.0,
+     "M7": 4.5,
+     "M4": 3.0
+    },
+    "M1": {
+     "M3": 5.0,
+     "M4": 3.5,
+     "M5": 3.5,
+     "M6": 2.5,
+     "M7": 4.0,
+     "M2": 1.0
+    },
+    "M4": {
+     "M2": 2.0,
+     "M3": 4.0,
+     "M5": 3.5,
+     "M6": 1.0,
+     "M7": 3.5,
+     "M1": 1.5
+    },
+    "M3": {
+     "M5": 5.0,
+     "M7": 3.0,
+     "M4": 1.0
+    },
+    "M6": {
+     "M3": 5.0,
+     "M5": 4.0,
+     "M2": 3.0,
+     "M4": 4.0,
+     "M1": 2.5,
+     "M7": 1.0
+    },
+    "M7": {
+     "M3": 2.0,
+     "M5": 3.5,
+     "M6": 4.0,
+     "M4": 1.5,
+     "M1": 1.0,
+     "M2": 0.5
+    },
+    "M5": {
+     "M1": 1.5,
+     "M4": 1.5,
+     "M6": 1.0,
+     "M7": 1.5,
+     "M2": 1.0
+    }
+   }
+  },
+  "texture_material": {
+   "wins": {
+    "M1": {
+     "M2": 4.5,
+     "M3": 4.0,
+     "M5": 3.0,
+     "M6": 2.0,
+     "M7": 2.0,
+     "M4": 1.0
+    },
+    "M4": {
+     "M1": 4.0,
+     "M2": 4.5,
+     "M3": 5.0,
+     "M5": 4.5,
+     "M6": 1.5,
+     "M7": 4.5
+    },
+    "M2": {
+     "M3": 3.0,
+     "M5": 4.5,
+     "M6": 1.0,
+     "M7": 2.5,
+     "M1": 0.5,
+     "M4": 0.5
+    },
+    "M7": {
+     "M2": 2.5,
+     "M3": 4.0,
+     "M5": 4.0,
+     "M1": 3.0,
+     "M6": 1.5,
+     "M4": 0.5
+    },
+    "M3": {
+     "M5": 3.5,
+     "M2": 2.0,
+     "M7": 1.0,
+     "M1": 1.0
+    },
+    "M6": {
+     "M3": 5.0,
+     "M5": 4.0,
+     "M7": 3.5,
+     "M2": 4.0,
+     "M4": 3.5,
+     "M1": 3.0
+    },
+    "M5": {
+     "M1": 2.0,
+     "M6": 1.0,
+     "M3": 1.5,
+     "M2": 0.5,
+     "M4": 0.5,
+     "M7": 1.0
+    }
+   }
+  },
+  "form_proportion": {
+   "wins": {
+    "M1": {
+     "M2": 3.5,
+     "M3": 3.5,
+     "M4": 3.5,
+     "M5": 3.5,
+     "M7": 2.5
+    },
+    "M4": {
+     "M1": 1.5,
+     "M2": 2.5,
+     "M3": 2.5,
+     "M5": 2.5,
+     "M6": 1.0,
+     "M7": 1.0
+    },
+    "M6": {
+     "M1": 5.0,
+     "M3": 5.0,
+     "M5": 5.0,
+     "M7": 4.0,
+     "M2": 3.0,
+     "M4": 4.0
+    },
+    "M2": {
+     "M3": 3.5,
+     "M5": 4.0,
+     "M6": 2.0,
+     "M7": 3.0,
+     "M1": 1.5,
+     "M4": 2.5
+    },
+    "M3": {
+     "M5": 4.5,
+     "M1": 1.5,
+     "M2": 1.5,
+     "M4": 2.5,
+     "M7": 1.0
+    },
+    "M7": {
+     "M3": 4.0,
+     "M4": 4.0,
+     "M5": 3.0,
+     "M1": 2.5,
+     "M2": 2.0,
+     "M6": 1.0
+    },
+    "M5": {
+     "M1": 1.5,
+     "M2": 1.0,
+     "M3": 0.5,
+     "M4": 2.5,
+     "M7": 2.0
+    }
+   }
+  },
+  "mesh_integrity": {
+   "wins": {
+    "M2": {
+     "M1": 3.5,
+     "M3": 5.0,
+     "M4": 3.5,
+     "M5": 4.0,
+     "M6": 2.5,
+     "M7": 4.5
+    },
+    "M1": {
+     "M3": 4.5,
+     "M4": 4.5,
+     "M5": 1.5,
+     "M7": 4.0,
+     "M2": 1.5
+    },
+    "M6": {
+     "M1": 5.0,
+     "M2": 2.5,
+     "M3": 5.0,
+     "M4": 3.0,
+     "M5": 3.5,
+     "M7": 4.0
+    },
+    "M5": {
+     "M2": 1.0,
+     "M3": 4.0,
+     "M6": 1.5,
+     "M7": 3.0,
+     "M1": 3.5,
+     "M4": 3.5
+    },
+    "M4": {
+     "M3": 4.5,
+     "M5": 1.5,
+     "M6": 2.0,
+     "M7": 2.5,
+     "M1": 0.5,
+     "M2": 1.5
+    },
+    "M7": {
+     "M3": 4.5,
+     "M1": 1.0,
+     "M4": 2.5,
+     "M5": 2.0,
+     "M2": 0.5,
+     "M6": 1.0
+    },
+    "M3": {
+     "M1": 0.5,
+     "M5": 1.0,
+     "M7": 0.5,
+     "M4": 0.5
+    }
+   }
+  },
+  "overall": {
+   "wins": {
+    "M2": {
+     "M1": 4.0,
+     "M3": 4.0,
+     "M5": 4.0,
+     "M6": 1.0,
+     "M7": 2.5,
+     "M4": 2.0
+    },
+    "M1": {
+     "M3": 5.0,
+     "M5": 3.0,
+     "M6": 1.5,
+     "M7": 1.5,
+     "M4": 2.0,
+     "M2": 1.0
+    },
+    "M4": {
+     "M1": 3.0,
+     "M2": 3.0,
+     "M3": 4.0,
+     "M5": 3.5,
+     "M6": 1.0,
+     "M7": 3.0
+    },
+    "M3": {
+     "M5": 4.0,
+     "M7": 1.0,
+     "M2": 1.0,
+     "M4": 1.0
+    },
+    "M6": {
+     "M3": 5.0,
+     "M5": 5.0,
+     "M7": 4.0,
+     "M1": 3.5,
+     "M2": 4.0,
+     "M4": 4.0
+    },
+    "M7": {
+     "M3": 4.0,
+     "M5": 4.5,
+     "M1": 3.5,
+     "M4": 2.0,
+     "M6": 1.0,
+     "M2": 2.5
+    },
+    "M5": {
+     "M1": 2.0,
+     "M4": 1.5,
+     "M7": 0.5,
+     "M3": 1.0,
+     "M2": 1.0
+    }
+   }
+  }
+ }
+}

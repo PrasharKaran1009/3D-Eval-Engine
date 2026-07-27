@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>3D Eval · Leaderboard</title>
+<style>
+  :root { --bg:#0b0b0d; --card:#141416; --line:#262629; --txt:#f2f2f4; --muted:#8a8a93;
+    --gold:#e0a32e; --gold2:#caa24a; --green:#5fd07a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--txt);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    padding:32px; display:flex; flex-direction:column; align-items:center; gap:26px; }
+  .mono { font-family:ui-monospace,"SF Mono",Menlo,monospace; letter-spacing:1.5px; }
+  .card { width:min(1180px,96vw); background:var(--card); border:1px solid var(--line);
+    border-radius:18px; padding:26px 30px; border-top:3px solid var(--gold);
+    box-shadow:0 10px 40px rgba(0,0,0,.4); }
+  .head { display:flex; align-items:center; gap:18px; }
+  .logo { width:62px; height:62px; border-radius:14px;
+    background:linear-gradient(145deg,#e0a32e,#9c6f1c); display:flex; align-items:center;
+    justify-content:center; font-size:26px; color:#1a1206; box-shadow:0 0 26px rgba(224,163,46,.4); }
+  .head h1 { margin:0; font-size:26px; font-weight:750; }
+  .sub { color:var(--muted); font-size:12px; margin-top:4px; }
+  .refresh { margin-left:auto; align-self:flex-start; background:#1c1c1f; color:var(--gold);
+    border:1px solid var(--gold2); border-radius:9px; padding:9px 16px; font-size:12px;
+    cursor:pointer; }
+  .refresh:hover { background:var(--gold); color:#1a1206; }
+  .refresh:disabled { opacity:.5; cursor:wait; }
+  .panel { margin-top:24px; border:1px solid var(--line); border-radius:14px; padding:22px 26px 0; }
+  .ptitle { color:var(--muted); font-size:12px; margin-bottom:8px; }
+  .podium { display:flex; align-items:flex-end; justify-content:center; gap:60px; min-height:300px; }
+  .pod { display:flex; flex-direction:column; align-items:center; gap:6px; width:170px; text-align:center; }
+  .star { color:var(--gold); font-size:22px; filter:drop-shadow(0 0 8px rgba(224,163,46,.6)); }
+  .medal { width:52px; height:52px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:20px; font-weight:700; border:2px solid var(--gold2);
+    color:var(--txt); }
+  .first .medal { background:var(--gold); color:#1a1206; border-color:var(--gold);
+    box-shadow:0 0 26px rgba(224,163,46,.55); }
+  .pname { font-size:17px; font-weight:650; }
+  .pvendor { color:var(--muted); font-size:10.5px; letter-spacing:1px; }
+  .pscore { font-size:26px; font-weight:760; color:var(--gold); }
+  .first .pscore { font-size:30px; }
+  .bar { width:100%; border-radius:10px 10px 0 0; margin-top:6px;
+    background:linear-gradient(180deg,#3a2f17,#262017); }
+  .first .bar { background:linear-gradient(180deg,#e0a32e,#9c6f1c);
+    box-shadow:0 0 30px rgba(224,163,46,.45); }
+
+  .bars { display:flex; flex-direction:column; gap:11px; padding:4px 0 20px; }
+  .brow { display:flex; align-items:center; gap:14px; }
+  .blabel { width:180px; font-size:13px; color:var(--txt); text-align:right; }
+  .btrack { flex:1; height:22px; background:#1c1c1f; border-radius:6px; overflow:hidden; }
+  .bfill { height:100%; border-radius:6px; background:linear-gradient(90deg,#7d5816,#caa24a); }
+  .bfill.top { background:linear-gradient(90deg,#e0a32e,#f3c45e);
+    box-shadow:0 0 14px rgba(224,163,46,.5); }
+  .bval { width:56px; color:var(--gold); font-weight:700; font-size:14px; }
+
+  table { width:min(1180px,96vw); border-collapse:collapse; }
+  thead th { color:var(--muted); font-size:11px; text-align:left; padding:14px 16px;
+    border-bottom:1px solid var(--line); letter-spacing:1.5px; }
+  thead th.r, td.sc, td.cr, td.st { text-align:left; }
+  tbody td { padding:16px; border-bottom:1px solid #1c1c1f; vertical-align:middle; }
+  tr.lead td { background:linear-gradient(90deg,rgba(224,163,46,.10),transparent); }
+  .rk { color:var(--muted); font-family:ui-monospace,monospace; font-size:15px; width:48px; }
+  .mname { font-size:16px; font-weight:600; }
+  .mven { color:var(--muted); font-size:10.5px; letter-spacing:1px; margin-top:2px; }
+  .sc { color:var(--gold); font-size:19px; font-weight:700; width:110px; }
+  .st { color:var(--gold); letter-spacing:3px; font-size:15px; }
+  .cr { color:var(--txt); font-size:14px; } .cr::after { content:" cr"; color:var(--muted); font-size:11px; }
+  .foot { color:var(--muted); font-size:11.5px; width:min(1180px,96vw); }
+</style></head>
+<body>
+  <div class="card">
+    <div class="head">
+      <div class="logo">◎</div>
+      <div><h1>AI 3D Model Generation</h1>
+        <div class="sub mono">1 SUBCATEGORY · 7 MODELS · 5 TEST CASES · LIVE PREVIEW</div></div>
+      <button id="refresh" class="refresh mono">↻ REFRESH</button>
+    </div>
+    <div class="panel">
+      <div class="ptitle mono">TOP 3 LEADERS</div>
+      <div class="podium">
+        <div class="pod ">
+          
+          <div class="medal">2</div>
+          <div class="pname">Tripo 3D-2.5</div>
+          <div class="pvendor">TRIPO</div>
+          <div class="pscore">1471</div>
+          <div class="bar" style="height:70px"></div>
+        </div>
+        <div class="pod first">
+          <div class="star">★</div>
+          <div class="medal">1</div>
+          <div class="pname">Hunyuan 3D Pro</div>
+          <div class="pvendor">TENCENT</div>
+          <div class="pscore">1608</div>
+          <div class="bar" style="height:100px"></div>
+        </div>
+        <div class="pod ">
+          
+          <div class="medal">3</div>
+          <div class="pname">Hyper 3D Rodin 2</div>
+          <div class="pvendor">DEEMOS</div>
+          <div class="pscore">1312</div>
+          <div class="bar" style="height:55px"></div>
+        </div></div>
+    </div>
+    <div class="panel">
+      <div class="ptitle mono">ALL 7 MODELS · FUSED SCORE</div>
+      <div class="bars">
+        <div class="brow">
+          <div class="blabel">1. Hunyuan 3D Pro</div>
+          <div class="btrack"><div class="bfill top"
+               style="width:100.0%"></div></div>
+          <div class="bval">1608</div>
+        </div>
+        <div class="brow">
+          <div class="blabel">2. Tripo 3D-2.5</div>
+          <div class="btrack"><div class="bfill "
+               style="width:79.0%"></div></div>
+          <div class="bval">1471</div>
+        </div>
+        <div class="brow">
+          <div class="blabel">3. Hyper 3D Rodin 2</div>
+          <div class="btrack"><div class="bfill "
+               style="width:54.6%"></div></div>
+          <div class="bval">1312</div>
+        </div>
+        <div class="brow">
+          <div class="blabel">4. Trellis 2</div>
+          <div class="btrack"><div class="bfill "
+               style="width:53.0%"></div></div>
+          <div class="bval">1301</div>
+        </div>
+        <div class="brow">
+          <div class="blabel">5. Pixal 3D</div>
+          <div class="btrack"><div class="bfill "
+               style="width:37.6%"></div></div>
+          <div class="bval">1201</div>
+        </div>
+        <div class="brow">
+          <div class="blabel">6. Meshy 6 Preview</div>
+          <div class="btrack"><div class="bfill "
+               style="width:25.5%"></div></div>
+          <div class="bval">1122</div>
+        </div>
+        <div class="brow">
+          <div class="blabel">7. Hyper 3D Rodin 2.5</div>
+          <div class="btrack"><div class="bfill "
+               style="width:20.0%"></div></div>
+          <div class="bval">1086</div>
+        </div></div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr>
+      <th class="mono">#</th><th class="mono">MODEL</th><th class="mono r">SCORE</th>
+      <th class="mono r">MESH QUALITY</th><th class="mono r">TEXTURE</th><th class="mono r">CREDITS</th>
+    </tr></thead>
+    <tbody>
+      <tr class="lead">
+        <td class="rk">01</td>
+        <td class="mdl"><div class="mname">Hunyuan 3D Pro</div><div class="mven">TENCENT</div></td>
+        <td class="sc">1608</td>
+        <td class="st">★★☆☆☆</td>
+        <td class="st">★★★★☆</td>
+        <td class="cr">104</td>
+      </tr>
+      <tr class="">
+        <td class="rk">02</td>
+        <td class="mdl"><div class="mname">Tripo 3D-2.5</div><div class="mven">TRIPO</div></td>
+        <td class="sc">1471</td>
+        <td class="st">★★★★☆</td>
+        <td class="st">★★★☆☆</td>
+        <td class="cr">78</td>
+      </tr>
+      <tr class="">
+        <td class="rk">03</td>
+        <td class="mdl"><div class="mname">Hyper 3D Rodin 2</div><div class="mven">DEEMOS</div></td>
+        <td class="sc">1312</td>
+        <td class="st">★☆☆☆☆</td>
+        <td class="st">★★☆☆☆</td>
+        <td class="cr">104</td>
+      </tr>
+      <tr class="">
+        <td class="rk">04</td>
+        <td class="mdl"><div class="mname">Trellis 2</div><div class="mven">MICROSOFT</div></td>
+        <td class="sc">1301</td>
+        <td class="st">★☆☆☆☆</td>
+        <td class="st">★★★☆☆</td>
+        <td class="cr">78</td>
+      </tr>
+      <tr class="">
+        <td class="rk">05</td>
+        <td class="mdl"><div class="mname">Pixal 3D</div><div class="mven">PIXAL</div></td>
+        <td class="sc">1201</td>
+        <td class="st">★☆☆☆☆</td>
+        <td class="st">★★★☆☆</td>
+        <td class="cr">78–110</td>
+      </tr>
+      <tr class="">
+        <td class="rk">06</td>
+        <td class="mdl"><div class="mname">Meshy 6 Preview</div><div class="mven">MESHY</div></td>
+        <td class="sc">1122</td>
+        <td class="st">★★☆☆☆</td>
+        <td class="st">★★★☆☆</td>
+        <td class="cr">208</td>
+      </tr>
+      <tr class="">
+        <td class="rk">07</td>
+        <td class="mdl"><div class="mname">Hyper 3D Rodin 2.5</div><div class="mven">DEEMOS</div></td>
+        <td class="sc">1086</td>
+        <td class="st">★☆☆☆☆</td>
+        <td class="st">★★★★☆</td>
+        <td class="cr">104</td>
+      </tr></tbody>
+  </table>
+
+  <div class="foot mono">SCORE = fused subjective (Bradley-Terry ELO) + objective (geometry), centered at 1300 ·
+    LIVE PREVIEW — sharpens as voting completes · stars from 6B Integrity / Texturing</div>
+  <script>
+  const rb = document.getElementById('refresh');
+  rb.onclick = async () => {
+    const label = rb.textContent;
+    rb.disabled = true; rb.textContent = 'RECOMPUTING…';
+    try {
+      const r = await fetch('/api/refresh', { method: 'POST' });
+      if (!r.ok) throw new Error(await r.text());
+      location.reload();   // redraw with the freshly recomputed scores
+    } catch (e) {
+      rb.disabled = false; rb.textContent = label;
+      alert('Refresh needs the server. Open this page via\n'
+        + 'http://127.0.0.1:8000/Layer 6A... (not as a file://), then retry.\n\n' + e.message);
+    }
+  };
+</script>
+</body></html>

@@ -1,0 +1,407 @@
+{
+  "weights": {
+    "integrity": 0.5,
+    "texturing": 0.35,
+    "symmetry": 0.15,
+    "efficiency": 0.0
+  },
+  "by_test_case": {
+    "TC001": {
+      "M1": {
+        "name": "M1",
+        "dimensions": {
+          "integrity": 17.5,
+          "texturing": 52.5,
+          "symmetry": 1.0,
+          "efficiency": 50.5
+        },
+        "obj_score": 16.7
+      },
+      "M2": {
+        "name": "M2",
+        "dimensions": {
+          "integrity": 73.2,
+          "texturing": 56.7,
+          "symmetry": 34.0,
+          "efficiency": 67.0
+        },
+        "obj_score": 59.7
+      },
+      "M3": {
+        "name": "M3",
+        "dimensions": {
+          "integrity": 56.7,
+          "texturing": 64.9,
+          "symmetry": 50.5,
+          "efficiency": 100.0
+        },
+        "obj_score": 58.4
+      },
+      "M4": {
+        "name": "M4",
+        "dimensions": {
+          "integrity": 17.5,
+          "texturing": 52.5,
+          "symmetry": 100.0,
+          "efficiency": 34.0
+        },
+        "obj_score": 33.4
+      },
+      "M5": {
+        "name": "M5",
+        "dimensions": {
+          "integrity": 21.6,
+          "texturing": 81.5,
+          "symmetry": 67.0,
+          "efficiency": 17.5
+        },
+        "obj_score": 40.8
+      },
+      "M6": {
+        "name": "M6",
+        "dimensions": {
+          "integrity": 50.5,
+          "texturing": 93.8,
+          "symmetry": 83.5,
+          "efficiency": 1.0
+        },
+        "obj_score": 67.6
+      },
+      "M7": {
+        "name": "M7",
+        "dimensions": {
+          "integrity": 29.9,
+          "texturing": 38.1,
+          "symmetry": 17.5,
+          "efficiency": 83.5
+        },
+        "obj_score": 30.0
+      }
+    },
+    "TC002": {
+      "M1": {
+        "name": "M1",
+        "dimensions": {
+          "integrity": 29.9,
+          "texturing": 52.6,
+          "symmetry": 50.5,
+          "efficiency": 67.0
+        },
+        "obj_score": 39.4
+      },
+      "M2": {
+        "name": "M2",
+        "dimensions": {
+          "integrity": 73.2,
+          "texturing": 52.6,
+          "symmetry": 67.0,
+          "efficiency": 1.0
+        },
+        "obj_score": 64.3
+      },
+      "M3": {
+        "name": "M3",
+        "dimensions": {
+          "integrity": 52.6,
+          "texturing": 56.7,
+          "symmetry": 83.5,
+          "efficiency": 100.0
+        },
+        "obj_score": 57.9
+      },
+      "M4": {
+        "name": "M4",
+        "dimensions": {
+          "integrity": 13.4,
+          "texturing": 31.9,
+          "symmetry": 17.5,
+          "efficiency": 50.5
+        },
+        "obj_score": 18.9
+      },
+      "M5": {
+        "name": "M5",
+        "dimensions": {
+          "integrity": 34.0,
+          "texturing": 67.0,
+          "symmetry": 34.0,
+          "efficiency": 25.8
+        },
+        "obj_score": 43.1
+      },
+      "M6": {
+        "name": "M6",
+        "dimensions": {
+          "integrity": 46.4,
+          "texturing": 95.9,
+          "symmetry": 100.0,
+          "efficiency": 25.8
+        },
+        "obj_score": 67.1
+      },
+      "M7": {
+        "name": "M7",
+        "dimensions": {
+          "integrity": 17.5,
+          "texturing": 83.5,
+          "symmetry": 1.0,
+          "efficiency": 83.5
+        },
+        "obj_score": 19.7
+      }
+    },
+    "TC003": {
+      "M1": {
+        "name": "M1",
+        "dimensions": {
+          "integrity": 17.5,
+          "texturing": 56.7,
+          "symmetry": 83.5,
+          "efficiency": 50.5
+        },
+        "obj_score": 33.4
+      },
+      "M2": {
+        "name": "M2",
+        "dimensions": {
+          "integrity": 73.2,
+          "texturing": 48.5,
+          "symmetry": 50.5,
+          "efficiency": 83.5
+        },
+        "obj_score": 59.9
+      },
+      "M3": {
+        "name": "M3",
+        "dimensions": {
+          "integrity": 52.6,
+          "texturing": 52.6,
+          "symmetry": 17.5,
+          "efficiency": 100.0
+        },
+        "obj_score": 44.6
+      },
+      "M4": {
+        "name": "M4",
+        "dimensions": {
+          "integrity": 34.0,
+          "texturing": 56.7,
+          "symmetry": 34.0,
+          "efficiency": 34.0
+        },
+        "obj_score": 40.7
+      },
+      "M5": {
+        "name": "M5",
+        "dimensions": {
+          "integrity": 13.4,
+          "texturing": 54.6,
+          "symmetry": 67.0,
+          "efficiency": 1.0
+        },
+        "obj_score": 27.9
+      },
+      "M6": {
+        "name": "M6",
+        "dimensions": {
+          "integrity": 46.4,
+          "texturing": 75.2,
+          "symmetry": 100.0,
+          "efficiency": 17.5
+        },
+        "obj_score": 61.6
+      },
+      "M7": {
+        "name": "M7",
+        "dimensions": {
+          "integrity": 29.9,
+          "texturing": 95.9,
+          "symmetry": 1.0,
+          "efficiency": 67.0
+        },
+        "obj_score": 27.0
+      }
+    },
+    "TC004": {
+      "M1": {
+        "name": "M1",
+        "dimensions": {
+          "integrity": 13.4,
+          "texturing": 64.9,
+          "symmetry": 34.0,
+          "efficiency": 50.5
+        },
+        "obj_score": 26.7
+      },
+      "M2": {
+        "name": "M2",
+        "dimensions": {
+          "integrity": 73.2,
+          "texturing": 52.5,
+          "symmetry": 83.5,
+          "efficiency": 67.0
+        },
+        "obj_score": 66.5
+      },
+      "M3": {
+        "name": "M3",
+        "dimensions": {
+          "integrity": 36.1,
+          "texturing": 60.8,
+          "symmetry": 67.0,
+          "efficiency": 100.0
+        },
+        "obj_score": 47.5
+      },
+      "M4": {
+        "name": "M4",
+        "dimensions": {
+          "integrity": 25.8,
+          "texturing": 56.7,
+          "symmetry": 17.5,
+          "efficiency": 34.0
+        },
+        "obj_score": 32.0
+      },
+      "M5": {
+        "name": "M5",
+        "dimensions": {
+          "integrity": 50.5,
+          "texturing": 77.3,
+          "symmetry": 100.0,
+          "efficiency": 1.0
+        },
+        "obj_score": 64.9
+      },
+      "M6": {
+        "name": "M6",
+        "dimensions": {
+          "integrity": 50.5,
+          "texturing": 77.3,
+          "symmetry": 50.5,
+          "efficiency": 17.5
+        },
+        "obj_score": 58.6
+      },
+      "M7": {
+        "name": "M7",
+        "dimensions": {
+          "integrity": 17.5,
+          "texturing": 50.5,
+          "symmetry": 1.0,
+          "efficiency": 83.5
+        },
+        "obj_score": 16.5
+      }
+    },
+    "TC005": {
+      "M1": {
+        "name": "M1",
+        "dimensions": {
+          "integrity": 34.0,
+          "texturing": 64.9,
+          "symmetry": 50.5,
+          "efficiency": 67.0
+        },
+        "obj_score": 45.2
+      },
+      "M2": {
+        "name": "M2",
+        "dimensions": {
+          "integrity": 75.2,
+          "texturing": 52.5,
+          "symmetry": 17.5,
+          "efficiency": 1.0
+        },
+        "obj_score": 53.3
+      },
+      "M3": {
+        "name": "M3",
+        "dimensions": {
+          "integrity": 25.8,
+          "texturing": 64.9,
+          "symmetry": 34.0,
+          "efficiency": 100.0
+        },
+        "obj_score": 37.1
+      },
+      "M4": {
+        "name": "M4",
+        "dimensions": {
+          "integrity": 34.0,
+          "texturing": 48.4,
+          "symmetry": 100.0,
+          "efficiency": 50.5
+        },
+        "obj_score": 45.2
+      },
+      "M5": {
+        "name": "M5",
+        "dimensions": {
+          "integrity": 17.5,
+          "texturing": 77.3,
+          "symmetry": 83.5,
+          "efficiency": 34.0
+        },
+        "obj_score": 37.2
+      },
+      "M6": {
+        "name": "M6",
+        "dimensions": {
+          "integrity": 50.5,
+          "texturing": 85.6,
+          "symmetry": 67.0,
+          "efficiency": 17.5
+        },
+        "obj_score": 63.4
+      },
+      "M7": {
+        "name": "M7",
+        "dimensions": {
+          "integrity": 29.9,
+          "texturing": 46.4,
+          "symmetry": 1.0,
+          "efficiency": 83.5
+        },
+        "obj_score": 20.9
+      }
+    }
+  },
+  "objective_leaderboard": [
+    {
+      "model": "M6",
+      "obj_score": 63.7,
+      "test_cases": 5
+    },
+    {
+      "model": "M2",
+      "obj_score": 60.7,
+      "test_cases": 5
+    },
+    {
+      "model": "M3",
+      "obj_score": 49.1,
+      "test_cases": 5
+    },
+    {
+      "model": "M5",
+      "obj_score": 42.8,
+      "test_cases": 5
+    },
+    {
+      "model": "M4",
+      "obj_score": 34.0,
+      "test_cases": 5
+    },
+    {
+      "model": "M1",
+      "obj_score": 32.3,
+      "test_cases": 5
+    },
+    {
+      "model": "M7",
+      "obj_score": 22.8,
+      "test_cases": 5
+    }
+  ]
+}

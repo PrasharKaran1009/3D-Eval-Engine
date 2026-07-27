@@ -1,0 +1,5 @@
+{
+  "type": "hybrid",
+  "provider": "GPT-5.5",
+  "maxTokens": 1024
+}

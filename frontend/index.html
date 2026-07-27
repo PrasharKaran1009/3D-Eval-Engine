@@ -220,16 +220,55 @@
   .callout .ci { font-size:18px; }
   .kbd { font-family:ui-monospace,monospace; background:#0f1420; border:1px solid var(--line2);
     border-radius:5px; padding:1px 6px; font-size:11.5px; color:var(--txt); }
+  /* ---- top3d-style leaderboard ---- */
+  .lbhero { background:linear-gradient(180deg,#141a2b,#0e1016); border:1px solid var(--line);
+    border-radius:18px; padding:22px 24px; margin-bottom:18px; position:relative; overflow:hidden; }
+  .lbhero::before { content:''; position:absolute; inset:0 0 auto 0; height:3px;
+    background:linear-gradient(90deg,#a78bfa,#f0a94a,#4ade80); }
+  .lbhead { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+  .lbtitle { font-size:22px; font-weight:750; margin:0; }
+  .lbsub { color:var(--muted); font-size:13px; margin:5px 0 0; max-width:560px; line-height:1.5; }
+  .lbstat { font-size:12px; color:var(--muted); white-space:nowrap; }
+  .livedot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 8px var(--accent); }
+  .pills { display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 4px; }
+  .pill2 { font-size:12.5px; padding:7px 14px; border-radius:20px; border:1px solid var(--line2);
+    background:transparent; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .12s; }
+  .pill2:hover { color:var(--txt); border-color:#3f4a5e; }
+  .pill2.on { color:#0a0c11; font-weight:650; background:linear-gradient(90deg,#a78bfa,#f0a94a); border-color:transparent; }
+  .lbboard { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .lbrow { display:grid; grid-template-columns:56px 1fr 92px 70px 70px 84px; align-items:center;
+    padding:14px 18px; border-bottom:1px solid #1a2130; gap:8px; }
+  .lbrow:last-child { border-bottom:none; }
+  .lbrow:hover:not(.lbrhead) { background:#171d2a; }
+  .lbrhead { font-size:10.5px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted2); background:#0f1420; }
+  .lbrhead .lc-num, .lbrhead .lc-rank, .lbrhead .lc-model { font-weight:600; }
+  .lbrow.first { background:linear-gradient(90deg,rgba(224,163,46,.10),transparent); }
+  .lc-num { text-align:right; font-family:ui-monospace,monospace; font-size:13px; color:var(--muted); }
+  .rankb { display:inline-flex; width:30px; height:30px; border-radius:9px; align-items:center;
+    justify-content:center; font-weight:700; font-size:13px; background:#1c2432; border:1px solid var(--line2); color:var(--muted); }
+  .rankb.gold { background:linear-gradient(180deg,#e0a32e,#9c6f1c); color:#0a0c11; border-color:var(--gold); }
+  .mname { font-size:15px; font-weight:640; }
+  .mvend { font-size:11.5px; color:var(--muted); font-weight:400; margin-left:6px; }
+  .mtags { display:flex; gap:6px; flex-wrap:wrap; margin-top:7px; }
+  .tag2 { font-size:10.5px; padding:3px 8px; border-radius:5px; background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12); color:var(--muted); }
+  .tag2.cost { background:rgba(74,222,128,.10); border-color:#1f5230; color:var(--accent); font-family:ui-monospace,monospace; }
+  .elo { font-size:17px; color:var(--txt); }
+  .elo.gold { color:var(--gold); }
+  @media (max-width:720px){ .lbrow { grid-template-columns:40px 1fr 64px 56px; }
+    .lbrow .lc-num:nth-child(5), .lbrow .lc-num:nth-child(6){ display:none; } }
 </style>
 </head>
 <body>
 <div id="bar">
   <div class="brand">
     <span class="dot"></span>
-    <div><h1>3D Eval · Setup Studio</h1><span>Registry → Input → Pairs → Schedule → Evaluate → Leaderboard</span></div>
+    <div><h1>3D Eval · Setup Studio</h1><span>Registry → Input → Pairs → Vote → Leaderboard</span></div>
   </div>
   <div class="spacer"></div>
   <span class="mockpill" id="livepill" title="Connecting to the live pipeline…">◍ CONNECTING…</span>
+  <button id="exampleBtn" title="Restore the built-in example run (105 demo votes + its leaderboard)">↺ Load example</button>
   <button id="resetBtn">Reset demo</button>
 </div>
 
@@ -270,26 +309,29 @@ let MODELS = [
   { id:'M7', name:'Pixal 3D',           vendor:'Pixal',     credits:94 },
 ];
 let TESTCASES = [
-  { id:'TC001', name:'Chair'  }, { id:'TC002', name:'Sword' },
-  { id:'TC003', name:'Robot'  }, { id:'TC004', name:'Car'   },
-  { id:'TC005', name:'Dragon' },
+  { id:'TC001', name:'Mecha Dragon'   }, { id:'TC002', name:'Treasure Chest' },
+  { id:'TC003', name:'Saguaro Cactus' }, { id:'TC004', name:'Knight Armor'   },
+  { id:'TC005', name:'McLaren Spider' },
 ];
 // a couple of small real sample GLBs (served from project root) for the upload demo
 const SAMPLE_GLBS = [
   { label:'Meshy · Chair (5 MB)', file:'/TEST CASES/TC001 GLB/TC001_Meshy 6 Preview.glb', model:'M3', tc:'TC001' },
   { label:'Tripo · Chair (8 MB)', file:'/TEST CASES/TC001 GLB/ TC001_Tripo 3D-2.5.glb',   model:'M2', tc:'TC001' },
 ];
+// Baked fallback ONLY (shown if the backend is unreachable). boot() overwrites
+// these from the live pipeline. Kept in sync with the current SAW+constraints run.
 let FUSED = [
-  { rank:1, model:'M6', fused:1566.5, sub:1602.4, obj:63.7, worst:1407 },
-  { rank:2, model:'M2', fused:1435.9, sub:1364.4, obj:60.7, worst:1220 },
-  { rank:3, model:'M4', fused:1289.8, sub:1404.9, obj:34.0, worst:1210 },
-  { rank:4, model:'M3', fused:1229.9, sub:1079.0, obj:49.1, worst:955  },
-  { rank:5, model:'M1', fused:1219.7, sub:1278.4, obj:32.3, worst:1332 },
-  { rank:6, model:'M7', fused:1196.2, sub:1353.3, obj:22.8, worst:1214 },
-  { rank:7, model:'M5', fused:1162.0, sub:1017.6, obj:42.8, worst:1033 },
+  { rank:1, model:'M6', fused:1614.6, sub:1511.4, obj:63.7, worst:1407 },
+  { rank:2, model:'M2', fused:1490.7, sub:1394.7, obj:60.7, worst:1220 },
+  { rank:3, model:'M4', fused:1285.2, sub:1349.2, obj:34.0, worst:1210 },
+  { rank:4, model:'M1', fused:1278.6, sub:1353.5, obj:32.3, worst:1332 },
+  { rank:5, model:'M7', fused:1162.4, sub:1289.7, obj:22.8, worst:1214 },
+  { rank:6, model:'M3', fused:1160.3, sub:1108.2, obj:49.1, worst:955  },
+  { rank:7, model:'M5', fused:1108.2, sub:1093.5, obj:42.8, worst:1033 },
 ];
 let DIMS = {"M1":{"integrity":22.5,"texturing":58.3,"symmetry":43.9,"efficiency":57.1},"M2":{"integrity":73.6,"texturing":52.6,"symmetry":50.5,"efficiency":43.9},"M3":{"integrity":44.8,"texturing":60.0,"symmetry":50.5,"efficiency":100.0},"M4":{"integrity":24.9,"texturing":49.2,"symmetry":53.8,"efficiency":40.6},"M5":{"integrity":27.4,"texturing":71.5,"symmetry":70.3,"efficiency":15.9},"M6":{"integrity":48.9,"texturing":85.6,"symmetry":80.2,"efficiency":15.9},"M7":{"integrity":24.9,"texturing":62.9,"symmetry":4.3,"efficiency":80.2}};
 let PARAM_ELO = {"M1":{"form_proportion":1336,"mesh_integrity":1332,"overall":1278,"prompt_alignment":1423,"texture_material":1340},"M2":{"form_proportion":1339,"mesh_integrity":1506,"overall":1364,"prompt_alignment":1508,"texture_material":1220},"M3":{"form_proportion":1195,"mesh_integrity":955,"overall":1079,"prompt_alignment":1149,"texture_material":1098},"M4":{"form_proportion":1210,"mesh_integrity":1246,"overall":1405,"prompt_alignment":1333,"texture_material":1549},"M5":{"form_proportion":1080,"mesh_integrity":1349,"overall":1018,"prompt_alignment":1033,"texture_material":1062},"M6":{"form_proportion":1597,"mesh_integrity":1499,"overall":1602,"prompt_alignment":1407,"texture_material":1524},"M7":{"form_proportion":1343,"mesh_integrity":1214,"overall":1353,"prompt_alignment":1248,"texture_material":1308}};
+let PAIRWISE = {};   // {param: {wins: {winner: {loser: count}}}} — Bradley-Terry evidence
 const PARAMS = [['prompt_alignment','Prompt'],['texture_material','Texture'],['form_proportion','Form'],['mesh_integrity','Mesh'],['overall','Overall']];
 // baseName resolves the BAKED reference models (used only by the Results/charts step,
 // which previews the real project leaderboard). The Registry list is user-entered.
@@ -312,13 +354,26 @@ function setTCCount(n){
  * ============================================================= */
 const wait = ms => new Promise(r=>setTimeout(r,ms));
 let LIVE = false;   // flips true once the backend (main.py) answers
+let PENDING = false; // true when a fresh benchmark has no computed results yet
 async function getJSON(url){ const r=await fetch(url); if(!r.ok) throw new Error(url+' → '+r.status); return r.json(); }
+async function postJSON(url, body){
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body||{})});
+  if(!r.ok) throw new Error(url+' → '+r.status+' '+(await r.text()).slice(0,160));
+  return r.json();
+}
 const api = {
   registry(){ return getJSON('/api/registry'); },
   validate(){ return getJSON('/api/validate'); },
   pairs(){ return getJSON('/api/pairs'); },
   results(){ return getJSON('/api/results'); },
-  async schedule(){ await wait(200); return { ok:true }; },
+  settings(){ return getJSON('/api/settings'); },
+  // write-through: these actually change pipeline state on disk
+  saveRegistry(payload){ return postJSON('/api/registry', payload); },
+  upload(payload){ return postJSON('/api/upload', payload); },
+  saveSettings(patch){ return postJSON('/api/settings', patch); },
+  schedule(opts){ return postJSON('/api/schedule', opts||{}); },
+  loadExample(){ return postJSON('/api/load-example', {}); },
 };
 
 /* Pull the REAL registry + computed results from the pipeline so the whole
@@ -331,12 +386,20 @@ async function boot(){
       name:m.name, vendor:(m.metadata&&m.metadata.vendor)||'', credits:'',
       source:m.source, format:m.format }));
     state.bench.cases = reg.benchmark.map(b=>({ id:b.id, label:b.subject||'' }));
+    if(reg.judge) state.judge = { ...state.judge, ...reg.judge };
+    // reflect the pipeline's real fusion settings in the wizard controls
+    try{ const st=await api.settings();
+      state.settings.mcda = st.fusion.mcda_method;
+      state.settings.wSub = Math.round(st.fusion.subjective_weight*100);
+      state.settings.wObj = 100 - state.settings.wSub;
+    }catch(e){}
     const res = await api.results();
-    MODELS = res.models.map((m,i)=>({ id:m.id||('M'+(i+1)), name:m.name, vendor:'',
+    PENDING = !!res.pending;             // fresh benchmark, no votes computed yet
+    MODELS = res.models.map((m,i)=>({ id:m.id||('M'+(i+1)), name:m.name, vendor:(m.metadata&&m.metadata.vendor)||'',
       credits: Math.round((res.gen_seconds&&res.gen_seconds[m.id])||0) }));
     FUSED = res.fused.map(r=>({ rank:r.rank, model:r.model, fused:r.fused,
       sub:r.sub, obj:r.obj, worst:r.worst }));
-    DIMS = res.dims; PARAM_ELO = res.param_elo;
+    DIMS = res.dims; PARAM_ELO = res.param_elo; PAIRWISE = res.pairwise || {};
     LIVE = true;
   }catch(e){ console.warn('backend unavailable — using baked fallback data', e); }
   const pill=document.getElementById('livepill');
@@ -373,15 +436,16 @@ function save(){ const {uploads,...rest}=state; // don't persist blob urls
 /* ============================================================= *
  *  STEP DEFINITIONS                                             *
  * ============================================================= */
+// The Scheduler / Cache / Subjective+Objective layers are internal pipeline
+// mechanics — the user doesn't drive them, so they're hidden from the wizard.
+// The pipeline runs automatically when the user reaches Vote (see RENDERERS.vote).
 const STEPS = [
   { key:'welcome',  tag:'START',            title:'Welcome',                   sub:'How the evaluation works',        icon:'👋', tint:'input',   color:'var(--input)' },
   { key:'registry', tag:'1 · REGISTRY',     title:'Registry Layer',            sub:'Models · Judges · Benchmarks',    icon:'🗂️', tint:'input',   color:'var(--input)' },
   { key:'input',    tag:'2 · INPUT',        title:'Input Layer',               sub:'Upload models / connect APIs',    icon:'📥', tint:'input',   color:'var(--input)' },
   { key:'pairs',    tag:'3 · PAIRS',        title:'Round-Robin Pair Generator',sub:'All nC2 matchups',                icon:'🔀', tint:'input',   color:'var(--input)' },
-  { key:'schedule', tag:'4 · SCHEDULER',    title:'Generation / Prep Scheduler',sub:'Lazy gen + caching',             icon:'⚙️', tint:'process', color:'var(--process)' },
-  { key:'cache',    tag:'CACHE',            title:'Cache / Storage Layer',     sub:'Meshes · previews · metadata',    icon:'💾', tint:'storage', color:'var(--storage)' },
-  { key:'evaluate', tag:'5 · EVALUATE',     title:'Subjective + Objective',    sub:'Voting & mesh analysis (built)',  icon:'⚖️', tint:'eval',    color:'var(--eval)' },
-  { key:'results',  tag:'6–8 · RESULTS',    title:'Fusion · Leaderboard · Viz',sub:'MCDA scores & charts',            icon:'🏆', tint:'output',  color:'var(--output)' },
+  { key:'vote',     tag:'4 · VOTE',         title:'Blind Pairwise Voting',     sub:'Prepares & runs automatically',   icon:'⚖️', tint:'eval',    color:'var(--eval)' },
+  { key:'results',  tag:'5 · RESULTS',      title:'Fusion · Leaderboard · Viz',sub:'MCDA scores & charts',            icon:'🏆', tint:'output',  color:'var(--output)' },
 ];
 
 /* ============================================================= *
@@ -444,9 +508,7 @@ const LEADS = {
   registry:'The 3D generators for the path you chose. BYOM loads them live from the pipeline registry (models.json); BYOA collects API access. Edits here stay local to the wizard.',
   input:'Pick how many examples (test cases) you\'re evaluating, name them, then provide each model\'s input per example — a prompt (BYOA) or a mesh (BYOM). BYOM also takes one zip per example.',
   pairs:'Every model is compared against every other on each test case — n(n−1)/2 unique matchups. These pairs drive both blind voting and objective analysis.',
-  schedule:'The scheduler resolves each matchup. BYOM reads your uploaded meshes; BYOA lazily generates each model once and caches it — so only n generations run, never nC2.',
-  cache:'Everything produced is stored once and reused: meshes, preview renders, mesh statistics, and per-pair intermediate results.',
-  evaluate:'This is where the already-built lower pipeline takes over — blind pairwise voting (Bradley-Terry ELO) and automated mesh analysis run per matchup.',
+  vote:'Reaching this step prepares everything automatically — it runs the pipeline (validate → pairs → mesh metrics → cache) and drops you straight into blind, side-by-side pairwise voting.',
   results:'The Fusion layer combines subjective ELO and objective scores via MCDA into one ranked leaderboard, with visual breakdowns.',
 };
 
@@ -747,9 +809,27 @@ function addUploadRec(path, blob, tcId, opts){
     if(ix>=0){ try{ if(state.uploads[ix].url.startsWith('blob:')) URL.revokeObjectURL(state.uploads[ix].url); }catch(e){} state.uploads.splice(ix,1); }
   }
   const url=URL.createObjectURL(blob);
-  state.uploads.push({ name, size:blob.size||0, tc:tcId, modelId, model:parsed.model,
-    ok:okFmt, ext, warn: okFmt?null:'unsupported format', url, isSample:false });
+  const rec={ name, size:blob.size||0, tc:tcId, modelId, model:parsed.model,
+    ok:okFmt, ext, warn: okFmt?null:'unsupported format', url, isSample:false, synced:false };
+  state.uploads.push(rec);
+  // Write-through: land the mesh on disk under its canonical TC00x_Name.ext so
+  // the real pipeline (Layer 2 gate → Layer 4 indexer) can find it.
+  if(LIVE && okFmt && modelId){ pushUpload(rec, blob); }
   return null;
+}
+
+// base64-encode a blob and POST it to /api/upload. Names the file from the
+// REGISTERED model label (not the dropped filename), so it always matches the
+// registry regardless of what the user's file was called.
+async function pushUpload(rec, blob){
+  try{
+    const label=(validModels().find(m=>m.id===rec.modelId)||{}).label||rec.model||rec.modelId;
+    const buf=new Uint8Array(await blob.arrayBuffer());
+    let bin=''; for(let i=0;i<buf.length;i++) bin+=String.fromCharCode(buf[i]);
+    const res=await api.upload({ tc:rec.tc, model_name:label, ext:rec.ext,
+      content_b64:btoa(bin) });
+    rec.synced=true; rec.serverPath=res.path; save();
+  }catch(e){ console.warn('upload sync failed', rec.name, e); rec.warn='not saved to server: '+e.message; save(); }
 }
 
 // Minimal in-browser ZIP reader (no library). Handles stored (0) + deflate (8) entries,
@@ -910,78 +990,156 @@ async function runScheduler(el, byom){
       done++; pdone.textContent=done; fill.style.width=(100*done/total).toFixed(1)+'%';
     }
   }
-  await api.schedule();
+  // Real backend run: persist the registry, then stream L2→L3→L4→L5 for real.
+  if(LIVE){
+    try{
+      line(`<span class="lg">[persist] saving registry to the pipeline…</span>`);
+      await api.saveRegistry(registryPayload());
+      line(`<span class="lg">[L2→L5] running the real pipeline (validate → pairs → cache)…</span>`);
+      const r=await api.schedule({});
+      line(`<span class="lok">✓ pipeline done — ${r.ready}/${r.matchups} matchups cached, `
+          +`${r.viewer_entries} ready to evaluate</span>`);
+    }catch(e){
+      line(`<span class="lwarn">backend run failed: ${escapeHtml(e.message)}</span>`);
+      btn.disabled=false; return;
+    }
+  } else {
+    line(`<span class="lwarn">offline — this was a simulation. Start the server (python3 main.py) to run for real.</span>`);
+  }
   line(byom?`<span class="lok">✓ all meshes cached — ready for evaluation</span>`
            :`<span class="lok">✓ total generations = ${genSeen.size} (n) · everything else served from cache</span>`);
   state.scheduled=true; save(); btn.disabled=false; btn.textContent='Re-run scheduler';
 }
 
-/* ---- 5. CACHE ---- */
-RENDERERS.cache = (el)=>{
-  const n=validModels().length, tc=state.bench.cases.length;
-  const items=[
-    ['💾','Generated / uploaded meshes','GLB / OBJ / FBB',`${n*tc} files`],
-    ['🖼️','Preview images','high-quality renders',`${n*tc} thumbs`],
-    ['📊','Mesh statistics','vertices, faces, watertight',`${n*tc} rows`],
-    ['🧾','Metadata & configs','prompt hash, model version, cost','per asset'],
-    ['🔗','Pair results (intermediate)','resolved matchup assets',`${n*(n-1)/2*tc} pairs`],
-    ['📝','Logs & reports','scheduler + validation trace','append-only'],
-  ];
+// Assemble the write-through registry payload from wizard state. Sent to
+// POST /api/registry, which is id-stable by name (see main.save_registry).
+function registryPayload(){
+  return {
+    path: state.path,
+    judge: state.judge,
+    models: state.reg.models.map(m=>({
+      name:(m.name||'').trim(), vendor:m.vendor||'', credits:m.credits||'',
+      source:state.path, format:m.format||'glb',
+      endpoint:m.endpoint||'', api_key_env:m.api_key_env||'' })),
+    benchmark: state.bench.cases.map(c=>({ id:c.id, subject:c.label||'' })),
+  };
+}
+
+/* ---- 4. VOTE — auto-run the pipeline, then blind pairwise voting ----
+   The Scheduler / Cache / Objective layers are hidden: reaching this step
+   persists the registry and runs L2→L3→L4→L5 for real, then embeds the blind
+   pair viewer. Objective mesh analysis runs in the same pipeline, headless. */
+RENDERERS.vote = (el)=>{
+  const byom=state.path==='BYOM';
   el.innerHTML=`
-  <div class="card tint-storage">
-    <h3>💾 Cache / Storage Layer</h3>
-    <p class="desc">Written once, reused everywhere downstream. This is the boundary between the setup layers and the evaluation pipeline.</p>
-    <div class="grid3">${items.map(it=>`
-      <div class="stat"><div style="font-size:22px">${it[0]}</div>
-        <div class="ot" style="font-weight:600; font-size:13.5px; margin-top:8px">${it[1]}</div>
-        <div class="sl">${it[2]}</div>
-        <div class="pill ok" style="margin-top:10px">${it[3]}</div>
-      </div>`).join('')}</div>
-    <div class="callout"><span class="ci">📁</span><div>In the real project this maps to <span class="kbd">Layer 5 - Output Cache/cache/&lt;TC&gt;/&lt;model&gt;/</span>, populated by <span class="kbd">cache.py</span> + <span class="kbd">metrics_extractor.py</span>.</div></div>
-  </div>`;
+  <div class="card tint-eval" id="prepcard">
+    <h3>⚙️ Preparing evaluation…</h3>
+    <p class="desc">${byom
+      ? 'Reading each uploaded mesh, extracting geometry metrics, and building the blind matchups. Objective analysis (integrity · watertightness · UV · symmetry) runs here too.'
+      : 'Generating each model once, caching it, and building the blind matchups.'}
+      This runs automatically — no button to press.</p>
+    <div class="pbar" style="margin-bottom:14px"><div id="pfill" style="width:0%"></div></div>
+    <div class="log" id="log"></div>
+  </div>
+  <div id="votehost"></div>`;
+  runAndVote(el, byom);
 };
 
-/* ---- 6. EVALUATE (handoff) ---- */
-RENDERERS.evaluate = (el)=>{
-  el.innerHTML=`
-  <div class="grid2">
-    <div class="card tint-eval">
-      <h3>⚖️ 6A · Subjective Pipeline <span class="pill ok">built</span></h3>
-      <p class="desc">Blind side-by-side pair viewer (Three.js). Judges (${state.judge.type}) vote per parameter; Bradley-Terry MLE turns the pairwise matrix into per-parameter ELO scores.</p>
-      <div class="legendrow" style="margin-top:0">${PARAMS.map(p=>`<span class="lk"><span class="sw" style="background:var(--eval)"></span>${p[1]} ELO</span>`).join('')}</div>
-      <div style="margin-top:16px"><a class="btn sm" href="/Layer 6A - Subjective Pipeline/preview.html" target="_blank">Open blind pair viewer ↗</a></div>
+async function runAndVote(el, byom){
+  const log=el.querySelector('#log'); const fill=el.querySelector('#pfill');
+  const line=(html)=>{ log.innerHTML+=html+'<br>'; log.scrollTop=log.scrollHeight; };
+  if(!LIVE){
+    line('<span class="lwarn">Offline — start the server with <b>python3 main.py</b> to run the pipeline and vote.</span>');
+    fill.style.width='100%'; return;
+  }
+  try{
+    line('<span class="lg">[persist] saving registry to the pipeline…</span>'); fill.style.width='18%';
+    await api.saveRegistry(registryPayload());
+    line('<span class="lg">[L2→L5] validate → pairs → extract metrics → cache…</span>'); fill.style.width='45%';
+    const r=await api.schedule({});
+    fill.style.width='100%';
+    line(`<span class="lok">✓ ready — ${r.ready}/${r.matchups} matchups prepared, ${r.viewer_entries} to vote on</span>`);
+    state.scheduled=true; save();
+    mountVoteViewer(el.querySelector('#votehost'));
+    // collapse the prep card once done so voting is the focus
+    const pc=el.querySelector('#prepcard'); if(pc){ pc.style.opacity='.6'; }
+  }catch(e){
+    line(`<span class="lwarn">pipeline failed: ${escapeHtml(e.message)}</span>`);
+    line('<span class="hintline">Most often this is the Layer 2 gate — every test case needs one mesh per model, named correctly. Check the Input step.</span>');
+  }
+}
+
+// Embed the blind pair viewer (its own page) right inside the wizard so voting
+// happens in-flow. It posts to /api/vote on the same origin.
+function mountVoteViewer(host){
+  host.innerHTML=`
+  <div class="card tint-eval" style="padding:0; overflow:hidden">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--line)">
+      <h3 style="margin:0">⚖️ Blind pairwise voting <span class="pill ok">${escapeHtml(state.judge.type)}</span></h3>
+      <a class="btn sm" href="/5A - Subjective Pipeline/preview.html" target="_blank">Open full-screen ↗</a>
     </div>
-    <div class="card tint-eval">
-      <h3>🔬 6B · Objective Pipeline <span class="pill ok">built</span></h3>
-      <p class="desc">Automated mesh analysis — integrity, watertightness, UV quality, symmetry, polygon count — normalized to a 0–100 rubric per dimension.</p>
-      <table class="tbl"><thead><tr><th>Dimension</th><th>Weight</th></tr></thead><tbody>
-        <tr><td>Integrity</td><td class="mono">0.50</td></tr>
-        <tr><td>Texturing</td><td class="mono">0.35</td></tr>
-        <tr><td>Symmetry</td><td class="mono">0.15</td></tr>
-        <tr><td>Efficiency</td><td class="mono">0.00</td></tr>
-      </tbody></table>
-    </div>
+    <iframe src="/5A - Subjective Pipeline/preview.html" title="Blind pair viewer"
+      style="width:100%; height:78vh; border:0; display:block; background:var(--bg0)"></iframe>
   </div>
-  <div class="callout"><span class="ci">🧩</span><div>These two layers already run end-to-end in the project (105 matchups, 105 votes verified). The setup you just completed is what feeds them. Continue to see the fused results.</div></div>`;
-};
+  <div class="callout"><span class="ci">🏆</span><div>Vote on the matchups above, then continue to see the fused leaderboard. You can revote any matchup — the latest ballot per judge replaces the earlier one.</div></div>`;
+}
 
 /* ---- 7. RESULTS + VIZ ---- */
 RENDERERS.results = (el)=>{
+  if(LIVE && (PENDING || !FUSED.length)){
+    el.innerHTML=`
+    <div class="card tint-output">
+      <h3>🏆 No results yet</h3>
+      <p class="desc">This benchmark has no votes yet, so there's nothing to fuse. Go to the <b>Vote</b> step and cast a few pairwise ballots — the leaderboard builds itself from them.</p>
+      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn primary" id="goVote">Go to voting</button>
+        <button class="btn sm" id="loadEg">↺ Load the example run instead</button>
+      </div>
+    </div>`;
+    el.querySelector('#goVote').onclick=()=>go(STEPS.findIndex(s=>s.key==='vote'));
+    el.querySelector('#loadEg').onclick=()=>document.getElementById('exampleBtn').click();
+    return;
+  }
+  const votesCast=Math.round(Object.values((PAIRWISE.overall||{}).wins||{})
+    .reduce((s,row)=>s+Object.values(row).reduce((a,b)=>a+b,0),0));
   el.innerHTML=`
-  <div class="card tint-output" style="margin-bottom:20px">
-    <h3>🏆 Final composite leaderboard</h3>
-    <p class="desc">Fusion (Layer 7) combines subjective ELO and objective score via ${state.settings.mcda}, weighted ${state.settings.wSub}/${state.settings.wObj}, centered on a 1300 ELO scale. ${LIVE?'<b>These are the live computed results</b> from the running pipeline (Layers 6A/6B/7).':'<b>Your registered models will appear here once the pipeline runs.</b>'}</p>
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:4px">
-      <button class="btn sm" id="expCsv">⭳ Export CSV</button>
-      <button class="btn sm" id="expJson">⭳ Export JSON</button>
-      <a class="btn sm" href="/Layer 8 - Leaderboard/leaderboard.html" target="_blank">Open full leaderboard ↗</a>
+  <div class="lbhero">
+    <div class="lbhead">
+      <div><h2 class="lbtitle">3D Model Evaluation Leaderboard</h2>
+        <p class="lbsub">Ranked by blind pairwise votes (Bradley-Terry ELO) fused with automated mesh analysis.</p></div>
+      <div class="lbstat"><span class="livedot"></span> <b>${votesCast}</b> votes cast · <span class="mono">${state.settings.mcda}</span> · <span style="color:var(--accent)">LIVE</span></div>
+    </div>
+    <div class="pills" id="axisPills">
+      ${[['fused','Composite'],['overall','Overall'],['prompt_alignment','Prompt'],['texture_material','Texture'],['form_proportion','Form'],['mesh_integrity','Mesh']]
+        .map(([k,l],i)=>`<button class="pill2 ${i===0?'on':''}" data-axis="${k}">${l}</button>`).join('')}
+    </div>
+    <div id="podium" style="display:flex; align-items:flex-end; justify-content:center; gap:30px; min-height:230px; margin:20px 0 4px"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn sm" id="expCsv">⭳ Export CSV</button><button class="btn sm" id="expJson">⭳ Export JSON</button>
     </div>
   </div>
-  <div class="chartcard" style="margin-bottom:20px">
-    <h4>Fused score · all models</h4><p class="csub">Bradley-Terry subjective + objective geometry, MCDA-fused</p>
-    <div id="barchart"></div>
+
+  <div class="lbboard">
+    <div class="lbrow lbrhead"><div class="lc-rank">#</div><div class="lc-model">Model</div>
+      <div class="lc-num">ELO</div><div class="lc-num">Wins</div><div class="lc-num">Losses</div><div class="lc-num">Win rate</div></div>
+    <div id="richboard"></div>
   </div>
-  <div class="grid2">
+
+  ${LIVE?`<div class="card tint-eval" style="margin-top:20px">
+    <h3>⚙️ Fusion settings <span class="pill">live</span></h3>
+    <p class="desc">Change the MCDA method or the subjective/objective split, then re-fuse — the leaderboard recomputes from the same votes.</p>
+    <div style="display:flex; gap:18px; align-items:flex-end; flex-wrap:wrap">
+      <label class="fld" style="margin:0"><span class="lt">MCDA method</span>
+        <select id="setMethod">${['SAW','TOPSIS','PROMETHEE','VIKOR','ELECTRE'].map(x=>`<option ${state.settings.mcda===x?'selected':''}>${x}</option>`).join('')}</select></label>
+      <label class="fld" style="margin:0; min-width:220px"><span class="lt">Subjective weight: <b id="wLbl">${state.settings.wSub}%</b></span>
+        <input type="range" id="setW" min="0" max="100" value="${state.settings.wSub}" style="width:100%"></label>
+      <label class="fld" style="margin:0"><span class="lt">Pareto filter</span>
+        <select id="setPareto"><option value="0">off</option><option value="1">flag dominated</option></select></label>
+      <button class="btn primary sm" id="applyFusion">Apply &amp; re-fuse</button>
+      <span id="fusionMsg" class="hintline" style="margin:0"></span>
+    </div>
+  </div>`:''}
+  <div class="grid2" style="margin-top:20px">
     <div class="chartcard"><h4>Per-parameter ELO</h4><p class="csub">Subjective strengths — top 3 models</p><div id="radar"></div>
       <div class="legendrow" id="radarleg"></div></div>
     <div class="chartcard"><h4>Speed vs quality</h4><p class="csub">Avg generation time (s) vs fused score</p><div id="scatter"></div></div>
@@ -991,28 +1149,117 @@ RENDERERS.results = (el)=>{
     <div class="legendrow" id="dimleg"></div>
   </div>
   <div class="chartcard" style="margin-top:20px">
-    <h4>Ranked table</h4><p class="csub">Sorted by fused score</p>
-    <table class="tbl"><thead><tr><th>#</th><th>Model</th><th>Fused</th><th>Subjective ELO</th><th>Objective</th><th>Worst axis</th><th>Gen time</th></tr></thead>
-    <tbody>${FUSED.map(r=>{const m=MODELS.find(x=>x.id===r.model);return `<tr>
-      <td class="mono" style="color:var(--muted)">${String(r.rank).padStart(2,'0')}</td>
-      <td><span class="modelchip"><span class="mid">${r.model}</span> ${m.name}</span></td>
-      <td class="mono" style="color:var(--gold); font-weight:700">${r.fused.toFixed(0)}</td>
-      <td class="mono">${r.sub.toFixed(0)}</td><td class="mono">${r.obj.toFixed(1)}</td>
-      <td class="mono" style="color:var(--muted)">${r.worst}</td><td class="mono">${m.credits}s</td></tr>`;}).join('')}
-    </tbody></table>
+    <h4>Pairwise win matrix <span style="font-weight:400;color:var(--muted)">· the Bradley-Terry input</span></h4>
+    <p class="csub">How often the <b>row</b> model beat the <b>column</b> model (ties = ½), summed across test cases — the raw evidence the ELO is fit from.
+      <select id="pwParam" style="margin-left:8px;width:auto;display:inline-block;padding:4px 8px">${PARAMS.map(p=>`<option value="${p[0]}" ${p[0]==='overall'?'selected':''}>${p[1]}</option>`).join('')}</select></p>
+    <div id="pwmatrix" style="overflow-x:auto"></div>
   </div>`;
-  drawBar(el.querySelector('#barchart'));
+  drawPodium(el.querySelector('#podium'));
+  renderRichBoard(el.querySelector('#richboard'), 'fused');
   drawRadar(el.querySelector('#radar'), el.querySelector('#radarleg'));
   drawScatter(el.querySelector('#scatter'));
   drawDims(el.querySelector('#dimchart'), el.querySelector('#dimleg'));
+  const pwSel=el.querySelector('#pwParam'), pwHost=el.querySelector('#pwmatrix');
+  if(pwSel){ drawPairwise(pwHost, pwSel.value); pwSel.onchange=()=>drawPairwise(pwHost, pwSel.value); }
+  // category pills re-rank the board (and sync the matrix to the same axis)
+  el.querySelectorAll('#axisPills .pill2').forEach(b=>b.onclick=()=>{
+    el.querySelectorAll('#axisPills .pill2').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    const ax=b.dataset.axis; renderRichBoard(el.querySelector('#richboard'), ax);
+    if(pwSel && ax!=='fused'){ pwSel.value=ax; drawPairwise(pwHost, ax); }
+  });
   el.querySelector('#expCsv').onclick=()=>exportData('csv');
   el.querySelector('#expJson').onclick=()=>exportData('json');
+
+  const wS=el.querySelector('#setW'), wL=el.querySelector('#wLbl');
+  if(wS) wS.oninput=()=>{ wL.textContent=wS.value+'%'; };
+  const apply=el.querySelector('#applyFusion');
+  if(apply) apply.onclick=async()=>{
+    const msg=el.querySelector('#fusionMsg');
+    apply.disabled=true; msg.textContent='saving settings…';
+    try{
+      state.settings.mcda=el.querySelector('#setMethod').value;
+      state.settings.wSub=+wS.value; state.settings.wObj=100-(+wS.value); save();
+      await api.saveSettings({ fusion:{
+        mcda_method:state.settings.mcda,
+        subjective_weight:(+wS.value)/100,
+        pareto_filter: el.querySelector('#setPareto').value==='1' }});
+      msg.textContent='re-fusing from existing votes…';
+      await postJSON('/api/refresh',{});           // hybrid→aggregate→fuse→leaderboard
+      const res=await api.results();               // pull fresh numbers
+      FUSED=res.fused.map(r=>({rank:r.rank,model:r.model,fused:r.fused,sub:r.sub,obj:r.obj,worst:r.worst}));
+      DIMS=res.dims; PARAM_ELO=res.param_elo; PAIRWISE=res.pairwise||{};
+      MODELS=res.models.map((m,i)=>({id:m.id||('M'+(i+1)),name:m.name,vendor:(m.metadata&&m.metadata.vendor)||'',credits:Math.round((res.gen_seconds&&res.gen_seconds[m.id])||0)}));
+      RENDERERS.results(el);                        // re-render with new data
+    }catch(e){ msg.textContent='failed: '+e.message; apply.disabled=false; }
+  };
 };
 
 /* ============================================================= *
  *  CHARTS (pure SVG)                                            *
  * ============================================================= */
 const PAL=['#4ade80','#5b8bf0','#f0a94a','#a78bfa','#f2555a','#4dd0e1','#e0a32e'];
+
+// Top-3 podium with vertical bars (the "full leaderboard" viz, brought up top).
+// Arranged 2·1·3, bar height scaled to fused score, #1 gold + tallest.
+function drawPodium(host){
+  if(!host) return;
+  const top=FUSED.slice(0,3); if(top.length<3){ host.innerHTML=''; return; }
+  const order=[top[1],top[0],top[2]];                 // 2 · 1 · 3
+  const min=Math.min(...top.map(r=>r.fused)), max=Math.max(...top.map(r=>r.fused)), span=(max-min)||1;
+  host.innerHTML=order.map(r=>{
+    const m=MODELS.find(x=>x.id===r.model)||{}, first=r.rank===1;
+    const h=90+130*(r.fused-min)/span;                // 90..220px by score
+    const grad=first?'linear-gradient(180deg,#e0a32e,#9c6f1c)':'linear-gradient(180deg,#3a5f8f,#243a55)';
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:150px;text-align:center">
+      ${first?'<div style="font-size:20px;color:var(--gold)">★</div>':'<div style="height:20px"></div>'}
+      <div style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;
+        background:${first?'var(--gold)':'#1c2432'};color:${first?'#0a0c11':'var(--txt)'};border:1px solid ${first?'var(--gold)':'var(--line2)'}">${r.rank}</div>
+      <div style="font-size:14px;font-weight:650">${m.name||r.model}</div>
+      <div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">${r.model}</div>
+      <div style="font-size:22px;font-weight:740;color:${first?'var(--gold)':'var(--txt)'}">${r.fused.toFixed(0)}</div>
+      <div style="width:100%;height:${h.toFixed(0)}px;border-radius:10px 10px 0 0;background:${grad}"></div>
+    </div>`;
+  }).join('');
+}
+
+// Wins/losses per model from the pairwise matrix of an axis (ties count as ½).
+function axisWinLoss(axis){
+  const W=((PAIRWISE[axis]||{}).wins)||{}, ids=MODELS.map(m=>m.id), out={};
+  ids.forEach(a=>{ let w=0,l=0; ids.forEach(b=>{ if(a===b) return; w+=(W[a]||{})[b]||0; l+=(W[b]||{})[a]||0; });
+    out[a]={w,l,rate:(w+l)?w/(w+l):0}; });
+  return out;
+}
+// Feature tags derived from the objective dimensions (like top3d's tool tags).
+function modelTags(mid){
+  const d=DIMS[mid]||{}, t=[];
+  if(d.integrity>=55) t.push('Watertight'); else if(d.integrity>=38) t.push('Clean topology');
+  if(d.texturing>=68) t.push('HD texture'); else if(d.texturing>=50) t.push('PBR');
+  if(d.symmetry>=68) t.push('Symmetric');
+  if(d.efficiency>=68) t.push('Low-poly'); else if(d.efficiency<=22) t.push('High-poly');
+  return t.slice(0,3);
+}
+const fmtN=v=>(+v).toFixed(1).replace(/\.0$/,'');
+// Rich ranked board (top3d.ai style): rank · model+tags+cost · ELO · W · L · win-rate.
+function renderRichBoard(host, axis){
+  if(!host) return;
+  const isFused=axis==='fused', pwAxis=isFused?'overall':axis, wl=axisWinLoss(pwAxis);
+  const rows = isFused
+    ? FUSED.map(r=>({id:r.model, elo:r.fused}))
+    : MODELS.map(m=>({id:m.id, elo:(PARAM_ELO[m.id]||{})[axis]||0})).sort((a,b)=>b.elo-a.elo);
+  host.innerHTML=rows.map((r,i)=>{
+    const m=MODELS.find(x=>x.id===r.id)||{}, rank=i+1, first=rank===1, lw=wl[r.id]||{w:0,l:0,rate:0};
+    const cost=m.credits?`<span class="tag2 cost">~${m.credits}s / gen</span>`:'';
+    const tags=modelTags(r.id).map(t=>`<span class="tag2">${t}</span>`).join('');
+    return `<div class="lbrow${first?' first':''}">
+      <div class="lc-rank"><span class="rankb${first?' gold':''}">${rank}</span></div>
+      <div class="lc-model"><div class="mname">${escapeHtml(m.name||r.id)}<span class="mvend">${escapeHtml(m.vendor||'')}</span></div>
+        <div class="mtags">${cost}${tags}</div></div>
+      <div class="lc-num"><b class="elo${first?' gold':''}">${Math.round(r.elo)}</b></div>
+      <div class="lc-num">${fmtN(lw.w)}</div><div class="lc-num">${fmtN(lw.l)}</div>
+      <div class="lc-num">${Math.round(lw.rate*100)}%</div>
+    </div>`;
+  }).join('');
+}
 
 function drawBar(host){
   const data=[...FUSED]; const W=880,H=data.length*46+30, L=170, R=70;
@@ -1083,6 +1330,27 @@ function drawDims(host, leg){
   leg.innerHTML=dims.map((d,i)=>`<span class="lk"><span class="sw" style="background:${PAL[i]}"></span>${d}</span>`).join('');
 }
 
+// Pairwise win matrix (Bradley-Terry input): row beat column, ties=½, summed
+// across test cases. Rows/cols ordered by the fused leaderboard so the winner
+// sits top-left; cell shade = win fraction of that pairing.
+function drawPairwise(host, param){
+  const order=FUSED.map(d=>d.model);
+  const W=(PAIRWISE[param]||{}).wins||{};
+  if(!Object.keys(W).length){ host.innerHTML='<p class="csub">No pairwise data (vote first, then refresh).</p>'; return; }
+  const cell=(r,c)=>{
+    if(r===c) return '<td style="background:#0c0f16;color:var(--muted2)">—</td>';
+    const w=(W[r]||{})[c]||0, l=(W[c]||{})[r]||0, tot=w+l;
+    const frac=tot?w/tot:0;                                  // 0..1 row-over-col
+    const bg=`rgba(74,222,128,${(0.10+0.80*frac).toFixed(2)})`;   // greener = row won more
+    const title=`${r} beat ${c} ${w} — ${l} (${tot?Math.round(frac*100):0}%)`;
+    return `<td title="${title}" style="background:${bg};color:#0a0c11;font-weight:600">${w}</td>`;
+  };
+  host.innerHTML=`<table class="tbl" style="min-width:520px;text-align:center">
+    <thead><tr><th style="text-align:left">▼ won / ► lost</th>${order.map(c=>`<th style="text-align:center">${c}</th>`).join('')}</tr></thead>
+    <tbody>${order.map(r=>`<tr><td style="text-align:left"><span class="mid">${r}</span> ${baseName(r)}</td>${order.map(c=>cell(r,c)).join('')}</tr>`).join('')}</tbody>
+  </table>`;
+}
+
 function exportData(fmt){
   let blob;
   if(fmt==='json') blob=new Blob([JSON.stringify(FUSED,null,2)],{type:'application/json'});
@@ -1125,11 +1393,26 @@ function teardownViewers(){ VIEWERS.forEach(v=>{ v.alive=false; try{v.rnd.dispos
 /* ============================================================= *
  *  WIRING                                                       *
  * ============================================================= */
-document.getElementById('nextBtn').onclick=()=>{ if(state.step<STEPS.length-1) go(state.step+1); };
+document.getElementById('nextBtn').onclick=async ()=>{
+  if(state.step<STEPS.length-1){ go(state.step+1); return; }
+  // Finish: reset the wizard flow and return the user to screen one (Welcome).
+  teardownViewers(); state=defaultState(); await boot(); go(0);
+};
 document.getElementById('backBtn').onclick=()=>{ if(state.step>0) go(state.step-1); };
 document.getElementById('resetBtn').onclick=async ()=>{
-  if(!confirm('Reset the demo? Reloads the live registry and clears uploads.')) return;
+  if(!confirm('Reset the wizard? Reloads the live registry and clears local uploads (does not delete server data).')) return;
   teardownViewers(); state=defaultState(); await boot(); go(0);
+};
+
+// Restore the frozen example run on the server (the 105 demo ballots + scores),
+// then reload the wizard against it. One click back to the showcase leaderboard.
+document.getElementById('exampleBtn').onclick=async ()=>{
+  if(!LIVE){ alert('Start the server (python3 main.py) to load the example run.'); return; }
+  if(!confirm('Load the built-in example run? This restores the demo models + 105 votes on the server.')) return;
+  const btn=document.getElementById('exampleBtn'); btn.disabled=true; btn.textContent='…restoring';
+  try{ await api.loadExample(); teardownViewers(); state=defaultState(); await boot(); go(STEPS.length-1); }
+  catch(e){ alert('Could not load example: '+e.message); }
+  finally{ btn.disabled=false; btn.textContent='↺ Load example'; }
 };
 
 /* Entry point: always open on the Welcome page (pick BYOM + judge). */

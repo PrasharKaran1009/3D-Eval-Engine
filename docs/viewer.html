@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>6A · Blind Pair Viewer</title>
+<style>
+  :root {
+    --bg0:#0a0c11; --bg1:#10141d; --panel:#141925; --card:#171d2a;
+    --line:#252c3a; --txt:#e8ebf2; --muted:#7e879b; --accent:#4ade80;
+    --A:#3b82f6; --B:#f59e0b;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; color:var(--txt);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { display:flex; flex-direction:column;
+    background:radial-gradient(1200px 600px at 50% -10%, #19202e 0%, var(--bg1) 45%, var(--bg0) 100%); }
+
+  /* ---------- top bar ---------- */
+  #bar { display:flex; align-items:center; gap:20px; padding:12px 20px;
+    background:rgba(20,25,37,.72); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand .dot { width:9px; height:9px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 10px var(--accent); }
+  .brand h1 { font-size:14px; font-weight:650; margin:0; letter-spacing:.2px; }
+  .brand span { font-size:11px; color:var(--muted); }
+  .spacer { flex:1; }
+  .group { display:flex; align-items:center; gap:8px; }
+  .group > .lbl { font-size:11px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.6px; }
+  select, button { background:#1c2230; color:var(--txt); border:1px solid var(--line);
+    border-radius:9px; padding:7px 12px; font-size:13px; cursor:pointer;
+    transition:all .12s ease; }
+  select:hover, button:hover { border-color:#3a4456; background:#222a3a; }
+  .seg { display:flex; background:#1c2230; border:1px solid var(--line);
+    border-radius:10px; padding:3px; gap:2px; }
+  .seg button { border:none; background:transparent; border-radius:7px; padding:6px 13px; }
+  .seg button.active { background:var(--accent); color:#06210f; font-weight:650; }
+  .nav button { padding:7px 11px; font-size:15px; line-height:1; }
+  #mid { font-size:12px; color:var(--muted); min-width:130px; text-align:center; }
+  #mid b { color:var(--txt); font-weight:600; }
+  #sync.active { background:var(--accent); color:#06210f; border-color:var(--accent);
+    font-weight:600; }
+
+  /* ---------- stage ---------- */
+  /* ---------- prompt context (bias fix: judge sees what was asked for) ---- */
+  #prompt { margin:12px 14px 0; }
+  .pwrap { display:flex; gap:16px; align-items:flex-start; background:var(--card);
+    border:1px solid var(--line); border-radius:14px; padding:12px 16px; }
+  .ptext { flex:1; min-width:0; }
+  .plabel { font-size:10px; letter-spacing:1.2px; color:var(--accent);
+    font-weight:700; }
+  .ptext b { display:block; font-size:15px; margin:2px 0 4px; }
+  .ptext p { margin:0; font-size:12px; line-height:1.5; color:var(--muted);
+    max-height:3.2em; overflow:hidden; transition:max-height .2s; cursor:pointer; }
+  .ptext p.open { max-height:30em; }
+  .prefs { display:flex; gap:8px; flex:none; }
+  .prefs img { height:66px; width:66px; object-fit:cover; border-radius:9px;
+    border:1px solid var(--line); background:#0b0f18; }
+  .prefs:empty { display:none; }
+
+  #stage { display:flex; flex:1; min-height:0; gap:14px; padding:14px; }
+  .panel { position:relative; flex:1; border:1px solid var(--line); border-radius:16px;
+    overflow:hidden; background:linear-gradient(180deg,#0e1219,#0a0d13);
+    box-shadow:0 8px 30px rgba(0,0,0,.35); }
+  .badge { position:absolute; top:14px; left:14px; z-index:5; display:flex;
+    align-items:center; gap:8px; font-size:12px; font-weight:700; letter-spacing:1.2px;
+    background:rgba(8,10,15,.6); padding:7px 13px; border-radius:10px;
+    border:1px solid var(--line); backdrop-filter:blur(4px); }
+  .badge .pip { width:9px; height:9px; border-radius:50%; }
+  .badge.A .pip { background:var(--A); box-shadow:0 0 8px var(--A); }
+  .badge.B .pip { background:var(--B); box-shadow:0 0 8px var(--B); }
+  .hint { position:absolute; bottom:12px; left:14px; z-index:5; font-size:10.5px;
+    color:var(--muted); background:rgba(8,10,15,.5); padding:4px 9px; border-radius:7px; }
+  .load { position:absolute; inset:0; display:flex; align-items:center;
+    justify-content:center; color:var(--muted); font-size:13px; z-index:4; }
+  .load .spin { width:22px; height:22px; border:2px solid var(--line);
+    border-top-color:var(--accent); border-radius:50%; margin-right:10px;
+    animation:spin 0.8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  canvas { display:block; }
+
+  /* ---------- vote ---------- */
+  #vote { display:flex; align-items:flex-end; gap:14px; margin:0 14px 14px;
+    padding:14px 18px; background:var(--card); border:1px solid var(--line);
+    border-radius:16px; flex-wrap:wrap; }
+  .vlead { font-size:11px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.6px; align-self:center; margin-right:4px; }
+  .param { display:flex; flex-direction:column; gap:6px; }
+  .param .pname { font-size:11.5px; color:var(--muted); font-weight:500; }
+  .param .pmode { color:#5a6276; font-size:9.5px; text-transform:uppercase;
+    letter-spacing:.5px; margin-left:5px; }
+  .choices { display:flex; gap:0; border:1px solid var(--line); border-radius:9px;
+    overflow:hidden; }
+  .choices button { border:none; background:#1c2230; border-radius:0; padding:7px 12px;
+    font-size:12px; min-width:38px; font-weight:600; }
+  .choices button + button { border-left:1px solid var(--line); }
+  .choices button.sel[data-c="A"]   { background:var(--A); color:#fff; }
+  .choices button.sel[data-c="B"]   { background:var(--B); color:#241400; }
+  .choices button.sel[data-c="tie"] { background:#525a6b; color:#fff; }
+  #submit { margin-left:auto; background:var(--accent); color:#06210f; font-weight:700;
+    padding:12px 22px; border-radius:11px; align-self:center; font-size:13.5px; }
+  #submit:disabled { opacity:.35; cursor:not-allowed; }
+  #vcount { font-size:12px; color:var(--muted); align-self:center; min-width:64px;
+    text-align:right; }
+  #vcount b { color:var(--accent); }
+</style>
+</head>
+<body>
+<div id="bar">
+  <div class="brand">
+    <span class="dot"></span>
+    <div><h1>3D Eval · Blind Pair Viewer</h1><span>6A subjective pipeline</span></div>
+  </div>
+
+  <div class="group nav">
+    <span class="lbl">Test case</span>
+    <select id="tcsel"></select>
+  </div>
+  <div class="group nav">
+    <span class="lbl">Matchup</span>
+    <select id="sel"></select>
+    <button id="prev" title="previous">‹</button>
+    <button id="next" title="next">›</button>
+    <button id="skip" title="skip without voting">Skip ⤼</button>
+    <button id="last" title="jump to last matchup">Last ⇥</button>
+  </div>
+  <div id="mid"></div>
+
+  <div class="spacer"></div>
+
+  <div class="group">
+    <span class="lbl">Mode</span>
+    <div class="seg" id="modes">
+      <button class="active" data-mode="textured">Textured</button>
+      <button data-mode="shaded">Shaded</button>
+      <button data-mode="wireframe">Wireframe</button>
+    </div>
+  </div>
+</div>
+
+<div id="prompt">
+  <div class="pwrap">
+    <div class="ptext">
+      <span class="plabel">PROMPT</span>
+      <b id="psubject"></b>
+      <p id="pdesc"></p>
+    </div>
+    <div id="prefs" class="prefs"></div>
+  </div>
+</div>
+
+<div id="stage">
+  <div class="panel" id="panelA">
+    <div class="badge A"><span class="pip"></span>MODEL A</div>
+    <div class="hint">drag rotate · scroll zoom · right-drag pan</div>
+    <div class="load"><span class="spin"></span>loading…</div>
+  </div>
+  <div class="panel" id="panelB">
+    <div class="badge B"><span class="pip"></span>MODEL B</div>
+    <div class="hint">drag rotate · scroll zoom · right-drag pan</div>
+    <div class="load"><span class="spin"></span>loading…</div>
+  </div>
+</div>
+
+<div id="vote"></div>
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let MODE = 'textured';
+const loader = new GLTFLoader();
+
+const CLAY = new THREE.MeshStandardMaterial({ color:0xcdd2da, roughness:0.8, metalness:0.0 });
+// Wireframe mode = bright edges over a dark, unlit backing. The backing occludes
+// far-side geometry (so dense meshes read as a clean hidden-line cage instead of a
+// double-sided tangle) and gives the light edges something to contrast against.
+// polygonOffset pushes the fill behind the coplanar edges so they don't z-fight.
+const WIRE_FILL = new THREE.MeshBasicMaterial({
+  color:0x0e1320, polygonOffset:true, polygonOffsetFactor:1, polygonOffsetUnits:1 });
+const WIRE = new THREE.MeshBasicMaterial({ color:0xe6ebf5, wireframe:true });
+
+class Viewer {
+  constructor(el) {
+    this.el = el;
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
+    this.camera.position.set(0, 0, 3);
+
+    this.renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    el.appendChild(this.renderer.domElement);
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+
+    this.scene.add(new THREE.HemisphereLight(0xffffff, 0x3a3f4c, 1.15));
+    const d1 = new THREE.DirectionalLight(0xffffff, 1.5); d1.position.set(2,3,2);
+    const d2 = new THREE.DirectionalLight(0xbcd0ff, 0.5); d2.position.set(-2,-1,-2);
+    this.scene.add(d1, d2);
+
+    this.root = null;
+    this.loadEl = el.querySelector('.load');
+    this.controls.addEventListener('change', () => this.onChange && this.onChange(this));
+    this.resize();
+    new ResizeObserver(() => this.resize()).observe(el);
+  }
+
+  resize() {
+    const w = this.el.clientWidth, h = this.el.clientHeight;
+    if (!w || !h) return;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // updateStyle MUST stay on (default true): it sets the canvas CSS size to w×h
+    // so the element matches the panel. With it off, on a 2× display the canvas
+    // lays out at 2× the panel and overflow:hidden clips it to the top-left
+    // quarter — pushing the centered model into the bottom-right corner.
+    this.renderer.setSize(w, h);
+    this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
+  }
+
+  clear() {
+    if (!this.root) return;
+    // Free GPU resources so navigating heavy meshes (20-80 MB) doesn't leak.
+    // Dispose geometry + the GLB's own materials/textures only — never the
+    // shared CLAY/WIRE/WIRE_FILL materials (those are reused across loads).
+    const seen = new Set();
+    this.root.traverse(o => {
+      if (!o.isMesh) return;
+      if (o.geometry && !seen.has(o.geometry)) { o.geometry.dispose(); seen.add(o.geometry); }
+      const orig = o.userData.orig;
+      const mats = Array.isArray(orig) ? orig : (orig ? [orig] : []);
+      mats.forEach(m => {
+        for (const k in m) { const v = m[k]; if (v && v.isTexture) v.dispose(); }
+        if (m.dispose) m.dispose();
+      });
+    });
+    this.scene.remove(this.root);
+    this.root = null;
+  }
+
+  load(url) {
+    this.clear();
+    this.loadEl.style.display = 'flex';
+    this.loadEl.innerHTML = '<span class="spin"></span>loading…';
+    const t0 = performance.now();
+    loader.load(encodeURI(url), (gltf) => {
+      try {
+        const obj = gltf.scene;
+        // Collect meshes FIRST, then add wireframe overlays. Adding children
+        // during traverse() makes it recurse into the new child (also a mesh)
+        // forever -> "Maximum call stack size exceeded".
+        const meshes = [];
+        obj.traverse(o => { if (o.isMesh) meshes.push(o); });
+        meshes.forEach(o => {
+          o.userData.orig = o.material;
+          const wire = new THREE.Mesh(o.geometry, WIRE);   // shared material
+          wire.visible = false;
+          wire.userData.isWire = true;
+          o.userData.wire = wire;
+          o.add(wire);
+        });
+        this.root = obj;
+        this.scene.add(obj);
+        this.frame(obj);
+        applyMode(this, MODE);
+        this.loadEl.style.display = 'none';
+        console.log('LOADED', url, ((performance.now()-t0)/1000).toFixed(1)+'s');
+      } catch (e) {
+        this.loadEl.innerHTML = 'render error: ' + (e.message || e);
+        console.error('onLoad threw', url, e);
+      }
+    },
+    (p) => {                                     // progress
+      if (p.total) this.loadEl.innerHTML =
+        '<span class="spin"></span>loading… ' + Math.round(100*p.loaded/p.total) + '%';
+    },
+    (err) => {                                   // error — show the REAL reason
+      const msg = (err && (err.message || err.type)) || String(err);
+      this.loadEl.innerHTML = 'load failed: ' + msg;
+      console.error('GLTF load failed', url, err);
+    });
+  }
+
+  frame(obj) {
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    obj.position.sub(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const dist = maxDim / (2 * Math.tan(THREE.MathUtils.degToRad(this.camera.fov/2)));
+    this.camera.position.set(dist*0.6, dist*0.4, dist*1.5);
+    this.camera.near = maxDim/100; this.camera.far = maxDim*100;
+    this.camera.updateProjectionMatrix();
+    this.controls.target.set(0,0,0); this.controls.update();
+  }
+
+  render() { this.controls.update(); this.renderer.render(this.scene, this.camera); }
+}
+
+function applyMode(v, mode) {
+  if (!v.root) return;
+  v.root.traverse(o => {
+    if (!o.isMesh || o.userData.orig === undefined) return;  // skip non-meshes & wire children
+    o.material = mode === 'textured'  ? o.userData.orig
+               : mode === 'wireframe' ? WIRE_FILL
+               :                        CLAY;
+    if (o.userData.wire) o.userData.wire.visible = (mode === 'wireframe');
+  });
+}
+
+// Two fully independent viewers (no camera sync).
+const A = new Viewer(document.getElementById('panelA'));
+const B = new Viewer(document.getElementById('panelB'));
+
+(function loop(){ requestAnimationFrame(loop); A.render(); B.render(); })();
+
+// ---------------- data + nav (filtered by test case) ----------------
+let DATA = [];          // all matchups
+let LIST = [];          // matchups in the selected test case
+let idx = 0;            // index within LIST
+let TCS = [];           // ordered unique test cases (set on load)
+const tcsel = document.getElementById('tcsel');
+const sel = document.getElementById('sel');
+const mid = document.getElementById('mid');
+
+// Remember where the reviewer was so a reload doesn't dump them back at pair 1.
+const POS_KEY = 'viewer6a:pos';
+function savePos() {
+  try { localStorage.setItem(POS_KEY, JSON.stringify({ tc: tcsel.value, idx })); } catch (e) {}
+}
+function loadPos() {
+  try { return JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch (e) { return null; }
+}
+
+function _load(i) {
+  if (!LIST.length) return;
+  idx = (i + LIST.length) % LIST.length;
+  const m = LIST[idx];
+  sel.value = String(idx);
+  mid.innerHTML = `Matchup <b>#${m.matchup_id}</b> · <b>${m.prompt_id}</b> `
+    + `<span style="color:var(--muted)">(${idx + 1}/${LIST.length})</span>`;
+  showPrompt(m);
+  A.load(m.a_glb); B.load(m.b_glb);
+  savePos();
+}
+function loadMatchup(i){ _load(i); resetBallot(LIST[idx] && LIST[idx].vlm_ballot); }
+
+// Show the prompt the models were generated from, so the judge can actually
+// assess prompt_alignment (the highest-weighted axis). Reference images are
+// root-absolute paths from prompts.json; the viewer is served from project root.
+function showPrompt(m){
+  const subj = document.getElementById('psubject');
+  const desc = document.getElementById('pdesc');
+  const refs = document.getElementById('prefs');
+  subj.textContent = m.subject || m.prompt_id || '';
+  desc.textContent = m.description || '';
+  desc.classList.remove('open');
+  desc.onclick = () => desc.classList.toggle('open');   // click to expand full text
+  refs.innerHTML = (m.reference_images || [])
+    .map(src => `<img src="${src.replace(/^\//,'')}" alt="reference" loading="lazy">`)
+    .join('');
+}
+
+function selectTC(tc, start = 0) {
+  LIST = DATA.filter(m => m.prompt_id === tc);
+  sel.innerHTML = LIST.map((m, i) =>
+    `<option value="${i}">Pair ${i + 1} · #${m.matchup_id}</option>`).join('');
+  loadMatchup(start);   // loadMatchup wraps out-of-range indices, so a stale idx is safe
+}
+
+// Forward/back that CROSS test-case boundaries: past the last matchup of a test
+// case, advance to the first matchup of the NEXT test case (wrap at the very end).
+function goNext() {
+  if (idx + 1 < LIST.length) { loadMatchup(idx + 1); return; }
+  const ti = TCS.indexOf(tcsel.value);
+  const next = TCS[(ti + 1) % TCS.length];
+  tcsel.value = next; selectTC(next, 0);
+}
+function goPrev() {
+  if (idx - 1 >= 0) { loadMatchup(idx - 1); return; }
+  const ti = TCS.indexOf(tcsel.value);
+  const prev = TCS[(ti - 1 + TCS.length) % TCS.length];
+  const prevCount = DATA.filter(m => m.prompt_id === prev).length;
+  tcsel.value = prev; selectTC(prev, prevCount - 1);
+}
+
+tcsel.onchange = () => selectTC(tcsel.value);
+document.getElementById('prev').onclick = goPrev;
+document.getElementById('next').onclick = goNext;
+document.getElementById('skip').onclick = goNext;   // advance (cross-TC), record no vote
+document.getElementById('last').onclick = () => loadMatchup(LIST.length - 1);
+sel.onchange = () => loadMatchup(parseInt(sel.value, 10));
+
+document.querySelectorAll('#modes button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#modes button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    MODE = btn.dataset.mode;
+    applyMode(A, MODE); applyMode(B, MODE);
+  };
+});
+
+// ---------------- voting ballot ----------------
+// [key, label, mode-to-judge-in]. 'overall' is the ranking axis; the rest are
+// reference/diagnostic axes (see 6A design). Mode tag tells the reviewer which
+// render mode best reveals that axis.
+const PARAMS = [
+  ['prompt_alignment','Prompt Alignment','Textured'],
+  ['texture_material','Texture & Material','Textured'],
+  ['form_proportion','Form & Proportion','Shaded'],
+  ['mesh_integrity','Mesh Integrity','Wireframe'],
+  ['overall','Overall','Textured'],
+];
+let ballot = {};
+const voteEl = document.getElementById('vote');
+
+function buildBallot() {
+  voteEl.innerHTML = `<span class="vlead">Vote</span>` + PARAMS.map(([k,l,mode]) => `
+    <div class="param" data-param="${k}">
+      <span class="pname">${l}<em class="pmode">${mode}</em></span>
+      <div class="choices">
+        <button data-c="A">A</button><button data-c="tie">=</button><button data-c="B">B</button>
+      </div>
+    </div>`).join('') +
+    `<button id="submit" disabled>Submit &amp; Next →</button>
+     <span id="vcount">votes: <b>0</b></span>
+     <span id="vlmnote" style="display:none; color:var(--B); font-size:11px; margin-left:10px">🤖 VLM first pass — review &amp; confirm / modify</span>`;
+  voteEl.querySelectorAll('.choices button').forEach(btn => {
+    btn.onclick = () => {
+      const p = btn.closest('.param').dataset.param;
+      ballot[p] = btn.dataset.c;
+      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      document.getElementById('submit').disabled = Object.keys(ballot).length < PARAMS.length;
+    };
+  });
+  document.getElementById('submit').onclick = submitVote;
+}
+function resetBallot(prefill) {
+  ballot = {};
+  voteEl.querySelectorAll('.choices button').forEach(b => b.classList.remove('sel'));
+  const note = document.getElementById('vlmnote');
+  // Hybrid: if a VLM first-pass ballot exists, pre-select it so the human
+  // REVIEWS (accept / modify / overwrite) rather than voting from scratch.
+  if (prefill && typeof prefill === 'object') {
+    PARAMS.forEach(([k]) => {
+      const c = prefill[k];
+      if (c === 'A' || c === 'B' || c === 'tie') {
+        ballot[k] = c;
+        const btn = voteEl.querySelector(`.param[data-param="${k}"] button[data-c="${c}"]`);
+        if (btn) btn.classList.add('sel');
+      }
+    });
+    if (note) note.style.display = '';
+  } else if (note) {
+    note.style.display = 'none';
+  }
+  const s = document.getElementById('submit');
+  if (s) s.disabled = Object.keys(ballot).length < PARAMS.length;
+}
+let DEMO_VOTES = 0;
+async function submitVote() {
+  // Static demo: no backend. Record the ballot in-memory and advance so the
+  // full voter UX works; the leaderboard here is the pre-computed example run.
+  DEMO_VOTES += 1;
+  document.getElementById('vcount').innerHTML = `votes: <b>${DEMO_VOTES}</b> <span style="color:var(--muted)">(demo — not saved)</span>`;
+  goNext();
+}
+buildBallot();
+
+// ---------------- load ----------------
+fetch('data/viewer_data.json').then(r => r.json()).then(d => {
+  DATA = d.matchups || [];
+  if (!DATA.length) {
+    document.querySelectorAll('.load').forEach(e => e.textContent = 'no matchups — run the pipeline');
+    return;
+  }
+  TCS = [...new Set(DATA.map(m => m.prompt_id))];          // unique test cases, in order
+  tcsel.innerHTML = TCS.map(t => `<option value="${t}">${t}</option>`).join('');
+  const saved = loadPos();                                // resume where we left off
+  const startTC = (saved && TCS.includes(saved.tc)) ? saved.tc : TCS[0];
+  tcsel.value = startTC;
+  selectTC(startTC, saved && saved.tc === startTC ? saved.idx : 0);
+}).catch(e => {
+  document.querySelectorAll('.load').forEach(el =>
+    el.textContent = 'demo data missing (data/viewer_data.json)');
+  console.error(e);
+});
+</script>
+</body>
+</html>

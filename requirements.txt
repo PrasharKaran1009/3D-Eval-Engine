@@ -1,0 +1,19 @@
+# 3D Model Evaluation Leaderboard — Python dependencies
+# Python 3.9+  ·  install with:  pip install -r requirements.txt
+
+# --- Objective pipeline (Layer 5 metrics + Layer 6B scoring) ---
+trimesh>=4.0        # mesh load, counts, watertight, UV stretch
+numpy>=1.24         # required by trimesh + 6B scoring
+scipy>=1.10         # symmetry KD-tree + rank normalization
+pymeshlab>=2022.2   # topology integrity (non-manifold, boundary edges, holes).
+                    # REQUIRED: cache.py and metrics_extractor.py import it at
+                    # module load. Without it Layers 5/6B will not run.
+
+# --- Subjective VLM render path (Layer 6A, OPTIONAL) ---
+# Only needed to auto-render matchups for the VLM / hybrid judge. Human voting
+# and the whole objective pipeline run fine without these. After installing:
+#     playwright install chromium
+# playwright>=1.40
+
+# Note: the VLM judge itself (vlm_judge.py) uses only the Python stdlib
+# (urllib) — no SDK needed. Configure it via .env (see .env.example).

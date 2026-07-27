@@ -1,0 +1,340 @@
+{
+ "matchups": [
+  {
+   "matchup_id": 0,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M1.glb",
+   "b_glb": "models/TC001/M2.glb",
+   "vlm_ballot": null,
+   "_a_model": "M1",
+   "_b_model": "M2",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 1,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M3.glb",
+   "b_glb": "models/TC001/M1.glb",
+   "vlm_ballot": null,
+   "_a_model": "M3",
+   "_b_model": "M1",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 2,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M1.glb",
+   "b_glb": "models/TC001/M4.glb",
+   "vlm_ballot": null,
+   "_a_model": "M1",
+   "_b_model": "M4",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 3,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M1.glb",
+   "b_glb": "models/TC001/M5.glb",
+   "vlm_ballot": null,
+   "_a_model": "M1",
+   "_b_model": "M5",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 4,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M1.glb",
+   "b_glb": "models/TC001/M6.glb",
+   "vlm_ballot": null,
+   "_a_model": "M1",
+   "_b_model": "M6",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 5,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M1.glb",
+   "b_glb": "models/TC001/M7.glb",
+   "vlm_ballot": null,
+   "_a_model": "M1",
+   "_b_model": "M7",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 6,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M2.glb",
+   "b_glb": "models/TC001/M3.glb",
+   "vlm_ballot": null,
+   "_a_model": "M2",
+   "_b_model": "M3",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 7,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M2.glb",
+   "b_glb": "models/TC001/M4.glb",
+   "vlm_ballot": null,
+   "_a_model": "M2",
+   "_b_model": "M4",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 8,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M5.glb",
+   "b_glb": "models/TC001/M2.glb",
+   "vlm_ballot": null,
+   "_a_model": "M5",
+   "_b_model": "M2",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 9,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M2.glb",
+   "b_glb": "models/TC001/M6.glb",
+   "vlm_ballot": null,
+   "_a_model": "M2",
+   "_b_model": "M6",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 10,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M7.glb",
+   "b_glb": "models/TC001/M2.glb",
+   "vlm_ballot": null,
+   "_a_model": "M7",
+   "_b_model": "M2",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 11,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M4.glb",
+   "b_glb": "models/TC001/M3.glb",
+   "vlm_ballot": null,
+   "_a_model": "M4",
+   "_b_model": "M3",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 12,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M5.glb",
+   "b_glb": "models/TC001/M3.glb",
+   "vlm_ballot": null,
+   "_a_model": "M5",
+   "_b_model": "M3",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 13,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M3.glb",
+   "b_glb": "models/TC001/M6.glb",
+   "vlm_ballot": null,
+   "_a_model": "M3",
+   "_b_model": "M6",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 14,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M7.glb",
+   "b_glb": "models/TC001/M3.glb",
+   "vlm_ballot": null,
+   "_a_model": "M7",
+   "_b_model": "M3",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 15,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M4.glb",
+   "b_glb": "models/TC001/M5.glb",
+   "vlm_ballot": null,
+   "_a_model": "M4",
+   "_b_model": "M5",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 16,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M6.glb",
+   "b_glb": "models/TC001/M4.glb",
+   "vlm_ballot": null,
+   "_a_model": "M6",
+   "_b_model": "M4",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 17,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M7.glb",
+   "b_glb": "models/TC001/M4.glb",
+   "vlm_ballot": null,
+   "_a_model": "M7",
+   "_b_model": "M4",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 18,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M5.glb",
+   "b_glb": "models/TC001/M6.glb",
+   "vlm_ballot": null,
+   "_a_model": "M5",
+   "_b_model": "M6",
+   "_swapped": false
+  },
+  {
+   "matchup_id": 19,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M7.glb",
+   "b_glb": "models/TC001/M5.glb",
+   "vlm_ballot": null,
+   "_a_model": "M7",
+   "_b_model": "M5",
+   "_swapped": true
+  },
+  {
+   "matchup_id": 20,
+   "prompt_id": "TC001",
+   "subject": "Mecha Dragon",
+   "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+   "reference_images": [
+    "benchmark_assets/TC001/TC001_ref_row4.png",
+    "benchmark_assets/TC001/TC001_ref_row6.png"
+   ],
+   "a_glb": "models/TC001/M6.glb",
+   "b_glb": "models/TC001/M7.glb",
+   "vlm_ballot": null,
+   "_a_model": "M6",
+   "_b_model": "M7",
+   "_swapped": false
+  }
+ ]
+}

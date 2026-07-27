@@ -1,0 +1,14 @@
+{
+  "benchmark_version": 1,
+  "prompts": [
+    {
+      "id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ]
+    }
+  ]
+}

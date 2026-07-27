@@ -26,9 +26,9 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-for layer in ("Layer 3 - Pair Generation",
-              "Layer 4 - Generation Scheduler",
-              "Layer 5 - Output Cache"):
+for layer in ("3 - Round Robin Pair Generator",
+              "4 - Generation Prep Scheduler",
+              "Cache Storage Layer"):
     p = os.path.join(ROOT, layer)
     if p not in sys.path:
         sys.path.insert(0, p)
@@ -75,7 +75,7 @@ def main() -> None:
     cached = sum(1 for m in matchups if m.status == "cached")
     print(f"\nDone. {cached}/{len(matchups)} matchups fully enriched.")
     print(f"Enriched matchups -> {OUT_PATH}")
-    print(f"Per-model cache   -> {os.path.join('Layer 5 - Output Cache', 'cache')}/")
+    print(f"Per-model cache   -> {os.path.join('Cache Storage Layer', 'cache')}/")
 
 
 if __name__ == "__main__":

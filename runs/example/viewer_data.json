@@ -1,0 +1,1642 @@
+{
+  "matchups": [
+    {
+      "matchup_id": 0,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M2",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 1,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 2,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M4",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 3,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 4,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 5,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 6,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M3",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 7,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M4",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 8,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 9,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 10,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 11,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 12,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 13,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 14,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 15,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 16,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 17,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 18,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 19,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M5",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 20,
+      "prompt_id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC001/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC001/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 21,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M2",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 22,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M3",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 23,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 24,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 25,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 26,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 27,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M3",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 28,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M4",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 29,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 30,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 31,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 32,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 33,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 34,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 35,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 36,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 37,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 38,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 39,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M5",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 40,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M5",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 41,
+      "prompt_id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC002/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC002/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M6",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 42,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 43,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 44,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 45,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 46,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 47,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 48,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M3",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 49,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M4",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 50,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 51,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 52,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 53,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 54,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 55,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 56,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 57,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 58,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 59,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 60,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M5",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 61,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M5",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 62,
+      "prompt_id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC003/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC003/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M6",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 63,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M2",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 64,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M3",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 65,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 66,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 67,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 68,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 69,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 70,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 71,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 72,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 73,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 74,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M4",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 75,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 76,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 77,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 78,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 79,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 80,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 81,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 82,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M5",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 83,
+      "prompt_id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC004/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC004/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M6",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 84,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 85,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M3",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 86,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M4/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M4",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 87,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M1/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M1",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 88,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 89,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M1/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M1",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 90,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 91,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M4",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 92,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M2/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M2",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 93,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 94,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M2/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M7/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M2",
+      "_b_model": "M7",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 95,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M4",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 96,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M3/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M3",
+      "_b_model": "M5",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 97,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 98,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M3/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M3",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 99,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 100,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M6/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M6",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 101,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M4/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M4",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 102,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M5/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M5",
+      "_b_model": "M6",
+      "_swapped": false
+    },
+    {
+      "matchup_id": 103,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M5/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M5",
+      "_swapped": true
+    },
+    {
+      "matchup_id": 104,
+      "prompt_id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ],
+      "a_glb": "/Cache Storage Layer/cache/TC005/M7/model.glb",
+      "b_glb": "/Cache Storage Layer/cache/TC005/M6/model.glb",
+      "vlm_ballot": null,
+      "_a_model": "M7",
+      "_b_model": "M6",
+      "_swapped": true
+    }
+  ]
+}

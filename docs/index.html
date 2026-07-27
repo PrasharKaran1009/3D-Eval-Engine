@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Model Evaluation Leaderboard · Live Demo</title>
+<style>
+  :root{
+    --bg0:#0a0c11; --bg1:#10141d; --card:#141925; --line:#252c3a; --line2:#2f3849;
+    --txt:#e8ebf2; --muted:#8a93a6; --muted2:#5a6276; --accent:#4ade80; --gold:#e0a32e;
+    --input:#5b8bf0; --eval:#a78bfa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#19202e 0%,var(--bg1) 45%,var(--bg0) 100%);
+    background-attachment:fixed;color:var(--txt);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace}
+  a{color:var(--input)}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 22px 90px}
+  header .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block;box-shadow:0 0 12px var(--accent);margin-right:9px}
+  h1{font-size:26px;margin:0 0 6px;font-weight:730}
+  .sub{color:var(--muted);font-size:14.5px;max-width:760px}
+  .badges{margin:16px 0 6px;display:flex;gap:8px;flex-wrap:wrap}
+  .badge{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--line2);color:var(--muted)}
+  .badge.ok{color:var(--accent);border-color:#1f5230;background:#0f1f15}
+  .badge.eval{color:var(--eval);border-color:#3a3160;background:#161331}
+  .cta{display:inline-flex;align-items:center;gap:9px;margin-top:18px;background:var(--eval);color:#0a0c11;
+    font-weight:680;border-radius:11px;padding:12px 20px;text-decoration:none;font-size:14.5px}
+  .cta:hover{filter:brightness(1.08)}
+  .note{font-size:12px;color:var(--muted2);margin-top:10px}
+  section{margin-top:34px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+  h2{font-size:15px;font-weight:660;margin:0 0 3px;letter-spacing:.2px}
+  .csub{color:var(--muted);font-size:12.5px;margin:0 0 16px}
+  .podium{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:end}
+  .pod{background:#171d2a;border:1px solid var(--line2);border-radius:14px;padding:18px 14px;text-align:center}
+  .pod.first{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+  .pod .medal{font-size:12px;color:var(--muted);font-family:ui-monospace,monospace}
+  .pod .pn{font-size:15px;font-weight:650;margin:6px 0 2px}
+  .pod .pv{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .pod .ps{font-size:26px;font-weight:740;margin-top:8px}
+  .pod.first .ps{color:var(--gold)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:780px){.grid2,.podium{grid-template-columns:1fr}}
+  .chartcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+  h4{margin:0 0 2px;font-size:14px}
+  .legendrow{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+  .lk{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+  .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+  table.tbl{width:100%;border-collapse:collapse;margin-top:4px}
+  table.tbl th{text-align:left;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:9px 12px;border-bottom:1px solid var(--line)}
+  table.tbl td{padding:11px 12px;border-bottom:1px solid #1a2130;font-size:13px}
+  table.tbl tr:last-child td{border-bottom:none}
+  .mid{font-size:10px;color:var(--muted);background:#0f1420;border:1px solid var(--line);border-radius:5px;padding:2px 6px;margin-right:7px}
+  footer{margin-top:40px;color:var(--muted2);font-size:12px;text-align:center}
+  /* top3d-style leaderboard */
+  .lbhero{background:linear-gradient(180deg,#141a2b,#0e1016);border:1px solid var(--line);border-radius:18px;padding:22px 24px;position:relative;overflow:hidden}
+  .lbhero::before{content:'';position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,#a78bfa,#f0a94a,#4ade80)}
+  .lbhead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .lbtitle{font-size:22px;font-weight:750;margin:0}
+  .lbsub{color:var(--muted);font-size:13px;margin:5px 0 0;max-width:560px;line-height:1.5}
+  .lbstat{font-size:12px;color:var(--muted);white-space:nowrap}
+  .livedot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px}
+  .pill2{font-size:12.5px;padding:7px 14px;border-radius:20px;border:1px solid var(--line2);background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .12s}
+  .pill2:hover{color:var(--txt);border-color:#3f4a5e}
+  .pill2.on{color:#0a0c11;font-weight:650;background:linear-gradient(90deg,#a78bfa,#f0a94a);border-color:transparent}
+  .lbboard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .lbrow{display:grid;grid-template-columns:56px 1fr 92px 70px 70px 84px;align-items:center;padding:14px 18px;border-bottom:1px solid #1a2130;gap:8px}
+  .lbrow:last-child{border-bottom:none}
+  .lbrow:hover:not(.lbrhead){background:#171d2a}
+  .lbrhead{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted2);background:#0f1420}
+  .lbrhead .lc-num,.lbrhead .lc-rank,.lbrhead .lc-model{font-weight:600}
+  .lbrow.first{background:linear-gradient(90deg,rgba(224,163,46,.10),transparent)}
+  .lc-num{text-align:right;font-family:ui-monospace,monospace;font-size:13px;color:var(--muted)}
+  .rankb{display:inline-flex;width:30px;height:30px;border-radius:9px;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:#1c2432;border:1px solid var(--line2);color:var(--muted)}
+  .rankb.gold{background:linear-gradient(180deg,#e0a32e,#9c6f1c);color:#0a0c11;border-color:var(--gold)}
+  .mname{font-size:15px;font-weight:640}
+  .mvend{font-size:11.5px;color:var(--muted);font-weight:400;margin-left:6px}
+  .mtags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .tag2{font-size:10.5px;padding:3px 8px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted)}
+  .tag2.cost{background:rgba(74,222,128,.10);border-color:#1f5230;color:var(--accent);font-family:ui-monospace,monospace}
+  .elo{font-size:17px;color:var(--txt)}
+  .elo.gold{color:var(--gold)}
+  @media (max-width:720px){.lbrow{grid-template-columns:40px 1fr 64px 56px}.lbrow .lc-num:nth-child(5),.lbrow .lc-num:nth-child(6){display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="dot"></span>3D Model Evaluation Leaderboard</h1>
+    <p class="sub">A live demo of the benchmark: seven 3D generative models compared across five prompts,
+      scored by <b>blind pairwise voting</b> (Bradley-Terry ELO) fused with <b>automated mesh analysis</b>
+      (watertightness, UV, symmetry, topology) via MCDA into one ranked leaderboard.</p>
+    <div class="badges">
+      <span class="badge ok">● example run · 105 human ballots</span>
+      <span class="badge">7 models · 5 test cases · 21 pairs each</span>
+      <span class="badge eval">Bradley-Terry + MCDA</span>
+    </div>
+    <a class="cta" href="viewer.html">⚖️ Open the blind pair voter →</a>
+    <p class="note">The interactive 3D voter below ships the <b>Mecha Dragon</b> test case (all 7 models, 21 blind matchups).
+      The leaderboard &amp; charts aggregate all five test cases. Full multi-case voting runs in the local app.</p>
+  </header>
+
+  <section>
+    <div class="lbhero">
+      <div class="lbhead">
+        <div><h2 class="lbtitle">3D Model Evaluation Leaderboard</h2>
+          <p class="lbsub">Ranked by blind pairwise votes (Bradley-Terry ELO) fused with automated mesh analysis.</p></div>
+        <div class="lbstat"><span class="livedot"></span> <b id="votesCast">—</b> votes cast · example run</div>
+      </div>
+      <div class="pills" id="axisPills">
+        <button class="pill2 on" data-axis="fused">Composite</button>
+        <button class="pill2" data-axis="overall">Overall</button>
+        <button class="pill2" data-axis="prompt_alignment">Prompt</button>
+        <button class="pill2" data-axis="texture_material">Texture</button>
+        <button class="pill2" data-axis="form_proportion">Form</button>
+        <button class="pill2" data-axis="mesh_integrity">Mesh</button>
+      </div>
+      <div class="podium" id="podium"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="lbboard">
+      <div class="lbrow lbrhead"><div class="lc-rank">#</div><div class="lc-model">Model</div>
+        <div class="lc-num">ELO</div><div class="lc-num">Wins</div><div class="lc-num">Losses</div><div class="lc-num">Win rate</div></div>
+      <div id="richboard"></div>
+    </div>
+  </section>
+
+  <section class="chartcard">
+    <h4>Fused score · all models</h4><p class="csub">Bradley-Terry subjective + objective geometry, MCDA-fused</p>
+    <div id="barchart"></div>
+  </section>
+
+  <section class="grid2">
+    <div class="chartcard"><h4>Per-parameter ELO</h4><p class="csub">Subjective strengths — top 3 models</p>
+      <div id="radar"></div><div class="legendrow" id="radarleg"></div></div>
+    <div class="chartcard"><h4>Speed vs quality</h4><p class="csub">Avg generation time (s) vs fused score</p>
+      <div id="scatter"></div></div>
+  </section>
+
+  <section class="chartcard">
+    <h4>Objective dimension breakdown</h4><p class="csub">Mean 0–100 rubric per model (integrity · texturing · symmetry · efficiency)</p>
+    <div id="dimchart"></div><div class="legendrow" id="dimleg"></div>
+  </section>
+
+  <section class="chartcard">
+    <h4>Pairwise win matrix <span style="font-weight:400;color:var(--muted)">· the Bradley-Terry input</span></h4>
+    <p class="csub">How often the <b>row</b> model beat the <b>column</b> model (ties = ½), summed across test cases — the raw evidence the subjective ELO is fit from.
+      <select id="pwParam" style="margin-left:8px;background:#0f1420;color:var(--txt);border:1px solid var(--line2);border-radius:8px;padding:4px 8px">
+        <option value="overall" selected>Overall</option><option value="prompt_alignment">Prompt</option>
+        <option value="texture_material">Texture</option><option value="form_proportion">Form</option>
+        <option value="mesh_integrity">Mesh</option></select></p>
+    <div id="pwmatrix" style="overflow-x:auto"></div>
+  </section>
+
+  <footer>Static demo of the 3D Model Evaluation Leaderboard · example run · generated from the real pipeline output.</footer>
+</div>
+
+<script>
+const PAL=['#4ade80','#5b8bf0','#f0a94a','#a78bfa','#f2555a','#4dd0e1','#e0a32e'];
+const PARAMS=[['prompt_alignment','Prompt'],['texture_material','Texture'],['form_proportion','Form'],['mesh_integrity','Mesh'],['overall','Overall']];
+let MODELS=[],FUSED=[],PARAM_ELO={},DIMS={},PAIRWISE={};
+const baseName=id=>(MODELS.find(m=>m.id===id)||{}).name||id;
+
+fetch('data/results.json').then(r=>r.json()).then(res=>{
+  MODELS=res.models.map(m=>({id:m.id,name:m.name,vendor:(m.metadata&&m.metadata.vendor)||'',credits:Math.round((res.gen_seconds&&res.gen_seconds[m.id])||0)}));
+  FUSED=res.fused; PARAM_ELO=res.param_elo; DIMS=res.dims; PAIRWISE=res.pairwise||{};
+  renderPodium();
+  document.getElementById('votesCast').textContent=Math.round(Object.values((PAIRWISE.overall||{}).wins||{})
+    .reduce((s,row)=>s+Object.values(row).reduce((a,b)=>a+b,0),0));
+  renderRichBoard(document.getElementById('richboard'),'fused');
+  document.querySelectorAll('#axisPills .pill2').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#axisPills .pill2').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    const ax=b.dataset.axis; renderRichBoard(document.getElementById('richboard'),ax);
+    const pw=document.getElementById('pwParam'); if(pw&&ax!=='fused'){ pw.value=ax; drawPairwise(document.getElementById('pwmatrix'),ax); }
+  });
+  drawBar(document.getElementById('barchart'));
+  drawRadar(document.getElementById('radar'),document.getElementById('radarleg'));
+  drawScatter(document.getElementById('scatter'));
+  drawDims(document.getElementById('dimchart'),document.getElementById('dimleg'));
+  const pwSel=document.getElementById('pwParam'),pwHost=document.getElementById('pwmatrix');
+  if(pwSel){ drawPairwise(pwHost,pwSel.value); pwSel.onchange=()=>drawPairwise(pwHost,pwSel.value); }
+}).catch(e=>{document.getElementById('podium').innerHTML='<p class="csub">could not load data/results.json</p>';console.error(e);});
+
+function drawPairwise(host,param){
+  const order=FUSED.map(d=>d.model),W=((PAIRWISE[param]||{}).wins)||{};
+  if(!Object.keys(W).length){host.innerHTML='<p class="csub">no pairwise data</p>';return;}
+  const cell=(r,c)=>{
+    if(r===c) return '<td style="background:#0c0f16;color:var(--muted2);text-align:center">—</td>';
+    const w=(W[r]||{})[c]||0,l=(W[c]||{})[r]||0,tot=w+l,frac=tot?w/tot:0;
+    const bg=`rgba(74,222,128,${(0.10+0.80*frac).toFixed(2)})`;
+    return `<td title="${r} beat ${c} ${w}–${l}" style="background:${bg};color:#0a0c11;font-weight:600;text-align:center">${w}</td>`;
+  };
+  host.innerHTML=`<table class="tbl" style="min-width:520px"><thead><tr><th>▼ won / ► lost</th>${order.map(c=>`<th style="text-align:center">${c}</th>`).join('')}</tr></thead>
+    <tbody>${order.map(r=>`<tr><td><span class="mid">${r}</span>${baseName(r)}</td>${order.map(c=>cell(r,c)).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+function renderPodium(){
+  const top=FUSED.slice(0,3); const order=top.length===3?[top[1],top[0],top[2]]:top;
+  document.getElementById('podium').innerHTML=order.map(r=>{
+    const m=MODELS.find(x=>x.id===r.model)||{};
+    return `<div class="pod ${r.rank===1?'first':''}">
+      <div class="medal">#${r.rank}</div><div class="pn">${m.name||r.model}</div>
+      <div class="pv">${r.model}</div><div class="ps">${r.fused.toFixed(0)}</div></div>`;
+  }).join('');
+}
+function axisWinLoss(axis){
+  const W=((PAIRWISE[axis]||{}).wins)||{},ids=MODELS.map(m=>m.id),out={};
+  ids.forEach(a=>{let w=0,l=0;ids.forEach(b=>{if(a===b)return;w+=(W[a]||{})[b]||0;l+=(W[b]||{})[a]||0;});out[a]={w,l,rate:(w+l)?w/(w+l):0};});
+  return out;
+}
+function modelTags(mid){
+  const d=DIMS[mid]||{},t=[];
+  if(d.integrity>=55)t.push('Watertight');else if(d.integrity>=38)t.push('Clean topology');
+  if(d.texturing>=68)t.push('HD texture');else if(d.texturing>=50)t.push('PBR');
+  if(d.symmetry>=68)t.push('Symmetric');
+  if(d.efficiency>=68)t.push('Low-poly');else if(d.efficiency<=22)t.push('High-poly');
+  return t.slice(0,3);
+}
+const fmtN=v=>(+v).toFixed(1).replace(/\.0$/,'');
+function renderRichBoard(host,axis){
+  const isFused=axis==='fused',pwAxis=isFused?'overall':axis,wl=axisWinLoss(pwAxis);
+  const rows=isFused?FUSED.map(r=>({id:r.model,elo:r.fused}))
+    :MODELS.map(m=>({id:m.id,elo:(PARAM_ELO[m.id]||{})[axis]||0})).sort((a,b)=>b.elo-a.elo);
+  host.innerHTML=rows.map((r,i)=>{
+    const m=MODELS.find(x=>x.id===r.id)||{},rank=i+1,first=rank===1,lw=wl[r.id]||{w:0,l:0,rate:0};
+    const cost=m.credits?`<span class="tag2 cost">~${m.credits}s / gen</span>`:'';
+    const tags=modelTags(r.id).map(t=>`<span class="tag2">${t}</span>`).join('');
+    return `<div class="lbrow${first?' first':''}">
+      <div class="lc-rank"><span class="rankb${first?' gold':''}">${rank}</span></div>
+      <div class="lc-model"><div class="mname">${m.name||r.id}<span class="mvend">${m.vendor||''}</span></div>
+        <div class="mtags">${cost}${tags}</div></div>
+      <div class="lc-num"><b class="elo${first?' gold':''}">${Math.round(r.elo)}</b></div>
+      <div class="lc-num">${fmtN(lw.w)}</div><div class="lc-num">${fmtN(lw.l)}</div>
+      <div class="lc-num">${Math.round(lw.rate*100)}%</div>
+    </div>`;
+  }).join('');
+}
+
+/* ---- charts (pure SVG, adapted from the wizard) ---- */
+function drawBar(host){
+  const data=[...FUSED],W=880,H=data.length*46+30,L=170,R=70;
+  const min=Math.min(...data.map(d=>d.fused)),max=Math.max(...data.map(d=>d.fused)),span=(max-min)||1,bw=W-L-R;
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%">${data.map((d,i)=>{
+    const y=i*46+14,pct=0.18+0.82*(d.fused-min)/span,w=bw*pct,c=d.rank===1?'var(--gold)':'#3a5f8f';
+    return `<text x="${L-12}" y="${y+21}" text-anchor="end" font-size="12" fill="#e8ebf2">${d.rank}. ${baseName(d.model)}</text>
+      <rect x="${L}" y="${y+6}" width="${bw}" height="22" rx="6" fill="#0f1420"/>
+      <rect x="${L}" y="${y+6}" width="${w}" height="22" rx="6" fill="${c}"/>
+      <text x="${L+w+8}" y="${y+21}" font-size="12" font-family="ui-monospace,monospace" fill="${d.rank===1?'var(--gold)':'#8a93a6'}">${d.fused.toFixed(0)}</text>`;
+  }).join('')}</svg>`;
+}
+function drawRadar(host,leg){
+  const top=FUSED.slice(0,3).map(d=>d.model),axes=PARAMS,N=axes.length,W=440,H=360,cx=W/2,cy=H/2+6,R=125;
+  const lo=900,hi=1650,norm=v=>(v-lo)/(hi-lo),ang=i=>-Math.PI/2+i*2*Math.PI/N;
+  let grid='';for(let g=1;g<=4;g++){const rr=R*g/4;grid+=`<polygon points="${axes.map((_,i)=>`${cx+rr*Math.cos(ang(i))},${cy+rr*Math.sin(ang(i))}`).join(' ')}" fill="none" stroke="#232b3a"/>`;}
+  const labels=axes.map((a,i)=>{const x=cx+(R+22)*Math.cos(ang(i)),y=cy+(R+22)*Math.sin(ang(i));return `<text x="${x}" y="${y+4}" text-anchor="middle" font-size="11" fill="#c9d0dc">${a[1]}</text>`;}).join('');
+  const polys=top.map((mid,k)=>{const pts=axes.map((a,i)=>{const r=R*Math.max(0,Math.min(1,norm((PARAM_ELO[mid]||{})[a[0]]||lo)));return `${cx+r*Math.cos(ang(i))},${cy+r*Math.sin(ang(i))}`;}).join(' ');
+    return `<polygon points="${pts}" fill="${PAL[k]}22" stroke="${PAL[k]}" stroke-width="2"/>`;}).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">${grid}${labels}${polys}</svg>`;
+  leg.innerHTML=top.map((mid,k)=>`<span class="lk"><span class="sw" style="background:${PAL[k]}"></span>${baseName(mid)}</span>`).join('');
+}
+function drawScatter(host){
+  const W=440,H=340,pad=48,xs=FUSED.map(d=>(MODELS.find(m=>m.id===d.model)||{}).credits||0),ys=FUSED.map(d=>d.fused);
+  const xmin=Math.min(...xs)-15,xmax=Math.max(...xs)+15,ymin=Math.min(...ys)-40,ymax=Math.max(...ys)+40;
+  const X=v=>pad+(W-pad-16)*(v-xmin)/(xmax-xmin||1),Y=v=>H-pad-(H-pad-16)*(v-ymin)/(ymax-ymin||1);
+  let grid='';for(let i=0;i<=4;i++){const y=pad+i*(H-pad-16)/4;grid+=`<line x1="${pad}" y1="${y}" x2="${W-16}" y2="${y}" stroke="#1c2330"/>`;}
+  const axis=`<line x1="${pad}" y1="${H-pad}" x2="${W-16}" y2="${H-pad}" stroke="#2f3849"/><line x1="${pad}" y1="16" x2="${pad}" y2="${H-pad}" stroke="#2f3849"/>
+    <text x="${W/2}" y="${H-12}" text-anchor="middle" font-size="11" fill="#8a93a6">avg generation time (s) →</text>
+    <text x="16" y="${H/2}" text-anchor="middle" font-size="11" fill="#8a93a6" transform="rotate(-90 16 ${H/2})">fused score →</text>`;
+  const dots=FUSED.map((d,i)=>{const m=MODELS.find(x=>x.id===d.model)||{},x=X(m.credits||0),y=Y(d.fused),c=d.rank===1?'var(--gold)':PAL[i%PAL.length];
+    return `<circle cx="${x}" cy="${y}" r="8" fill="${c}cc" stroke="${c}"/><text x="${x+11}" y="${y+4}" font-size="10.5" fill="#c9d0dc">${d.model}</text>`;}).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">${grid}${axis}${dots}</svg>`;
+}
+function drawDims(host,leg){
+  const dims=['integrity','texturing','symmetry','efficiency'],order=FUSED.map(d=>d.model);
+  const W=880,groupW=(W-40)/order.length,bw=groupW/(dims.length+1),H=260,base=H-30;let bars='';
+  order.forEach((mid,gi)=>{const gx=20+gi*groupW;
+    dims.forEach((dm,di)=>{const v=(DIMS[mid]||{})[dm]||0,h=(base-20)*v/100;bars+=`<rect x="${gx+di*bw+6}" y="${base-h}" width="${bw-3}" height="${h}" rx="2" fill="${PAL[di]}"/>`;});
+    bars+=`<text x="${gx+groupW/2}" y="${base+16}" text-anchor="middle" font-size="10.5" fill="#8a93a6">${mid}</text>`;});
+  bars+=`<line x1="20" y1="${base}" x2="${W-10}" y2="${base}" stroke="#2f3849"/>`;
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%">${bars}</svg>`;
+  leg.innerHTML=dims.map((d,i)=>`<span class="lk"><span class="sw" style="background:${PAL[i]}"></span>${d}</span>`).join('');
+}
+</script>
+</body>
+</html>

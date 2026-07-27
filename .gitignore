@@ -93,18 +93,23 @@ pnpm-debug.log
 daily_logs/
 
 # Generated pipeline artifacts (regenerable via main.py)
-Layer 5 - Output Cache/cache/
+Cache Storage Layer/cache/
 enriched_matchups.json
-Layer 3 - Pair Generation/pairs.json
-Layer 3 - Pair Generation/matchups.json
-Layer 4 - Generation Scheduler/manifest.json
-Layer 6A - Subjective Pipeline/viewer_data.json
-Layer 6A - Subjective Pipeline/votes_backup.json
-Layer 6A - Subjective Pipeline/elos.json
-Layer 6A - Subjective Pipeline/renders/
-Layer 6B - Objective Pipeline/objective_scores.json
-Layer 7 - Fusion/fused_scores.json
-Layer 8 - Leaderboard/leaderboard.html
+6 - Fusion Layer/settings.json
+3 - Round Robin Pair Generator/judge.json
+3 - Round Robin Pair Generator/manifest.json
+4 - Generation Prep Scheduler/manifest.json
+5A - Subjective Pipeline/final_votes.json
+3 - Round Robin Pair Generator/pairs.json
+3 - Round Robin Pair Generator/matchups.json
+4 - Generation Prep Scheduler/manifest.json
+5A - Subjective Pipeline/viewer_data.json
+5A - Subjective Pipeline/votes_backup.json
+5A - Subjective Pipeline/elos.json
+5A - Subjective Pipeline/renders/
+5B - Objective Pipeline/objective_scores.json
+6 - Fusion Layer/fused_scores.json
+7 - Leaderboard/leaderboard.html
 frontend/app_data.json
 
 # 3D Model Large Assets
@@ -119,3 +124,13 @@ TEST CASES/
 *.ply
 *.3ds
 *.blend
+
+# Per-run archives + transient run pointer (runs/example is kept as the demo)
+runs/archive_*/
+runs/current.json
+
+# Ship the COMPRESSED demo meshes (static GitHub Pages demo). The global *.glb
+# rule above would otherwise exclude them and break the deployed 3D voter.
+!docs/models/
+!docs/models/**/
+!docs/models/**/*.glb

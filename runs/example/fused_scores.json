@@ -1,0 +1,217 @@
+{
+  "method": "VIKOR on z-normalized criteria -> 1300-centered ELO scale",
+  "mcda_method": "VIKOR",
+  "primary_weights": {
+    "subjective": 0.6,
+    "objective": 0.4
+  },
+  "parameter_weights": {
+    "prompt_alignment": 0.3,
+    "texture_material": 0.2,
+    "form_proportion": 0.2,
+    "mesh_integrity": 0.15,
+    "overall": 0.15
+  },
+  "hard_constraints": {
+    "reject_non_manifold": false,
+    "non_manifold_ratio_max": 0.05,
+    "watertight_penalty": 0.85,
+    "min_faces": 100
+  },
+  "pareto_filter": false,
+  "leaderboard": [
+    {
+      "rank": 1,
+      "model": "M6",
+      "fused_score": 1607.6,
+      "subjective_elo": 1511.4,
+      "objective_score": 63.7,
+      "objective_penalized": 54.1,
+      "worst_axis_elo": 1407.0,
+      "rejected": false,
+      "penalty": 0.85,
+      "constraint_reasons": [
+        "not watertight"
+      ],
+      "pareto_dominated": false
+    },
+    {
+      "rank": 2,
+      "model": "M2",
+      "fused_score": 1470.9,
+      "subjective_elo": 1394.7,
+      "objective_score": 60.7,
+      "objective_penalized": 51.6,
+      "worst_axis_elo": 1220.0,
+      "rejected": false,
+      "penalty": 0.85,
+      "constraint_reasons": [
+        "not watertight"
+      ],
+      "pareto_dominated": false
+    },
+    {
+      "rank": 3,
+      "model": "M4",
+      "fused_score": 1311.7,
+      "subjective_elo": 1349.2,
+      "objective_score": 34.0,
+      "objective_penalized": 28.9,
+      "worst_axis_elo": 1210.0,
+      "rejected": false,
+      "penalty": 0.85,
+      "constraint_reasons": [
+        "not watertight"
+      ],
+      "pareto_dominated": false
+    },
+    {
+      "rank": 4,
+      "model": "M1",
+      "fused_score": 1301.0,
+      "subjective_elo": 1353.5,
+      "objective_score": 32.3,
+      "objective_penalized": 27.5,
+      "worst_axis_elo": 1332.0,
+      "rejected": false,
+      "penalty": 0.85,
+      "constraint_reasons": [
+        "not watertight"
+      ],
+      "pareto_dominated": false
+    },
+    {
+      "rank": 5,
+      "model": "M7",
+      "fused_score": 1200.8,
+      "subjective_elo": 1289.7,
+      "objective_score": 22.8,
+      "objective_penalized": 19.4,
+      "worst_axis_elo": 1214.0,
+      "rejected": false,
+      "penalty": 0.85,
+      "constraint_reasons": [
+        "not watertight"
+      ],
+      "pareto_dominated": false
+    },
+    {
+      "rank": 6,
+      "model": "M3",
+      "fused_score": 1122.0,
+      "subjective_elo": 1108.2,
+      "objective_score": 49.1,
+      "objective_penalized": 41.7,
+      "worst_axis_elo": 955.0,
+      "rejected": false,
+      "penalty": 0.85,
+      "constraint_reasons": [
+        "not watertight"
+      ],
+      "pareto_dominated": false
+    },
+    {
+      "rank": 7,
+      "model": "M5",
+      "fused_score": 1086.0,
+      "subjective_elo": 1093.5,
+      "objective_score": 42.8,
+      "objective_penalized": 36.4,
+      "worst_axis_elo": 1033.0,
+      "rejected": false,
+      "penalty": 0.85,
+      "constraint_reasons": [
+        "not watertight"
+      ],
+      "pareto_dominated": false
+    }
+  ],
+  "sensitivity_ranks": {
+    "M6": {
+      "sub70": 1,
+      "sub60": 1,
+      "sub50": 1,
+      "sub40": 1,
+      "sub30": 1
+    },
+    "M2": {
+      "sub70": 2,
+      "sub60": 2,
+      "sub50": 2,
+      "sub40": 2,
+      "sub30": 2
+    },
+    "M1": {
+      "sub70": 3,
+      "sub60": 4,
+      "sub50": 4,
+      "sub40": 5,
+      "sub30": 6
+    },
+    "M4": {
+      "sub70": 4,
+      "sub60": 3,
+      "sub50": 3,
+      "sub40": 4,
+      "sub30": 5
+    },
+    "M7": {
+      "sub70": 5,
+      "sub60": 5,
+      "sub50": 7,
+      "sub40": 7,
+      "sub30": 7
+    },
+    "M3": {
+      "sub70": 6,
+      "sub60": 6,
+      "sub50": 5,
+      "sub40": 3,
+      "sub30": 3
+    },
+    "M5": {
+      "sub70": 7,
+      "sub60": 7,
+      "sub50": 6,
+      "sub40": 6,
+      "sub30": 4
+    }
+  },
+  "sensitivity_stability": {
+    "M1": {
+      "min_rank": 3,
+      "max_rank": 6,
+      "stable": false
+    },
+    "M2": {
+      "min_rank": 2,
+      "max_rank": 2,
+      "stable": true
+    },
+    "M3": {
+      "min_rank": 3,
+      "max_rank": 6,
+      "stable": false
+    },
+    "M4": {
+      "min_rank": 3,
+      "max_rank": 5,
+      "stable": false
+    },
+    "M5": {
+      "min_rank": 4,
+      "max_rank": 7,
+      "stable": false
+    },
+    "M6": {
+      "min_rank": 1,
+      "max_rank": 1,
+      "stable": true
+    },
+    "M7": {
+      "min_rank": 5,
+      "max_rank": 7,
+      "stable": false
+    }
+  }
+}

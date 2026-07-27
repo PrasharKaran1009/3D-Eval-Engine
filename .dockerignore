@@ -1,0 +1,18 @@
+# Keep the build context lean — these are regenerated inside the image, or
+# are local-only noise.
+.git
+.gitignore
+.DS_Store
+**/__pycache__/
+**/*.pyc
+.venv/
+venv/
+runs/archive_*/
+runs/current.json
+# The cache is rebuilt by the Dockerfile's `RUN python3 main.py --no-viewer`,
+# so don't ship a stale host copy into the context.
+Cache Storage Layer/cache/
+# Large design artifacts not needed at runtime.
+updated.png
+Screenshot*.png
+archive/
