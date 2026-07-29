@@ -112,8 +112,18 @@ enriched_matchups.json
 7 - Leaderboard/leaderboard.html
 frontend/app_data.json
 
-# 3D Model Large Assets
-TEST CASES/
+# Working registry — GENERATED, not source.
+#
+# Every registry save rewrites these, so a demo visitor comparing 2 of the 7
+# models legitimately shrinks them to 2 entries. The canonical 7x5 benchmark is
+# `benchmark/catalog.json` (committed, never written at runtime), and
+# main.ensure_registry() reseeds these from it whenever they are missing. Keeping
+# them ignored means nothing a visitor selects can dirty the checkout.
+1 - Registry Layer/models.json
+1 - Registry Layer/prompts.json
+1 - Registry Layer/judge.json
+
+
 
 *.glb
 *.gltf
@@ -128,9 +138,15 @@ TEST CASES/
 # Per-run archives + transient run pointer (runs/example is kept as the demo)
 runs/archive_*/
 runs/current.json
+# The live ballot log. Every vote a visitor casts lands here instead of in the
+# committed "5A - Subjective Pipeline/votes.json", which is the frozen 105-ballot
+# demo and must stay byte-identical no matter what anyone clicks.
+runs/session/
 
 # Ship the COMPRESSED demo meshes (static GitHub Pages demo). The global *.glb
 # rule above would otherwise exclude them and break the deployed 3D voter.
 !docs/models/
 !docs/models/**/
 !docs/models/**/*.glb
+
+task.md

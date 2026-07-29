@@ -160,8 +160,31 @@ def compute() -> dict:
     return {"weights": WEIGHTS, "by_test_case": by_tc, "objective_leaderboard": board}
 
 
+def write(out: dict, path: str = OUT_PATH) -> dict:
+    with open(path, "w") as f:
+        json.dump(out, f, indent=2)
+    return out
+
+
+def run() -> dict:
+    """
+    Compute + persist objective_scores.json. Importable entry point.
+
+    main.py's run_pipeline() calls this right after the Layer 5 cache is filled,
+    because the Fusion layer HARD-REQUIRES objective_scores.json and a registry
+    fork deletes it — leaving this to a manual CLI step meant a fresh model set
+    could never build a leaderboard.
+    """
+    return write(compute())
+
+
 def _print(out: dict) -> None:
     print("\n=== 6B Objective Leaderboard (mean composite across test cases) ===")
+    if not out["objective_leaderboard"]:
+        # Empty cache (fresh clone / post-fork). Report it instead of raising a
+        # StopIteration on the dimension-breakdown sample below.
+        print("  (no cached meshes yet — run `python3 main.py` to fill the Layer 5 cache)")
+        return
     for rank, r in enumerate(out["objective_leaderboard"], 1):
         print(f"  {rank:>2}. {r['model']:<5} {r['obj_score']:>6.1f}  ({r['test_cases']} TCs)")
     print(f"\n  weights: {out['weights']}")
@@ -178,9 +201,7 @@ def _print(out: dict) -> None:
 
 
 def main() -> None:
-    out = compute()
-    with open(OUT_PATH, "w") as f:
-        json.dump(out, f, indent=2)
+    out = run()
     _print(out)
     print(f"\n[out] objective scores -> {OUT_PATH}")
 

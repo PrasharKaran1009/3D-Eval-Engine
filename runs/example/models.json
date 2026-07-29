@@ -12,7 +12,10 @@
           "trellis"
         ]
       },
-      "metadata": {}
+      "metadata": {
+        "vendor": "Microsoft",
+        "credits": "78"
+      }
     },
     {
       "id": "M2",
@@ -24,7 +27,10 @@
           "tripo"
         ]
       },
-      "metadata": {}
+      "metadata": {
+        "vendor": "Tripo",
+        "credits": "78"
+      }
     },
     {
       "id": "M3",
@@ -36,7 +42,10 @@
           "meshy"
         ]
       },
-      "metadata": {}
+      "metadata": {
+        "vendor": "Meshy",
+        "credits": "208"
+      }
     },
     {
       "id": "M4",
@@ -51,7 +60,10 @@
           "2.5"
         ]
       },
-      "metadata": {}
+      "metadata": {
+        "vendor": "Deemos",
+        "credits": "104"
+      }
     },
     {
       "id": "M5",
@@ -64,7 +76,10 @@
           "2.5"
         ]
       },
-      "metadata": {}
+      "metadata": {
+        "vendor": "Deemos",
+        "credits": "104"
+      }
     },
     {
       "id": "M6",
@@ -76,7 +91,10 @@
           "hunyuan"
         ]
       },
-      "metadata": {}
+      "metadata": {
+        "vendor": "Tencent",
+        "credits": "104"
+      }
     },
     {
       "id": "M7",
@@ -88,7 +106,10 @@
           "pixal"
         ]
       },
-      "metadata": {}
+      "metadata": {
+        "vendor": "Pixal",
+        "credits": "78-110"
+      }
     }
   ]
 }

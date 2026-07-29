@@ -1,0 +1,921 @@
+{
+  "_note": "Base-color/normal/MR texture resolutions of the ORIGINAL uncompressed benchmark meshes, recorded before tools/pack_testcases.py downscaled them to 2048px. The packed TC00x.zip meshes report min(original, 2048) for texture_width/height, so this file is the only remaining record of the native map sizes the vendors delivered.",
+  "texture_size_cap": 2048,
+  "cases": {
+    "TC001": {
+      "M6": {
+        "model_name": "Hunyuan 3D Pro",
+        "file": "TC001_Hunyuan 3D Pro.glb",
+        "original_bytes": 56574336,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_pbr_20250901_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901_metallic-texture_pbr_20250901_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC001_Hyper 3D Rodin 2.glb": {
+        "model_name": null,
+        "file": "TC001_Hyper 3D Rodin 2.glb",
+        "original_bytes": 45235840,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC001_Hyper Rodin 2.5.glb": {
+        "model_name": null,
+        "file": "TC001_Hyper Rodin 2.5.glb",
+        "original_bytes": 77996984,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC001_Meshy 6 Preview.glb": {
+        "model_name": null,
+        "file": "TC001_Meshy 6 Preview.glb",
+        "original_bytes": 5192180,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      },
+      "M7": {
+        "model_name": "Pixal 3D",
+        "file": "TC001_Pixal 3d.glb",
+        "original_bytes": 8181984,
+        "base_color": {
+          "width": 1024,
+          "height": 1024,
+          "pixels": 1048576,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 1024,
+            "height": 1024,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 1024,
+            "height": 1024,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC001_Trellis 2.glb": {
+        "model_name": null,
+        "file": "TC001_Trellis 2.glb",
+        "original_bytes": 22144520,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC001_Tripo 3D-2.5.glb": {
+        "model_name": null,
+        "file": "TC001_Tripo 3D-2.5.glb",
+        "original_bytes": 8235736,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "Color_4a53de1e-73d3-424a-bb12-cdb9d26a49fa",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      }
+    },
+    "TC002": {
+      "M6": {
+        "model_name": "Hunyuan 3D Pro",
+        "file": "TC002_Hunyuan 3D Pro.glb",
+        "original_bytes": 60114868,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_pbr_20250901_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901_metallic-texture_pbr_20250901_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC002_Hyper 3D Rodin 2.glb": {
+        "model_name": null,
+        "file": "TC002_Hyper 3D Rodin 2.glb",
+        "original_bytes": 50041992,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC002_Hyper Rodin 2.5.glb": {
+        "model_name": null,
+        "file": "TC002_Hyper Rodin 2.5.glb",
+        "original_bytes": 70353808,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC002_Meshy 6 Preview.glb": {
+        "model_name": null,
+        "file": "TC002_Meshy 6 Preview.glb",
+        "original_bytes": 4590184,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      },
+      "M7": {
+        "model_name": "Pixal 3D",
+        "file": "TC002_Pixal 3d.glb",
+        "original_bytes": 9622576,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 4096,
+            "height": 4096,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 4096,
+            "height": 4096,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC002_Trellis 2.glb": {
+        "model_name": null,
+        "file": "TC002_Trellis 2.glb",
+        "original_bytes": 18964524,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC002_Tripo 3D-2.5.glb": {
+        "model_name": null,
+        "file": "TC002_Tripo 3D-2.5.glb",
+        "original_bytes": 14953764,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "Color_8bc8512f-dea8-4313-873f-266b01a02f50",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      }
+    },
+    "TC003": {
+      "M6": {
+        "model_name": "Hunyuan 3D Pro",
+        "file": "TC003_Hunyuan 3D Pro.glb",
+        "original_bytes": 51497068,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_pbr_20250901_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901_metallic-texture_pbr_20250901_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC003_Hyper 3D Rodin 2.glb": {
+        "model_name": null,
+        "file": "TC003_Hyper 3D Rodin 2.glb",
+        "original_bytes": 40650096,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC003_Hyper Rodin 2.5.glb": {
+        "model_name": null,
+        "file": "TC003_Hyper Rodin 2.5.glb",
+        "original_bytes": 76715732,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC003_Meshy 6 Preview.glb": {
+        "model_name": null,
+        "file": "TC003_Meshy 6 Preview.glb",
+        "original_bytes": 5550016,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      },
+      "M7": {
+        "model_name": "Pixal 3D",
+        "file": "TC003_Pixal 3d.glb",
+        "original_bytes": 10207972,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 4096,
+            "height": 4096,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 4096,
+            "height": 4096,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC003_Trellis 2.glb": {
+        "model_name": null,
+        "file": "TC003_Trellis 2.glb",
+        "original_bytes": 24573300,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC003_Tripo 3D-2.5.glb": {
+        "model_name": null,
+        "file": "TC003_Tripo 3D-2.5.glb",
+        "original_bytes": 4385100,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "Color_06acb8ae-bf6b-478a-acc4-ec4dfa93b6c3",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      }
+    },
+    "TC004": {
+      "M6": {
+        "model_name": "Hunyuan 3D Pro",
+        "file": "TC004_Hunyuan 3D Pro.glb",
+        "original_bytes": 61961272,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_pbr_20250901_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901_metallic-texture_pbr_20250901_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC004_Hyper 3D Rodin 2.glb": {
+        "model_name": null,
+        "file": "TC004_Hyper 3D Rodin 2.glb",
+        "original_bytes": 36819596,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC004_Hyper Rodin 2.5.glb": {
+        "model_name": null,
+        "file": "TC004_Hyper Rodin 2.5.glb",
+        "original_bytes": 88563944,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC004_Meshy 6 Preview.glb": {
+        "model_name": null,
+        "file": "TC004_Meshy 6 Preview.glb",
+        "original_bytes": 4985240,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      },
+      "M7": {
+        "model_name": "Pixal 3D",
+        "file": "TC004_Pixal 3d.glb",
+        "original_bytes": 8046204,
+        "base_color": {
+          "width": 1024,
+          "height": 1024,
+          "pixels": 1048576,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 1024,
+            "height": 1024,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 1024,
+            "height": 1024,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC004_Trellis 2.glb": {
+        "model_name": null,
+        "file": "TC004_Trellis 2.glb",
+        "original_bytes": 20432224,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC004_Tripo 3D-2.5.glb": {
+        "model_name": null,
+        "file": "TC004_Tripo 3D-2.5.glb",
+        "original_bytes": 13419512,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "Color_99c59cea-1134-49d7-89bc-aa14ba5fe844",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      }
+    },
+    "TC005": {
+      "M6": {
+        "model_name": "Hunyuan 3D Pro",
+        "file": "TC005_Hunyuan 3D Pro.glb",
+        "original_bytes": 55640072,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_pbr_20250901_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_pbr_20250901_metallic-texture_pbr_20250901_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC005_Hyper 3D Rodin 2.glb": {
+        "model_name": null,
+        "file": "TC005_Hyper 3D Rodin 2.glb",
+        "original_bytes": 37939760,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 2048,
+            "height": 2048,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC005_Hyper Rodin 2.5.glb": {
+        "model_name": null,
+        "file": "TC005_Hyper Rodin 2.5.glb",
+        "original_bytes": 50278088,
+        "base_color": {
+          "width": 4096,
+          "height": 4096,
+          "pixels": 16777216,
+          "format": "PNG"
+        },
+        "all_maps": [
+          {
+            "name": "texture_normal",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_diffuse",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          },
+          {
+            "name": "texture_metallic-texture_roughness",
+            "width": 4096,
+            "height": 4096,
+            "format": "PNG"
+          }
+        ]
+      },
+      "TC005_Meshy 6 Preview.glb": {
+        "model_name": null,
+        "file": "TC005_Meshy 6 Preview.glb",
+        "original_bytes": 4799588,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      },
+      "M7": {
+        "model_name": "Pixal 3D",
+        "file": "TC005_Pixal 3d.glb",
+        "original_bytes": 7975840,
+        "base_color": {
+          "width": 1024,
+          "height": 1024,
+          "pixels": 1048576,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 1024,
+            "height": 1024,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 1024,
+            "height": 1024,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC005_Trellis 2.glb": {
+        "model_name": null,
+        "file": "TC005_Trellis 2.glb",
+        "original_bytes": 20132692,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "WEBP"
+        },
+        "all_maps": [
+          {
+            "name": "image_0",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          },
+          {
+            "name": "image_1",
+            "width": 2048,
+            "height": 2048,
+            "format": "WEBP"
+          }
+        ]
+      },
+      "TC005_Tripo 3D-2.5.glb": {
+        "model_name": null,
+        "file": "TC005_Tripo 3D-2.5.glb",
+        "original_bytes": 15963244,
+        "base_color": {
+          "width": 2048,
+          "height": 2048,
+          "pixels": 4194304,
+          "format": "JPEG"
+        },
+        "all_maps": [
+          {
+            "name": "Color_c358c799-d500-4796-aa4d-da6b867503e3",
+            "width": 2048,
+            "height": 2048,
+            "format": "JPEG"
+          }
+        ]
+      }
+    }
+  }
+}

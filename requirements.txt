@@ -5,9 +5,28 @@
 trimesh>=4.0        # mesh load, counts, watertight, UV stretch
 numpy>=1.24         # required by trimesh + 6B scoring
 scipy>=1.10         # symmetry KD-tree + rank normalization
+Pillow>=10.0        # REQUIRED, not optional: trimesh decodes GLB textures through
+                    # PIL. Without it every mesh silently reports has_texture=False
+                    # and texture_pixels=None, so 6B's Texturing dimension (35% of
+                    # the objective weight) collapses to UV-stretch alone and the
+                    # has-texture gate / resolution / texel-density metrics go inert.
 pymeshlab>=2022.2   # topology integrity (non-manifold, boundary edges, holes).
                     # REQUIRED: cache.py and metrics_extractor.py import it at
                     # module load. Without it Layers 5/6B will not run.
+Pillow>=10.0        # REQUIRED, not optional — and it fails SILENTLY when absent.
+                    # trimesh only decodes a GLB's embedded baseColorTexture if
+                    # Pillow is importable; with no PIL it hands back a material
+                    # with no .image, so metrics_extractor._texture_metrics()
+                    # records has_texture=false / texture_pixels=null for EVERY
+                    # mesh. Nothing raises. The Texturing dimension is 35% of the
+                    # objective weight (WEIGHTS in 5B - Objective Pipeline/score.py)
+                    # and is built from has_texture + texture_pixels + UV stretch,
+                    # so it silently collapses to UV-stretch-only and every model
+                    # scores an identical 1.0 on the texture-resolution axis.
+                    # Verified: TC001_Hunyuan 3D Pro.glb reports
+                    # 4096x4096 / has_texture=true with Pillow, and
+                    # has_texture=false without it. Any cache built without
+                    # Pillow is wrong and must be rebuilt (main.py --force).
 
 # --- Subjective VLM render path (Layer 6A, OPTIONAL) ---
 # Only needed to auto-render matchups for the VLM / hybrid judge. Human voting

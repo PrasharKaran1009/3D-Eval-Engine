@@ -313,11 +313,40 @@ let TESTCASES = [
   { id:'TC003', name:'Saguaro Cactus' }, { id:'TC004', name:'Knight Armor'   },
   { id:'TC005', name:'McLaren Spider' },
 ];
-// a couple of small real sample GLBs (served from project root) for the upload demo
+// A couple of small real sample GLBs (served from the project root) for the BYOM
+// upload demo. `key` is matched against the registered model label so the sample
+// that lands in a row actually belongs to that model when the names line up.
 const SAMPLE_GLBS = [
-  { label:'Meshy · Chair (5 MB)', file:'/TEST CASES/TC001 GLB/TC001_Meshy 6 Preview.glb', model:'M3', tc:'TC001' },
-  { label:'Tripo · Chair (8 MB)', file:'/TEST CASES/TC001 GLB/ TC001_Tripo 3D-2.5.glb',   model:'M2', tc:'TC001' },
+  { key:'meshy', label:'Meshy 6 Preview · TC001 (5 MB)', file:'/TEST CASES/TC001 GLB/TC001_Meshy 6 Preview.glb', tc:'TC001' },
+  { key:'tripo', label:'Tripo 3D-2.5 · TC001 (8 MB)',    file:'/TEST CASES/TC001 GLB/TC001_Tripo 3D-2.5.glb',    tc:'TC001' },
 ];
+
+/* ---- Benchmark demo catalog ------------------------------------------------
+   Demo mode never lets the visitor type model or test-case data: it picks from
+   the committed catalog (benchmark/catalog.json, served by GET /api/catalog).
+   CATALOG_FALLBACK is the offline copy of that file — same ids, same vendors and
+   credits as "1 - Registry Layer/models.json" / "prompts.json" — used only when
+   the backend is unreachable so the picker still renders. */
+const CATALOG_FALLBACK = {
+  models: [
+    { id:'M1', name:'Trellis 2',          vendor:'Microsoft', credits:'78',     format:'glb' },
+    { id:'M2', name:'Tripo 3D-2.5',       vendor:'Tripo',     credits:'78',     format:'glb' },
+    { id:'M3', name:'Meshy 6 Preview',    vendor:'Meshy',     credits:'208',    format:'glb' },
+    { id:'M4', name:'Hyper 3D Rodin 2',   vendor:'Deemos',    credits:'104',    format:'glb' },
+    { id:'M5', name:'Hyper 3D Rodin 2.5', vendor:'Deemos',    credits:'104',    format:'glb' },
+    { id:'M6', name:'Hunyuan 3D Pro',     vendor:'Tencent',   credits:'104',    format:'glb' },
+    { id:'M7', name:'Pixal 3D',           vendor:'Pixal',     credits:'78-110', format:'glb' },
+  ],
+  test_cases: [
+    { id:'TC001', subject:'Mecha Dragon'   }, { id:'TC002', subject:'Treasure Chest' },
+    { id:'TC003', subject:'Saguaro Cactus' }, { id:'TC004', subject:'Knight Armor'   },
+    { id:'TC005', subject:'McLaren Spider' },
+  ],
+  available: null,   // null = "unknown" (offline); the server sends a real list
+};
+let CATALOG = null;            // normalised {models, test_cases, available}
+let CATALOG_LIVE = false;      // true once GET /api/catalog answered
+let catalogPromise = null;
 // Baked fallback ONLY (shown if the backend is unreachable). boot() overwrites
 // these from the live pipeline. Kept in sync with the current SAW+constraints run.
 let FUSED = [
@@ -337,8 +366,10 @@ const PARAMS = [['prompt_alignment','Prompt'],['texture_material','Texture'],['f
 // which previews the real project leaderboard). The Registry list is user-entered.
 const baseName = id => (MODELS.find(m=>m.id===id)||{}).name || id;
 const escapeHtml = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-// user-registered models -> positional id (M1..) + display label
-function userModels(){ return state.reg.models.map((m,i)=>({ ...m, id:'M'+(i+1), label:(m.name||'').trim()||('Model '+(i+1)) })); }
+// user-registered models -> id + display label. BYOM/BYOA rows get a positional
+// id (M1..); demo-mode rows keep the catalog id they were picked with, so the
+// wizard shows the same ids the pipeline (and the Layer 5 cache) uses.
+function userModels(){ return state.reg.models.map((m,i)=>({ ...m, id:m.catalogId||('M'+(i+1)), label:(m.name||'').trim()||('Model '+(i+1)) })); }
 function validModels(){ return userModels().filter(m=>(m.name||'').trim()); }
 function benchCases(){ return state.bench.cases; }
 function setTCCount(n){
@@ -352,8 +383,7 @@ function setTCCount(n){
  *  FAKE / MOCK REST LAYER                                        *
  *  (each returns a Promise, mimicking a network round-trip)     *
  * ============================================================= */
-const wait = ms => new Promise(r=>setTimeout(r,ms));
-let LIVE = false;   // flips true once the backend (main.py) answers
+let LIVE = false;  // flips true once the backend (main.py) answers
 let PENDING = false; // true when a fresh benchmark has no computed results yet
 async function getJSON(url){ const r=await fetch(url); if(!r.ok) throw new Error(url+' → '+r.status); return r.json(); }
 async function postJSON(url, body){
@@ -365,6 +395,7 @@ async function postJSON(url, body){
 const api = {
   registry(){ return getJSON('/api/registry'); },
   validate(){ return getJSON('/api/validate'); },
+  catalog(){ return getJSON('/api/catalog'); },
   pairs(){ return getJSON('/api/pairs'); },
   results(){ return getJSON('/api/results'); },
   settings(){ return getJSON('/api/settings'); },
@@ -376,15 +407,131 @@ const api = {
   loadExample(){ return postJSON('/api/load-example', {}); },
 };
 
+/* ============================================================= *
+ *  DEMO CATALOG (benchmark/catalog.json via GET /api/catalog)   *
+ * ============================================================= */
+function normalizeCatalog(c){
+  const src=c||{};
+  const models=(src.models||[]).map((m,i)=>({
+    id:m.id||('M'+(i+1)), name:m.name||('Model '+(i+1)),
+    vendor:(m.vendor!=null?m.vendor:((m.metadata&&m.metadata.vendor)||'')),
+    credits:(m.credits!=null?m.credits:((m.metadata&&m.metadata.credits)||'')),
+    format:m.format||'glb' }));
+  const cases=(src.test_cases||[]).map((t,i)=>({
+    id:t.id||('TC'+String(i+1).padStart(3,'0')),
+    subject:t.subject||t.label||'', description:t.description||'' }));
+  const avail=Array.isArray(src.available)?src.available.slice():null;
+  return { models, test_cases:cases, available:avail };
+}
+// Loaded once and cached. Never rejects: on failure it falls back to the offline
+// copy so the demo pickers still render with the right ids.
+function ensureCatalog(){
+  if(CATALOG) return Promise.resolve(CATALOG);
+  if(!catalogPromise){
+    catalogPromise = api.catalog().then(c=>{
+      const n=normalizeCatalog(c);
+      if(!n.models.length) throw new Error('/api/catalog returned no models');
+      CATALOG=n; CATALOG_LIVE=true; return CATALOG;
+    }).catch(e=>{
+      console.warn('/api/catalog unavailable — using the bundled catalog copy', e);
+      CATALOG=normalizeCatalog(CATALOG_FALLBACK); CATALOG_LIVE=false; return CATALOG;
+    });
+  }
+  return catalogPromise;
+}
+const catalogModels = () => (CATALOG||normalizeCatalog(CATALOG_FALLBACK)).models;
+const catalogCases  = () => (CATALOG||normalizeCatalog(CATALOG_FALLBACK)).test_cases;
+// null = availability unknown (offline / server silent) -> don't block anything.
+function catalogAvailable(){
+  const a=(CATALOG||{}).available;
+  return (Array.isArray(a) && a.length) ? a : null;
+}
+const tcAvailable = id => { const a=catalogAvailable(); return !a || a.indexOf(id)>=0; };
+const isDemo = () => state.mode==='demo';
+const sameModelName = (a,b) => String(a||'').trim().toLowerCase()===String(b||'').trim().toLowerCase();
+
+/* Demo selections live in the SAME state slots the rest of the wizard reads
+   (state.reg.models / state.bench.cases), so pairs, payloads and validation all
+   keep working — the only difference is the values come from the catalog
+   verbatim instead of from text inputs. */
+function demoModelSelected(id){
+  const c=catalogModels().find(m=>m.id===id); if(!c) return false;
+  return state.reg.models.some(m=>m.catalogId===id || sameModelName(m.name,c.name));
+}
+const demoCaseSelected = id => state.bench.cases.some(c=>c.id===id);
+
+// Re-derive the demo selection from the catalog: drops anything unknown, and
+// re-copies vendor/credits/format/id so nothing stale or hand-typed survives.
+function syncDemoSelections(){
+  const cat=catalogModels(), cases=catalogCases();
+  if(!cat.length || !cases.length) return;
+  const hits = cat.filter(c=>state.reg.models.some(m=>m.catalogId===c.id || sameModelName(m.name,c.name)));
+  // Nothing recognisable carried over (e.g. arriving from hand-typed BYOM rows):
+  // start the demo with the whole bundled field rather than an empty picker.
+  state.reg.models = (hits.length?hits:cat).map(c=>demoModelRec(c));
+  const picked = cases.filter(t=>state.bench.cases.some(x=>x.id===t.id));
+  const usable = picked.filter(t=>tcAvailable(t.id));
+  const chosen = (usable.length?usable:picked);
+  state.bench.cases = (chosen.length?chosen:[cases.find(t=>tcAvailable(t.id))||cases[0]])
+    .map(t=>({ id:t.id, label:t.subject||'' }));
+  state.path='BYOM';
+  save();
+}
+const demoModelRec = c => ({ name:c.name, vendor:c.vendor||'', credits:c.credits||'',
+  format:c.format||'glb', source:'BYOM', endpoint:'', apiKey:'', catalogId:c.id });
+
+function toggleDemoModel(id){
+  const cat=catalogModels(), c=cat.find(m=>m.id===id); if(!c) return;
+  const ix=state.reg.models.findIndex(m=>m.catalogId===id || sameModelName(m.name,c.name));
+  if(ix>=0) state.reg.models.splice(ix,1);
+  else state.reg.models.push(demoModelRec(c));
+  const order=cat.map(m=>m.id);
+  state.reg.models.sort((a,b)=>order.indexOf(a.catalogId)-order.indexOf(b.catalogId));
+  save();
+}
+function toggleDemoCase(id){
+  const cases=catalogCases(), c=cases.find(t=>t.id===id); if(!c) return;
+  const ix=state.bench.cases.findIndex(x=>x.id===id);
+  if(ix>=0) state.bench.cases.splice(ix,1);
+  else state.bench.cases.push({ id:c.id, label:c.subject||'' });
+  const order=cases.map(t=>t.id);
+  state.bench.cases.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
+  save();
+}
+
+/* Switching mode parks the other mode's work in state.stash so BYOM rows (and
+   the demo picks) survive a round trip through the Welcome screen. */
+function setMode(next){
+  if(next!=='demo' && next!=='byom') return;
+  if(next===state.mode) return;
+  state.stash = state.stash || {};
+  state.stash[state.mode] = { models:state.reg.models, cases:state.bench.cases, path:state.path };
+  state.mode = next;
+  const back = state.stash[next];
+  if(back){
+    state.reg.models = back.models || [];
+    state.bench.cases = (back.cases && back.cases.length) ? back.cases : [{ id:'TC001', label:'' }];
+    if(next==='byom' && back.path) state.path = back.path;
+  }
+  if(next==='demo') ensureCatalog().then(()=>{ syncDemoSelections(); if(STEPS[state.step].key!=='welcome') renderStep(); });
+  save();
+}
+
 /* Pull the REAL registry + computed results from the pipeline so the whole
    wizard runs live. Falls back to baked data if the server isn't reachable. */
 async function boot(){
+  await ensureCatalog();                 // never throws; falls back to the bundled copy
   try{
     const reg = await api.registry();
     state.path = reg.path || 'BYOM';
+    // The server persists which mode last wrote the registry; honour it so a
+    // reload / reset lands the visitor back in the same flow.
+    if(reg.mode==='demo' || reg.mode==='byom') state.mode=reg.mode;
+    const demo = state.mode==='demo';
     state.reg.models = reg.models.map(m=>({
-      name:m.name, vendor:(m.metadata&&m.metadata.vendor)||'', credits:'',
-      source:m.source, format:m.format }));
+      name:m.name, vendor:(m.metadata&&m.metadata.vendor)||'',
+      credits:(m.metadata&&m.metadata.credits)||'',
+      source:m.source, format:m.format, catalogId: demo?m.id:undefined }));
     state.bench.cases = reg.benchmark.map(b=>({ id:b.id, label:b.subject||'' }));
     if(reg.judge) state.judge = { ...state.judge, ...reg.judge };
     // reflect the pipeline's real fusion settings in the wizard controls
@@ -409,6 +556,7 @@ async function boot(){
     else    { pill.textContent='◍ OFFLINE (baked)';
               pill.title='Backend not reachable — start it with: python3 main.py'; }
   }
+  if(state.mode==='demo') syncDemoSelections();
   save();
 }
 
@@ -419,17 +567,30 @@ const LS_KEY = 'setupstudio:v3';
 const defaultState = () => ({
   step:0,
   maxStep:0,
+  mode:'byom',                              // chosen on Welcome: 'demo' | 'byom'
   path:'BYOM',                              // chosen on Welcome: 'BYOM' | 'BYOA'
-  judge:{ type:'hybrid', provider:'GPT-5.5', maxTokens:1024 },   // chosen on Welcome
+  judge:{ type:'hybrid', provider:'GPT-5.5', maxTokens:1024, endpoint:'' },  // chosen on Welcome
   reg:{ models: [] },                       // user fills by hand: [{name,vendor,credits,endpoint,apiKey}]
+                                            // demo mode: catalog entries {name,vendor,credits,catalogId}
   bench:{ cases: [{ id:'TC001', label:'' }] },   // count is asked on the Input step
   settings:{ wSub:60, wObj:40, mcda:'TOPSIS' },  // handled in the real fusion layer; kept for Results text
   uploads:[],        // BYOM: {name,tc,modelId,model,size,ok,warn,url,ext,isSample}
   inputs:{},         // BYOA: `${tcId}|${modelId}` -> {prompt,seed,guidance}
+  stash:{},          // per-mode parking lot so switching mode doesn't destroy work
   scheduled:false,
 });
 let state = load();
-function load(){ try{ const s=JSON.parse(localStorage.getItem(LS_KEY)); return s&&s.reg&&s.path ? s : defaultState(); }catch(e){ return defaultState(); } }
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem(LS_KEY));
+    if(!(s&&s.reg&&s.path)) return defaultState();
+    if(s.mode!=='demo' && s.mode!=='byom') s.mode='byom';   // pre-mode saved states
+    if(!s.stash || typeof s.stash!=='object') s.stash={};
+    if(!s.judge) s.judge=defaultState().judge;
+    if(s.judge.endpoint==null) s.judge.endpoint='';
+    return s;
+  }catch(e){ return defaultState(); }
+}
 function save(){ const {uploads,...rest}=state; // don't persist blob urls
   try{ localStorage.setItem(LS_KEY, JSON.stringify({...rest, uploads:uploads.map(u=>({name:u.name,tc:u.tc,modelId:u.modelId,model:u.model,size:u.size,ok:u.ok,warn:u.warn}))})); }catch(e){} }
 
@@ -499,7 +660,8 @@ function renderStep(){
   const s=STEPS[state.step];
   const fn = RENDERERS[s.key];
   content.innerHTML = stepHeader(s) + `<div id="stepbody"></div>`;
-  document.getElementById('leadP').textContent = LEADS[s.key];
+  document.getElementById('leadP').textContent =
+    (isDemo() && DEMO_LEADS[s.key]) || LEADS[s.key];
   fn(document.getElementById('stepbody'));
 }
 
@@ -510,6 +672,12 @@ const LEADS = {
   pairs:'Every model is compared against every other on each test case — n(n−1)/2 unique matchups. These pairs drive both blind voting and objective analysis.',
   vote:'Reaching this step prepares everything automatically — it runs the pipeline (validate → pairs → mesh metrics → cache) and drops you straight into blind, side-by-side pairwise voting.',
   results:'The Fusion layer combines subjective ELO and objective scores via MCDA into one ranked leaderboard, with visual breakdowns.',
+};
+// Benchmark-demo wording: nothing is typed or uploaded, everything is picked.
+const DEMO_LEADS = {
+  welcome:'Benchmark demo: pick from the generators and test cases bundled with this project, then choose how matchups are judged. Nothing to type, nothing to upload.',
+  registry:'Pick which of the bundled generators enter this run. Names, vendors and credit costs come from the committed catalog — you select, you never type. At least 2 models are needed for a matchup.',
+  input:'Pick which bundled test cases to evaluate on. Their meshes ship with the project as zip archives and are extracted automatically on the first run, so there is nothing to upload.',
 };
 
 /* ============================================================= *
@@ -527,24 +695,43 @@ const JUDGE_TYPES = [
 const SUITABLE_JUDGES = ['GPT-5.5','Gemini 2.5 (vision)','Claude Opus 4.8','Qwen-VL'];
 
 RENDERERS.welcome = (el)=>{
+  const demo=isDemo();
+  const nCat=catalogModels().length, nCases=catalogCases().length;
   el.innerHTML = `
+  <div class="card tint-storage">
+    <h3>1 · What are you evaluating?</h3>
+    <p class="desc">Run the benchmark on the data that ships with this project, or bring your own generators.</p>
+    <div class="tiles" id="modeTiles">
+      <div class="tile ${demo?'sel':''}" data-m="demo">
+        <div class="tcheck">✓</div><div class="ttl">🏁 Benchmark demo (bundled data)</div>
+        <div class="tsub">Pick from the ${nCat} generators and ${nCases} test cases bundled with the repo. Nothing to type and nothing to upload — the meshes come from the packaged <span class="kbd">.zip</span> archives.</div>
+      </div>
+      <div class="tile ${demo?'':'sel'}" data-m="byom">
+        <div class="tcheck">✓</div><div class="ttl">🧩 Bring your own models</div>
+        <div class="tsub">Register your own generators by hand and supply their meshes (or their APIs) per test case.</div>
+      </div>
+    </div>
+    ${demo?`<div class="callout"><span class="ci">🏁</span><div><b>Benchmark demo.</b> The Registry step becomes a model picker and the Input step a test-case picker — both read-only, straight from <span class="kbd">benchmark/catalog.json</span>. Model ids stay fixed (<span class="mono">M1…M${nCat}</span>) so changing your selection reuses the cached results instead of recomputing them.${CATALOG_LIVE?'':' <span class="lwarn">Catalog served from the offline copy — start the server for the live one.</span>'}</div></div>`:''}
+  </div>
+
   <div class="card tint-input">
-    <h3>1 · Select your path</h3>
+    <h3>2 · Select your path</h3>
     <p class="desc">How do the models enter the benchmark? This one choice decides what the Registry and Input steps ask you for.</p>
-    <div class="tiles" id="pathTiles">
-      <div class="tile ${state.path==='BYOA'?'sel':''}" data-p="BYOA">
+    <div class="tiles" id="pathTiles" style="${demo?'opacity:.55; pointer-events:none':''}">
+      <div class="tile ${!demo&&state.path==='BYOA'?'sel':''}" data-p="BYOA">
         <div class="tcheck">✓</div><div class="ttl">☁️ BYOA</div>
         <div class="tsub">Bring Your Own <b>API</b> — models are generated on demand via each provider's endpoint. You'll give names + API keys, then prompts per example.</div>
       </div>
-      <div class="tile ${state.path==='BYOM'?'sel':''}" data-p="BYOM">
+      <div class="tile ${demo||state.path==='BYOM'?'sel':''}" data-p="BYOM">
         <div class="tcheck">✓</div><div class="ttl">📦 BYOM</div>
         <div class="tsub">Bring Your Own <b>Models</b> — you upload pre-generated <span class="kbd">.glb</span> meshes. You'll give names + credit cost, then drop meshes per example.</div>
       </div>
     </div>
+    ${demo?`<div class="hintline">Fixed to <b>BYOM</b> in the benchmark demo — the bundled assets are pre-generated meshes, so there is no API to call.</div>`:''}
   </div>
 
   <div class="card tint-eval">
-    <h3>2 · How will matchups be judged?</h3>
+    <h3>3 · How will matchups be judged?</h3>
     <p class="desc">Pick the voting source. VLM and Hybrid use a vision-language model as the judge.</p>
     <div class="tiles" id="jt">${JUDGE_TYPES.map(([k,ic,ttl,sub])=>`
       <div class="tile ${state.judge.type===k?'sel':''}" data-k="${k}">
@@ -557,7 +744,7 @@ RENDERERS.welcome = (el)=>{
         <label class="fld"><span class="lt">Chosen judge</span>
           <select id="jprov">${SUITABLE_JUDGES.map(p=>`<option ${state.judge.provider===p?'selected':''}>${p}</option>`).join('')}</select></label>
         <label class="fld"><span class="lt">Max tokens</span><input type="number" id="jtok" value="${state.judge.maxTokens}"></label>
-        <label class="fld"><span class="lt">Judge endpoint</span><input type="text" placeholder="https://api.provider.ai/v1/vision"></label>
+        <label class="fld"><span class="lt">Judge endpoint</span><input type="text" id="jep" placeholder="https://api.provider.ai/v1/vision" value="${escapeHtml(state.judge.endpoint||'')}"></label>
       </div>
       ${state.judge.type==='hybrid'?`<div class="callout"><span class="ci">🔁</span><div><b>Hybrid flow:</b> VLM votes (first pass) → human review (overwrite / accept / modify) → final vote recorded.</div></div>`:''}
     </div>
@@ -565,19 +752,73 @@ RENDERERS.welcome = (el)=>{
 
   <div style="margin-top:18px; display:flex; align-items:center; gap:14px">
     <button class="btn primary" id="startBtn">Continue to Registry →</button>
-    <span class="hintline" style="margin:0">Path: <b style="color:var(--txt)">${state.path}</b> · Judge: <b style="color:var(--txt)">${state.judge.type}</b></span>
+    <span class="hintline" style="margin:0">Mode: <b style="color:var(--txt)">${demo?'benchmark demo':'bring your own models'}</b> · Path: <b style="color:var(--txt)">${demo?'BYOM':state.path}</b> · Judge: <b style="color:var(--txt)">${state.judge.type}</b></span>
   </div>`;
 
-  el.querySelectorAll('#pathTiles .tile').forEach(tl=>tl.onclick=()=>{ state.path=tl.dataset.p; save(); RENDERERS.welcome(el); });
+  el.querySelectorAll('#modeTiles .tile').forEach(tl=>tl.onclick=()=>{ setMode(tl.dataset.m); RENDERERS.welcome(el); renderNav(); });
+  el.querySelectorAll('#pathTiles .tile').forEach(tl=>tl.onclick=()=>{ if(isDemo()) return; state.path=tl.dataset.p; save(); RENDERERS.welcome(el); });
   el.querySelectorAll('#jt .tile').forEach(tl=>tl.onclick=()=>{ state.judge.type=tl.dataset.k; save(); RENDERERS.welcome(el); });
   el.querySelectorAll('[data-jp]').forEach(p=>p.onclick=()=>{ state.judge.provider=p.dataset.jp; save(); RENDERERS.welcome(el); });
   const prov=el.querySelector('#jprov'); if(prov) prov.onchange=()=>{ state.judge.provider=prov.value; save(); RENDERERS.welcome(el); };
   const tok=el.querySelector('#jtok'); if(tok) tok.onchange=()=>{ state.judge.maxTokens=+tok.value; save(); };
+  const jep=el.querySelector('#jep'); if(jep) jep.oninput=()=>{ state.judge.endpoint=jep.value; save(); };
   el.querySelector('#startBtn').onclick=()=>go(1);
 };
 
-/* ---- 1. REGISTRY — single screen for the chosen path ---- */
+/* ---- 1. REGISTRY — demo picker, or the free-text table for BYOM/BYOA ---- */
 RENDERERS.registry = (el)=>{
+  if(isDemo()) return demoRegistry(el);
+  byomRegistry(el);
+};
+
+// Demo mode: the 7 catalog generators as toggles. Read-only values, fixed ids.
+function demoRegistry(el){
+  const cat=catalogModels();
+  const picked=cat.filter(c=>demoModelSelected(c.id));
+  const n=picked.length, pairs=n*(n-1)/2, cases=state.bench.cases.length||1;
+  el.innerHTML = `
+  <div class="card tint-storage">
+    <h3>🏁 Bundled generators <span class="pill ok">benchmark demo</span>
+      ${CATALOG_LIVE?'<span class="pill">catalog · live</span>':'<span class="pill warn">catalog · offline copy</span>'}</h3>
+    <p class="desc">Every value below is read straight from <span class="kbd">benchmark/catalog.json</span> — names, vendors, credit costs and the fixed model ids. Tap a card to include or exclude that generator.
+      <a id="switchMode" style="cursor:pointer">← change mode</a></p>
+    <div class="tiles" id="mtiles">${cat.map(c=>{
+      const on=demoModelSelected(c.id);
+      return `<div class="tile ${on?'sel':''}" data-mid="${escapeHtml(c.id)}" role="checkbox" aria-checked="${on}" tabindex="0">
+        <div class="tcheck">✓</div>
+        <div class="ttl" style="padding-right:26px">${escapeHtml(c.name)}</div>
+        <div class="tsub">${escapeHtml(c.vendor||'unknown vendor')}</div>
+        <div class="mtags" style="margin-top:10px">
+          <span class="tag2 mono">${escapeHtml(c.id)}</span>
+          ${c.credits?`<span class="tag2 cost">${escapeHtml(c.credits)} credits / gen</span>`:''}
+          <span class="tag2">${escapeHtml((c.format||'glb').toUpperCase())}</span>
+        </div>
+      </div>`;}).join('')}</div>
+    <div style="margin-top:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+      <button class="btn sm" id="allm">Select all ${cat.length}</button>
+      <button class="btn sm ghost" id="nonem">Clear</button>
+      <span class="pill ${n>=2?'ok':'warn'}" id="mcount">${n} of ${cat.length} selected</span>
+      ${n>=2
+        ? `<span class="hintline" style="margin:0">→ <b style="color:var(--txt)">${pairs}</b> unique pair${pairs===1?'':'s'} · <b style="color:var(--txt)">${pairs*cases}</b> matchup${pairs*cases===1?'':'s'} across ${cases} test case${cases===1?'':'s'}</span>`
+        : `<span class="hintline" style="margin:0">Pick at least <b style="color:var(--txt)">2</b> — a matchup needs two models (nC2).</span>`}
+    </div>
+  </div>
+  <div class="callout"><span class="ci">🔒</span><div>Ids are pinned to the catalog (<span class="mono">${escapeHtml(cat.map(c=>c.id).join(' · '))}</span>) and never renumber, so changing your selection reuses whatever the Layer 5 cache already holds for those models instead of recomputing it.</div></div>`;
+  el.querySelector('#switchMode').onclick=()=>go(0);
+  const pick=(mid)=>{ toggleDemoModel(mid); demoRegistry(el); };
+  el.querySelectorAll('#mtiles .tile').forEach(t=>{
+    t.onclick=()=>pick(t.dataset.mid);
+    t.onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); pick(t.dataset.mid); } };
+  });
+  el.querySelector('#allm').onclick=()=>{
+    cat.forEach(c=>{ if(!demoModelSelected(c.id)) toggleDemoModel(c.id); }); demoRegistry(el);
+  };
+  el.querySelector('#nonem').onclick=()=>{
+    cat.forEach(c=>{ if(demoModelSelected(c.id)) toggleDemoModel(c.id); }); demoRegistry(el);
+  };
+}
+
+function byomRegistry(el){
   const byoa = state.path==='BYOA';
   const ms = state.reg.models;
   const cols = byoa
@@ -628,6 +869,89 @@ RENDERERS.registry = (el)=>{
 const EG_LABELS=['Chair','Sword','Robot','Car','Dragon','Teapot','Vase','Helmet'];
 
 RENDERERS.input = (el)=>{
+  if(isDemo()) return demoInput(el);
+  byomInput(el);
+};
+
+/* The live Layer 2 gate panel — shared by the demo picker and the BYOM uploader,
+   because both end up feeding the same validator. */
+function l2Card(){
+  return LIVE ? `<div class="card tint-input" id="l2val">
+    <h3>Input validation <span class="pill">Layer 2 · live</span></h3>
+    <p class="desc">Live pre-flight check of the model set on disk against the registry (naming · format · duplicates · full coverage), served by <span class="kbd">byom_validator.py</span>.</p>
+    <div id="l2rows"><span class="hintline" style="margin:0">running checks…</span></div></div>` : '';
+}
+function wireL2(el){
+  const vrows=el.querySelector('#l2rows');
+  if(!vrows) return;
+  api.validate().then(rep=>{
+    vrows.innerHTML = `<div style="margin-bottom:10px"><span class="pill ${rep.ok?'ok':''}" style="${rep.ok?'':'color:var(--B);border-color:var(--B)'}">${rep.ok?'✓ ALL CHECKS PASSED':'✗ VALIDATION FAILED'}</span></div>`
+      // An advisory row never gates the run (see byom_validator: unregistered
+      // meshes are ignored, not errors), so it reads "NOTE · N ignored" rather
+      // than "PASS · N issue(s)" — which would look like a contradiction.
+      + (rep.checks||[]).map(c=>`<div class="pr" style="justify-content:flex-start; gap:10px">
+          <span class="pill ${c.advisory?'':(c.ok?'ok':'')}" style="${c.advisory?'color:var(--muted);border-color:var(--line2)':(c.ok?'':'color:var(--B);border-color:var(--B)')}">${c.advisory?'NOTE':(c.ok?'PASS':'FAIL')}</span>
+          <span>${escapeHtml(c.name)}</span>
+          ${c.details&&c.details.length?`<span class="hintline" style="margin:0">— ${escapeHtml(c.details.length+(c.advisory?' ignored':' issue(s)'))}</span>`:''}
+        </div>`).join('');
+  }).catch(()=>{ vrows.innerHTML='<span class="lwarn">validator unreachable</span>'; });
+}
+
+// Demo mode: pick bundled test cases. No dropzones — the meshes live in the
+// packaged zips and the server extracts the selected ones on the first run.
+function demoInput(el){
+  const cases=catalogCases();
+  const models=validModels();
+  const picked=cases.filter(c=>demoCaseSelected(c.id));
+  const k=picked.length, pairs=models.length*(models.length-1)/2;
+  const avail=catalogAvailable();
+  el.innerHTML = `
+  <div class="card tint-storage">
+    <h3>🏁 Bundled test cases <span class="pill ok">benchmark demo</span></h3>
+    <p class="desc">Each case is one prompt every selected generator is evaluated on. Subjects and prompts come from the committed catalog — tap to include or exclude.
+      <a id="switchMode2" style="cursor:pointer">← change mode</a></p>
+    <div class="tiles" id="ttiles" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">${cases.map(c=>{
+      const on=demoCaseSelected(c.id), ok=tcAvailable(c.id);
+      const desc=(c.description||'').slice(0,150);
+      return `<div class="tile ${on?'sel':''}" data-tid="${escapeHtml(c.id)}" role="checkbox" aria-checked="${on}"
+        tabindex="${ok?'0':'-1'}" style="${ok?'':'opacity:.45; cursor:not-allowed'}">
+        <div class="tcheck">✓</div>
+        <div class="ttl" style="padding-right:26px"><span class="mid mono">${escapeHtml(c.id)}</span> ${escapeHtml(c.subject||c.id)}</div>
+        ${desc?`<div class="tsub">${escapeHtml(desc)}${(c.description||'').length>150?'…':''}</div>`:''}
+        <div class="mtags" style="margin-top:10px">${ok
+          ? '<span class="tag2">bundled ✓</span>'
+          : '<span class="tag2" style="color:var(--danger); border-color:rgba(242,85,90,.4)">not on disk</span>'}</div>
+      </div>`;}).join('')}</div>
+    <div style="margin-top:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+      <button class="btn sm" id="allt">Select all ${avail?avail.length:cases.length}</button>
+      <button class="btn sm ghost" id="nonet">Clear</button>
+      <span class="pill ${k>=1?'ok':'warn'}">${k} of ${cases.length} selected</span>
+      ${k>=1
+        ? `<span class="hintline" style="margin:0">→ <b style="color:var(--txt)">${pairs*k}</b> matchup${pairs*k===1?'':'s'} (${pairs} pair${pairs===1?'':'s'} × ${k} case${k===1?'':'s'})</span>`
+        : `<span class="hintline" style="margin:0">Pick at least <b style="color:var(--txt)">1</b> test case to evaluate on.</span>`}
+    </div>
+  </div>
+  <div class="callout"><span class="ci">🗜️</span><div><b>Nothing to upload.</b> The meshes for the cases you pick ship with the project as <span class="kbd">TEST CASES/&lt;TC&gt;.zip</span> and are extracted on the first run — only the ones you selected, and only if they aren't unpacked already.</div></div>
+  ${models.length<2
+    ? `<div class="callout"><span class="ci">⚠️</span><div>Only ${models.length} generator${models.length===1?'':'s'} selected — go back to the <b>Registry</b> step and pick at least 2, otherwise there is no matchup to vote on.</div></div>`
+    : ''}
+  ${l2Card()}`;
+  el.querySelector('#switchMode2').onclick=()=>go(0);
+  const pick=(tid)=>{ if(!tcAvailable(tid)) return; toggleDemoCase(tid); demoInput(el); };
+  el.querySelectorAll('#ttiles .tile').forEach(t=>{
+    t.onclick=()=>pick(t.dataset.tid);
+    t.onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); pick(t.dataset.tid); } };
+  });
+  el.querySelector('#allt').onclick=()=>{
+    cases.forEach(c=>{ if(tcAvailable(c.id) && !demoCaseSelected(c.id)) toggleDemoCase(c.id); }); demoInput(el);
+  };
+  el.querySelector('#nonet').onclick=()=>{
+    cases.forEach(c=>{ if(demoCaseSelected(c.id)) toggleDemoCase(c.id); }); demoInput(el);
+  };
+  wireL2(el);
+}
+
+function byomInput(el){
   const byoa = state.path==='BYOA';
   const models = validModels();
   const cases = benchCases();
@@ -641,10 +965,7 @@ RENDERERS.input = (el)=>{
       <div class="hintline" style="margin:0 0 4px">IDs auto-generate <span class="kbd">TC001…TC${String(cases.length).padStart(3,'0')}</span>. Path: <b style="color:var(--txt)">${state.path}</b>.</div>
     </div>
   </div>
-  ${!byoa && LIVE ? `<div class="card tint-input" id="l2val">
-    <h3>Input validation <span class="pill">Layer 2 · live</span></h3>
-    <p class="desc">Live pre-flight check of the uploaded model set against the registry (naming · format · duplicates · full coverage), served by <span class="kbd">byom_validator.py</span>.</p>
-    <div id="l2rows"><span class="hintline" style="margin:0">running checks…</span></div></div>` : ''}
+  ${!byoa ? l2Card() : ''}
   ${models.length<1
     ? `<div class="callout"><span class="ci">⚠️</span><div>No models registered — go back to the <b>Registry</b> step and add at least one. Each example then asks for one input per model.</div></div>`
     : `<div id="examples"></div>`}`;
@@ -652,16 +973,8 @@ RENDERERS.input = (el)=>{
   cnt.onchange=()=>{ setTCCount(+cnt.value); save(); renderInput(); };
   const host=el.querySelector('#examples');
   if(host) cases.forEach((tc,i)=> host.appendChild(exampleBlock(tc,i,models,byoa)) );
-  const vrows=el.querySelector('#l2rows');
-  if(vrows) api.validate().then(rep=>{
-    vrows.innerHTML = `<div style="margin-bottom:10px"><span class="pill ${rep.ok?'ok':''}" style="${rep.ok?'':'color:var(--B);border-color:var(--B)'}">${rep.ok?'✓ ALL CHECKS PASSED':'✗ VALIDATION FAILED'}</span></div>`
-      + rep.checks.map(c=>`<div class="pr" style="justify-content:flex-start; gap:10px">
-          <span class="pill ${c.ok?'ok':''}" style="${c.ok?'':'color:var(--B);border-color:var(--B)'}">${c.ok?'PASS':'FAIL'}</span>
-          <span>${escapeHtml(c.name)}</span>
-          ${c.details&&c.details.length?`<span class="hintline" style="margin:0">— ${escapeHtml(c.details.length+' issue(s)')}</span>`:''}
-        </div>`).join('');
-  }).catch(()=>{ vrows.innerHTML='<span class="lwarn">validator unreachable</span>'; });
-};
+  wireL2(el);
+}
 
 function renderInput(){ teardownViewers(); RENDERERS.input(document.getElementById('stepbody')); }
 
@@ -720,7 +1033,7 @@ function byomModelRow(tc,m){
   } else {
     cell.innerHTML=`<div class="drop" data-drop style="padding:13px 16px; text-align:left; display:flex; align-items:center; gap:12px">
         <span style="font-size:20px">⬆️</span>
-        <span style="font-size:12.5px; color:var(--muted)">drop <b>${escapeHtml(m.label)}</b>'s .glb · <a data-sample style="cursor:pointer; color:var(--input)">use sample</a></span>
+        <span style="font-size:12.5px; color:var(--muted)">drop <b>${escapeHtml(m.label)}</b>'s .glb · <a data-sample style="cursor:pointer; color:var(--input)" title="${escapeHtml(sampleFor(m).label)} — fetched from the project and uploaded for real">use sample (${escapeHtml(sampleFor(m).label)})</a></span>
       </div><input type="file" data-file accept=".glb,.gltf,.obj,.fbx" style="display:none">`;
     const drop=cell.querySelector('[data-drop]'), file=cell.querySelector('[data-file]');
     drop.onclick=e=>{ if(e.target.dataset.sample!==undefined) return; file.click(); };
@@ -879,13 +1192,36 @@ async function inflateRaw(bytes){
   return new Uint8Array(await new Response(s).arrayBuffer());
 }
 
-// Quick-test convenience: load one real benchmark GLB into a specific (example, model) cell.
+// Which sample belongs to a given model row: the one whose key matches the
+// registered name, else a stable per-row rotation (NOT always the first one).
+function sampleFor(m){
+  const label=String((m&&m.label)||'').toLowerCase();
+  const hit=SAMPLE_GLBS.find(s=>label.includes(s.key));
+  if(hit) return hit;
+  const ix=Math.max(0, validModels().findIndex(x=>x.id===(m&&m.id)));
+  return SAMPLE_GLBS[ix % SAMPLE_GLBS.length];
+}
+
+// Quick-test convenience: load one real benchmark GLB into a specific
+// (example, model) cell. It fetches the actual file and runs it through the
+// normal ingest path, so the mesh really lands on the server via /api/upload
+// and satisfies the Layer 2 gate — not just the UI.
 async function loadSampleInto(tcId, modelId){
-  const s=SAMPLE_GLBS[0];
-  const ix=state.uploads.findIndex(u=>u.tc===tcId && u.modelId===modelId);
-  if(ix>=0){ try{ if(state.uploads[ix].url.startsWith('blob:')) URL.revokeObjectURL(state.uploads[ix].url); }catch(e){} state.uploads.splice(ix,1); }
-  state.uploads.push({ name:'sample_'+tcId+'_'+modelId+'.glb', size:0, tc:tcId, modelId, model:'sample', ok:true, ext:'glb', warn:null, url:encodeURI(s.file), isSample:true });
-  save(); renderInput();
+  const m=validModels().find(x=>x.id===modelId);
+  const s=sampleFor(m||{id:modelId});
+  try{
+    const r=await fetch(encodeURI(s.file));
+    if(!r.ok) throw new Error(r.status+' '+r.statusText);
+    const blob=await r.blob();
+    // same path as a dropped file: replaces the cell + write-through upload
+    addUploadRec(s.file.split('/').pop(), blob, tcId, {forceModelId:modelId});
+    const rec=state.uploads.find(u=>u.tc===tcId && u.modelId===modelId);
+    if(rec) rec.isSample=true;
+    save(); renderInput();
+  }catch(e){
+    alert('Could not load the sample mesh:\n'+s.file+'\n\n'+e.message
+      +'\n\nSamples are served from the project folder — they need the server running (python3 main.py).');
+  }
 }
 
 /* ---- 3. PAIRS ---- */
@@ -893,7 +1229,7 @@ RENDERERS.pairs = (el)=>{
   const models=validModels();
   if(models.length<2){
     el.innerHTML=`<div class="card tint-input"><h3>Not enough models yet</h3>
-      <p class="desc">You have ${models.length} registered model${models.length===1?'':'s'}. Go back to the <b>Registry</b> step and add at least 2 to generate matchups.</p></div>`;
+      <p class="desc">You have ${models.length} ${isDemo()?'selected':'registered'} model${models.length===1?'':'s'}. Go back to the <b>Registry</b> step and ${isDemo()?'pick':'add'} at least 2 to generate matchups.</p></div>`;
     return;
   }
   const pairs=[]; for(let i=0;i<models.length;i++) for(let j=i+1;j<models.length;j++) pairs.push([models[i],models[j]]);
@@ -938,89 +1274,22 @@ function drawGraph(host, models){
   host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px">${edges}${nodes}</svg>`;
 }
 
-/* ---- 4. SCHEDULER ---- */
-RENDERERS.schedule = (el)=>{
-  const byom=state.path==='BYOM';
-  const n=validModels().length, tc=state.bench.cases.length;
-  el.innerHTML=`
-  <div class="card tint-process">
-    <h3>${byom?'📦 BYOM — Use uploaded models':'☁️ BYOA — Lazy generation + caching'}</h3>
-    <p class="desc">${byom
-      ? 'No generation runs. Each uploaded mesh is read, its metadata extracted, and stored to the cache for evaluation.'
-      : 'Each model is generated exactly once and cached. Later matchups reuse the cache — so only <b>n</b> generations run instead of nC2.'}</p>
-    <div class="stats" style="margin-bottom:18px">
-      <div class="stat"><div class="sv">${byom?n:('n = '+n)}</div><div class="sl">${byom?'meshes to read':'generations (not '+(n*(n-1)/2)+')'}</div></div>
-      <div class="stat"><div class="sv">${n*tc}</div><div class="sl">assets resolved</div></div>
-      <div class="stat"><div class="sv" id="pdone">0</div><div class="sl">processed</div></div>
-    </div>
-    <div class="pbar" style="margin-bottom:16px"><div id="pfill"></div></div>
-    <div class="log" id="log"></div>
-    <div style="margin-top:16px"><button class="btn primary" id="run">${state.scheduled?'Re-run scheduler':'Run scheduler'}</button></div>
-  </div>`;
-  el.querySelector('#run').onclick=()=>runScheduler(el, byom);
-  if(state.scheduled){ // show completed state statically
-    const log=el.querySelector('#log'); log.innerHTML=`<div class="lok">✓ scheduler already run — click to replay</div>`;
-    el.querySelector('#pfill').style.width='100%'; el.querySelector('#pdone').textContent=n*tc;
-  }
-};
-
-async function runScheduler(el, byom){
-  const btn=el.querySelector('#run'); btn.disabled=true;
-  const log=el.querySelector('#log'); log.innerHTML='';
-  const fill=el.querySelector('#pfill'); const pdone=el.querySelector('#pdone');
-  const models=validModels(), tcs=state.bench.cases;
-  const line=(html)=>{ log.innerHTML+=html+'<br>'; log.scrollTop=log.scrollHeight; };
-  const total=models.length*tcs.length; let done=0;
-  if(!total){ line('<span class="lwarn">nothing to schedule — register models first</span>'); el.querySelector('#run').disabled=false; return; }
-  line(`<span class="lg">[L4] scheduling ${total} assets across ${tcs.length} test case(s)…</span>`);
-  const genSeen=new Set();
-  for(const tc of tcs){
-    line(`<span class="lg">— ${tc.id} —</span>`);
-    for(const m of models){
-      await wait(90);
-      if(byom){
-        line(`<span class="lstore">read</span> <span class="lg">${escapeHtml(m.label)} · ${tc.id}</span> → extract metadata → cache <span class="lok">✓</span>`);
-      } else {
-        if(!genSeen.has(m.id)){ genSeen.add(m.id);
-          line(`<span class="lproc">generate</span> <span class="lg">${escapeHtml(m.label)}</span> (first use) → cache <span class="lok">✓</span>`);
-        } else {
-          line(`<span class="lg">cache hit · ${escapeHtml(m.label)} · ${tc.id}</span> <span class="lok">✓</span>`);
-        }
-      }
-      done++; pdone.textContent=done; fill.style.width=(100*done/total).toFixed(1)+'%';
-    }
-  }
-  // Real backend run: persist the registry, then stream L2→L3→L4→L5 for real.
-  if(LIVE){
-    try{
-      line(`<span class="lg">[persist] saving registry to the pipeline…</span>`);
-      await api.saveRegistry(registryPayload());
-      line(`<span class="lg">[L2→L5] running the real pipeline (validate → pairs → cache)…</span>`);
-      const r=await api.schedule({});
-      line(`<span class="lok">✓ pipeline done — ${r.ready}/${r.matchups} matchups cached, `
-          +`${r.viewer_entries} ready to evaluate</span>`);
-    }catch(e){
-      line(`<span class="lwarn">backend run failed: ${escapeHtml(e.message)}</span>`);
-      btn.disabled=false; return;
-    }
-  } else {
-    line(`<span class="lwarn">offline — this was a simulation. Start the server (python3 main.py) to run for real.</span>`);
-  }
-  line(byom?`<span class="lok">✓ all meshes cached — ready for evaluation</span>`
-           :`<span class="lok">✓ total generations = ${genSeen.size} (n) · everything else served from cache</span>`);
-  state.scheduled=true; save(); btn.disabled=false; btn.textContent='Re-run scheduler';
-}
-
 // Assemble the write-through registry payload from wizard state. Sent to
 // POST /api/registry, which is id-stable by name (see main.save_registry).
+//   mode:'demo' — the server ignores everything but models[].name / benchmark[].id
+//                 and copies the matching catalog entries verbatim (ids, match
+//                 rules, vendor, credits), which is what keeps ids stable.
+//   mode:'byom' — the rows below are the registry, exactly as before.
 function registryPayload(){
+  const demo=isDemo();
   return {
-    path: state.path,
+    mode: demo?'demo':'byom',
+    path: demo?'BYOM':state.path,
     judge: state.judge,
     models: state.reg.models.map(m=>({
       name:(m.name||'').trim(), vendor:m.vendor||'', credits:m.credits||'',
-      source:state.path, format:m.format||'glb',
-      endpoint:m.endpoint||'', api_key_env:m.api_key_env||'' })),
+      source:demo?'BYOM':state.path, format:m.format||'glb',
+      endpoint:demo?'':(m.endpoint||''), api_key_env:m.api_key_env||'' })),
     benchmark: state.bench.cases.map(c=>({ id:c.id, subject:c.label||'' })),
   };
 }
@@ -1030,11 +1299,29 @@ function registryPayload(){
    persists the registry and runs L2→L3→L4→L5 for real, then embeds the blind
    pair viewer. Objective mesh analysis runs in the same pipeline, headless. */
 RENDERERS.vote = (el)=>{
-  const byom=state.path==='BYOM';
+  const byom=isDemo() || state.path==='BYOM';
+  // Demo mode can't run without a valid selection — say so instead of failing at L2.
+  if(isDemo()){
+    const n=validModels().length, k=state.bench.cases.length;
+    if(n<2 || k<1){
+      el.innerHTML=`<div class="card tint-eval"><h3>⚙️ Nothing to prepare yet</h3>
+        <p class="desc">The benchmark demo needs at least <b>2</b> generators and <b>1</b> test case.
+          You have <b>${n}</b> generator${n===1?'':'s'} and <b>${k}</b> test case${k===1?'':'s'} selected.</p>
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+          <button class="btn primary" id="toReg">Pick generators</button>
+          <button class="btn sm" id="toIn">Pick test cases</button>
+        </div></div>`;
+      el.querySelector('#toReg').onclick=()=>go(STEPS.findIndex(s=>s.key==='registry'));
+      el.querySelector('#toIn').onclick=()=>go(STEPS.findIndex(s=>s.key==='input'));
+      return;
+    }
+  }
   el.innerHTML=`
   <div class="card tint-eval" id="prepcard">
     <h3>⚙️ Preparing evaluation…</h3>
-    <p class="desc">${byom
+    <p class="desc">${isDemo()
+      ? 'Unpacking the bundled meshes for the test cases you picked (only those, and only if they aren\'t unpacked yet), extracting geometry metrics, and building the blind matchups. Objective analysis (integrity · watertightness · UV · symmetry) runs here too.'
+      : byom
       ? 'Reading each uploaded mesh, extracting geometry metrics, and building the blind matchups. Objective analysis (integrity · watertightness · UV · symmetry) runs here too.'
       : 'Generating each model once, caching it, and building the blind matchups.'}
       This runs automatically — no button to press.</p>
@@ -1055,7 +1342,7 @@ async function runAndVote(el, byom){
   try{
     line('<span class="lg">[persist] saving registry to the pipeline…</span>'); fill.style.width='18%';
     await api.saveRegistry(registryPayload());
-    line('<span class="lg">[L2→L5] validate → pairs → extract metrics → cache…</span>'); fill.style.width='45%';
+    line(`<span class="lg">[L2→L5] ${isDemo()?'unpack bundled zips → ':''}validate → pairs → extract metrics → cache…</span>`); fill.style.width='45%';
     const r=await api.schedule({});
     fill.style.width='100%';
     line(`<span class="lok">✓ ready — ${r.ready}/${r.matchups} matchups prepared, ${r.viewer_entries} to vote on</span>`);
@@ -1065,7 +1352,9 @@ async function runAndVote(el, byom){
     const pc=el.querySelector('#prepcard'); if(pc){ pc.style.opacity='.6'; }
   }catch(e){
     line(`<span class="lwarn">pipeline failed: ${escapeHtml(e.message)}</span>`);
-    line('<span class="hintline">Most often this is the Layer 2 gate — every test case needs one mesh per model, named correctly. Check the Input step.</span>');
+    line(isDemo()
+      ? '<span class="hintline">Most often this is the Layer 2 gate — a selected test case is missing a mesh for one of the selected generators. Try a different combination on the Registry / Input steps.</span>'
+      : '<span class="hintline">Most often this is the Layer 2 gate — every test case needs one mesh per model, named correctly. Check the Input step.</span>');
   }
 }
 

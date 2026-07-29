@@ -22,7 +22,9 @@ wizard drives it live:
 - **Input** uploads land canonically in `TEST CASES/<TC> GLB/` as
   `TC<nnn>_<Name>.<ext>` (`POST /api/upload`), which is why the strict Layer 2
   gate can stay strict.
-- **Scheduler** runs the real L2→L3→L4→L5 pipeline (`POST /api/schedule`).
+- **Scheduler** runs the real L2→L3→L4→L5→L5B pipeline (`POST /api/schedule`) —
+  objective scoring is part of the run, not a manual step, so a brand-new model
+  set can fuse a leaderboard as soon as it has votes.
 - **Fusion** exposes the full MCDA menu — hard constraints + optional Pareto +
   **SAW / TOPSIS / PROMETHEE / VIKOR / ELECTRE** — configurable from the wizard
   (`GET`/`POST /api/settings`, stored in `6 - Fusion Layer/settings.json`).
@@ -154,6 +156,7 @@ leaderboard from existing votes, click **↻ REFRESH** on the leaderboard page, 
 ```bash
 python3 "5A - Subjective Pipeline/hybrid.py" && \
 python3 "5A - Subjective Pipeline/aggregate.py" && \
+python3 "5B - Objective Pipeline/score.py" && \
 python3 "6 - Fusion Layer/fuse.py" && \
 python3 "7 - Leaderboard/build_leaderboard.py"
 ```

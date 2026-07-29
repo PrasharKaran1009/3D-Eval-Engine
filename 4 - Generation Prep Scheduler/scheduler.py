@@ -57,9 +57,16 @@ def load_manifest(path: str = MANIFEST_PATH) -> dict:
     # Fallback: build the index live.
     roster = asset_indexer.load_roster()
     index, problems = asset_indexer.build_index(asset_indexer.DEFAULT_ROOT, roster)
-    if problems:
+    # Only a DUPLICATE is fatal — two files claiming the same (test case, model)
+    # cell means we'd silently pick one and score the wrong mesh. An UNMATCHED
+    # file just isn't part of this run (a demo-mode subset leaves the other
+    # catalog models' meshes on disk, and so does a BYOM user who dropped a
+    # model), and build_index already excluded it from the index. Failing here
+    # made every subset selection unrunnable. Layer 2 reports these as advisory.
+    fatal = [p for p in problems if p.startswith("DUPLICATE")]
+    if fatal:
         raise RuntimeError(
-            "Cannot build manifest cleanly:\n  " + "\n  ".join(problems)
+            "Cannot build manifest cleanly:\n  " + "\n  ".join(fatal)
         )
     return {"assets": index}
 

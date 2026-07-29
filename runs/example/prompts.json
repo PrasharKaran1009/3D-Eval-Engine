@@ -30,7 +30,7 @@
     {
       "id": "TC004",
       "subject": "Knight Armor",
-      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight’s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
       "reference_images": [
         "benchmark_assets/TC004/TC004_ref_row4.png"
       ]

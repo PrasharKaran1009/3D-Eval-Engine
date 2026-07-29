@@ -10,7 +10,7 @@ to refresh.
 Pulls:
     Layer 7 fused_scores.json      -> rank + Score (1300-centered fused ELO)
     Layer 6B objective_scores.json -> Mesh Quality / Texture star ratings
-    META (below)                   -> display name, vendor, credit cost
+    Layer 1 models.json            -> display name, vendor, credit cost
 
 Usage:  python3 build_leaderboard.py
 """
@@ -26,18 +26,32 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 FUSED = os.path.join(ROOT, "6 - Fusion Layer", "fused_scores.json")
 OBJ = os.path.join(ROOT, "5B - Objective Pipeline", "objective_scores.json")
+REGISTRY = os.path.join(ROOT, "1 - Registry Layer", "models.json")
 OUT = os.path.join(HERE, "leaderboard.html")
 
-# Display metadata + credit cost per generation (provided by the user).
-META = {
-    "M1": {"name": "Trellis 2",          "vendor": "Microsoft", "credits": "78"},
-    "M2": {"name": "Tripo 3D-2.5",       "vendor": "Tripo",     "credits": "78"},
-    "M3": {"name": "Meshy 6 Preview",    "vendor": "Meshy",     "credits": "208"},
-    "M4": {"name": "Hyper 3D Rodin 2",   "vendor": "Deemos",    "credits": "104"},
-    "M5": {"name": "Hyper 3D Rodin 2.5", "vendor": "Deemos",    "credits": "104"},
-    "M6": {"name": "Hunyuan 3D Pro",     "vendor": "Tencent",   "credits": "104"},
-    "M7": {"name": "Pixal 3D",           "vendor": "Pixal",     "credits": "78–110"},
-}
+
+def load_meta(path: str = REGISTRY) -> dict:
+    """
+    Display metadata straight from the Registry (Layer 1) — the architecture's
+    single source of truth for the roster.
+
+    This used to be a hardcoded dict of the seven demo models, which meant any
+    OTHER BYOM registry rendered as bare "M1…Mn" with no vendor and no cost. The
+    wizard already persists vendor/credits into each model's `metadata` block
+    (see main.save_registry), so read them from there.
+    """
+    with open(path) as f:
+        models = json.load(f)["models"]
+    meta = {}
+    for m in models:
+        extra = m.get("metadata") or {}
+        credits = str(extra.get("credits", "") or "").strip()
+        meta[m["id"]] = {
+            "name": m.get("name") or m["id"],
+            "vendor": str(extra.get("vendor", "") or ""),
+            "credits": credits,          # "" = unknown; rendered as an em dash
+        }
+    return meta
 
 
 def stars(score: float) -> str:
@@ -61,9 +75,12 @@ def build() -> str:
     board = fused["leaderboard"]                      # already ranked
     dims = dim_means()
     n_tc = len(json.load(open(OBJ))["by_test_case"])
+    meta = load_meta()
 
     def row_meta(mid):
-        m = META.get(mid, {"name": mid, "vendor": "", "credits": "—"})
+        # A model in the fused board but not the registry (a retired id) still
+        # gets a row — a leaderboard must account for every entrant.
+        m = meta.get(mid, {"name": mid, "vendor": "", "credits": ""})
         d = dims.get(mid, {})
         return m, stars(d.get("integrity")), stars(d.get("texturing"))
 
@@ -96,7 +113,7 @@ def build() -> str:
         <td class="sc">{r['fused_score']:.0f}</td>
         <td class="st">{mq}</td>
         <td class="st">{tx}</td>
-        <td class="cr">{m['credits']}</td>
+        <td class="cr{'' if m['credits'] else ' none'}">{m['credits'] or '—'}</td>
       </tr>"""
 
     # ---- bar chart: ALL models (padded scale so score gaps are visible) ----
@@ -185,6 +202,8 @@ _TEMPLATE = """<!DOCTYPE html>
   .sc {{ color:var(--gold); font-size:19px; font-weight:700; width:110px; }}
   .st {{ color:var(--gold); letter-spacing:3px; font-size:15px; }}
   .cr {{ color:var(--txt); font-size:14px; }} .cr::after {{ content:" cr"; color:var(--muted); font-size:11px; }}
+  /* a registry with no credit cost recorded shows "—", not "— cr" */
+  .cr.none {{ color:var(--muted); }} .cr.none::after {{ content:""; }}
   .foot {{ color:var(--muted); font-size:11.5px; width:min(1180px,96vw); }}
 </style></head>
 <body>

@@ -24,22 +24,25 @@ lsof -ti:8000 | xargs kill ; python3 main.py --viewer-only --port 8000
 ```bash
 python3 "5A - Subjective Pipeline/hybrid.py" && \
 python3 "5A - Subjective Pipeline/aggregate.py" && \
+python3 "5B - Objective Pipeline/score.py" && \
 python3 "6 - Fusion Layer/fuse.py" && \
 python3 "7 - Leaderboard/build_leaderboard.py"
 ```
 Then reload the leaderboard page. (`hybrid.py` resolves the VLM-first-pass /
-human-review ballots into `final_votes.json`, which `aggregate.py` then reads.)
+human-review ballots into `final_votes.json`, which `aggregate.py` then reads.
+`score.py` re-derives the objective half from the current Layer 5 cache, which
+`fuse.py` requires.) This is the exact chain the **↻ REFRESH** button runs.
 
 ## First time / fresh clone (build everything once)
-The leaderboard HTML and score files are generated (not committed). Build them once:
+`python3 main.py` now runs Layer 5B itself, so the objective scores exist as soon
+as the cache is built. Only the vote-dependent steps are left:
 ```bash
-python3 "5B - Objective Pipeline/score.py"            # objective scores
+python3 main.py --no-viewer                           # cache meshes + objective scores
 python3 "5A - Subjective Pipeline/hybrid.py"          # resolve VLM/human → final_votes.json
 python3 "5A - Subjective Pipeline/aggregate.py"       # subjective ELOs (needs votes)
 python3 "6 - Fusion Layer/fuse.py"                          # fuse → 1300-centered score
 python3 "7 - Leaderboard/build_leaderboard.py"        # render leaderboard.html
 ```
-(Objective scores need the Layer 5 cache populated — run `python3 main.py` once if needed.)
 
 ## Notes
 - Votes are saved to `5A - Subjective Pipeline/votes.json` (append-only; surviving server restarts). Don't re-vote a matchup — there's no dedup.

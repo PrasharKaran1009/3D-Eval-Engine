@@ -131,7 +131,17 @@ def validate_byom(root: str = DEFAULT_ROOT) -> dict:
         _check("Naming Convention OK  (TC<nnn>_<ModelName>.<fmt>)", not naming_bad, naming_bad),
         _check("Supported Format", not fmt_bad, fmt_bad),
         _check("No Duplicates", not dups, dups),
-        _check("Files Match a Registered Model", not unmatched, unmatched),
+        # ADVISORY, not a gate. A file matching no registered model is simply not
+        # part of THIS run: asset_indexer never indexes it, so it cannot change a
+        # single score. Two normal situations leave such files on disk —
+        #   * a demo-mode subset (compare 3 of the 7 catalog models; the other 4
+        #     models' meshes are still sitting in TEST CASES), and
+        #   * a BYOM user who removed a model from the registry after uploading.
+        # Failing the gate on those made every subset selection unrunnable. What
+        # actually threatens correctness is a DUPLICATE (two files claiming one
+        # cell) or a GAP in coverage — both still hard-fail below.
+        dict(_check("Unregistered files (ignored — not part of this run)",
+                    True, unmatched), advisory=True),
         _check(f"All Test Cases Present  ({len(expected_tcs)} TC x {len(expected_ids)} models)",
                not gaps, gaps),
     ]

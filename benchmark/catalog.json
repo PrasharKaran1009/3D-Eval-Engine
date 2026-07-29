@@ -1,0 +1,139 @@
+{
+  "catalog_version": 1,
+  "_comment": "Frozen source of truth for DEMO mode. Model ids are permanent: votes.json, the Layer 5 mesh cache and every computed score are keyed by them, so M1..M7 must never be renumbered or recycled. Built from 1 - Registry Layer/models.json + prompts.json; edit there and regenerate, never hand-renumber.",
+  "models": [
+    {
+      "id": "M1",
+      "name": "Trellis 2",
+      "vendor": "Microsoft",
+      "credits": "78",
+      "format": "glb",
+      "match": {
+        "all": [
+          "trellis"
+        ]
+      }
+    },
+    {
+      "id": "M2",
+      "name": "Tripo 3D-2.5",
+      "vendor": "Tripo",
+      "credits": "78",
+      "format": "glb",
+      "match": {
+        "all": [
+          "tripo"
+        ]
+      }
+    },
+    {
+      "id": "M3",
+      "name": "Meshy 6 Preview",
+      "vendor": "Meshy",
+      "credits": "208",
+      "format": "glb",
+      "match": {
+        "all": [
+          "meshy"
+        ]
+      }
+    },
+    {
+      "id": "M4",
+      "name": "Hyper 3D Rodin 2",
+      "vendor": "Deemos",
+      "credits": "104",
+      "format": "glb",
+      "match": {
+        "all": [
+          "rodin"
+        ],
+        "none": [
+          "2.5"
+        ]
+      }
+    },
+    {
+      "id": "M5",
+      "name": "Hyper 3D Rodin 2.5",
+      "vendor": "Deemos",
+      "credits": "104",
+      "format": "glb",
+      "match": {
+        "all": [
+          "rodin",
+          "2.5"
+        ]
+      }
+    },
+    {
+      "id": "M6",
+      "name": "Hunyuan 3D Pro",
+      "vendor": "Tencent",
+      "credits": "104",
+      "format": "glb",
+      "match": {
+        "all": [
+          "hunyuan"
+        ]
+      }
+    },
+    {
+      "id": "M7",
+      "name": "Pixal 3D",
+      "vendor": "Pixal",
+      "credits": "78-110",
+      "format": "glb",
+      "match": {
+        "all": [
+          "pixal"
+        ]
+      }
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "TC001",
+      "subject": "Mecha Dragon",
+      "description": "Envision a lifelike 3D model of a robotic dragon, predominantly red with white accents covering its sturdy four-legged body. This mechanized creature features two expansive wings and a lengthy tail, all adorned with sharp spikes and robust claws. Highlighting its technological design, it possesses glowing blue energy cores located strategically throughout its body, accompanied by intricate mechanical details that enhance its formidable appearance.",
+      "reference_images": [
+        "benchmark_assets/TC001/TC001_ref_row4.png",
+        "benchmark_assets/TC001/TC001_ref_row6.png"
+      ]
+    },
+    {
+      "id": "TC002",
+      "subject": "Treasure Chest",
+      "description": "Create a highly detailed, photorealistic 3D model of a medieval oak treasure chest, showcasing deep wood grain, age-induced cracks, and rusted iron corner brackets. The chest features a corroded iron lock, worn leather hinges, and tarnished brass nails, contributing to its antique allure. It is slightly ajar, revealing an interior lined with faded red velvet. Emphasize realistic textures and materials, set against a backdrop of dramatic, dark lighting to enhance the mysterious, ancient atmosphere of the scene.",
+      "reference_images": [
+        "benchmark_assets/TC002/TC002_ref_row4.png",
+        "benchmark_assets/TC002/TC002_ref_row7.png"
+      ]
+    },
+    {
+      "id": "TC003",
+      "subject": "Saguaro Cactus",
+      "description": "Create a hyperrealistic 3D rendering of a towering saguaro cactus, featuring its distinctive tall, ribbed structure and waxy green skin. The cactus should have clusters of sharp spines, varying in shades of white and brown, and its surface should appear sun-bleached, showcasing a detailed, wrinkled texture that reflects subtle moisture variations. Surround the base of the cactus with dry, cracked desert soil dotted with small pebbles, all bathed in the warm glow of desert sunlight, emphasizing a photorealistic, organic texture with no cartoon-like or overly smooth surfaces.",
+      "reference_images": [
+        "benchmark_assets/TC003/TC003_ref_row4.png"
+      ]
+    },
+    {
+      "id": "TC004",
+      "subject": "Knight Armor",
+      "description": "Create a highly detailed, realistic 3D image of a medieval knight dressed in shimmering full steel plate armor, featuring a helmet with a closed visor, broad pauldrons, and heavy gauntlets. The armor should include segmented leg guards and be accented with chainmail at the waist, a sturdy leather belt, and a sword sheathed at the knight\u2019s side. The metal of the armor should display realistic textures such as rivets, subtle engravings, and signs of light wear and tear. The knight is to be depicted standing in a neutral pose, exuding an imposing yet calm demeanor.",
+      "reference_images": [
+        "benchmark_assets/TC004/TC004_ref_row4.png"
+      ]
+    },
+    {
+      "id": "TC005",
+      "subject": "McLaren Spider",
+      "description": "Create a highly detailed and realistic 3D model of a McLaren 765LT Spider in lime green. The model should feature an accurate body shape with the convertible roof open, showcasing intricate front and rear design elements like the distinctive headlights and tail lights. It should also include black alloy wheels, emphasize the car's aerodynamic contours, and ensure high geometric fidelity to reflect its sleek, sporty silhouette.",
+      "reference_images": [
+        "benchmark_assets/TC005/TC005_ref_row4.jpg",
+        "benchmark_assets/TC005/TC005_ref_row6.jpg"
+      ]
+    }
+  ]
+}
