@@ -281,6 +281,7 @@
   <button class="btn ghost" id="backBtn">‹ Back</button>
   <div class="fprog">Step <b id="fstep">1</b> of <b id="ftot">8</b> · <span id="fname"></span></div>
   <div class="spacer" style="flex:1"></div>
+  <span id="advReason" class="hintline" style="margin:0 12px 0 0; max-width:46ch; text-align:right; color:var(--lwarn,#e0a32e)"></span>
   <button class="btn primary" id="nextBtn">Continue ›</button>
 </div>
 
@@ -641,8 +642,57 @@ function go(i){
   document.getElementById('backBtn').disabled = i===0;
   const nb=document.getElementById('nextBtn');
   nb.textContent = i===STEPS.length-1 ? 'Finish ✓' : 'Continue ›';
+  refreshAdvanceGate();
   window.scrollTo({top:0, behavior:'smooth'});
   teardownViewers();
+}
+
+// Per-step completeness gate. Returns '' when the current step is complete
+// enough to advance; otherwise a short reason shown beside a disabled Continue
+// button. This is what stops a visitor clicking Welcome -> Results with nothing
+// selected (demo and BYOM alike).
+function advanceBlock(stepKey){
+  const nModels = validModels().length;
+  const cases = state.bench.cases || [];
+  if(stepKey==='registry'){
+    if(nModels<2) return `Select at least 2 ${isDemo()?'generators':'models'} to form a matchup — you have ${nModels}.`;
+  }
+  if(stepKey==='input'){
+    if(nModels<2) return `At least 2 models are needed — go back to Registry (you have ${nModels}).`;
+    if(cases.length<1) return `Pick at least 1 test case.`;
+    if(!isDemo()){
+      const byoa = state.path==='BYOA';
+      const models = validModels();
+      const gaps=[];
+      cases.forEach(tc=> models.forEach(m=>{
+        const ok = byoa
+          ? (()=>{ const v=state.inputs[tc.id+'|'+m.id]; return !!(v && (v.prompt||'').trim()); })()
+          : state.uploads.some(u=>u.tc===tc.id && u.modelId===m.id && u.ok);
+        if(!ok) gaps.push(`${tc.id}·${m.label||m.name}`);
+      }));
+      if(gaps.length) return `${gaps.length} ${byoa?'prompt':'mesh'} cell${gaps.length>1?'s':''} still empty (e.g. ${gaps.slice(0,2).join(', ')}${gaps.length>2?'…':''}).`;
+    }
+  }
+  if(stepKey==='vote'){
+    if(!state.scheduled) return `Prepare the run and cast at least one vote before viewing results.`;
+  }
+  return '';
+}
+
+// Reflect the gate on the Continue button + inline reason. Safe to call any time
+// the selection changes so the button enables/disables live.
+function refreshAdvanceGate(){
+  const nb=document.getElementById('nextBtn');
+  const rs=document.getElementById('advReason');
+  if(!nb) return;
+  const key = STEPS[state.step] && STEPS[state.step].key;
+  const reason = advanceBlock(key);
+  // The last step's Continue is "Finish" (resets the wizard) — never gate it.
+  const gated = reason && state.step < STEPS.length-1;
+  nb.disabled = !!gated;
+  nb.style.opacity = gated ? '0.5' : '';
+  nb.style.cursor = gated ? 'not-allowed' : '';
+  if(rs) rs.textContent = gated ? reason : '';
 }
 
 function stepHeader(s){
@@ -663,6 +713,7 @@ function renderStep(){
   document.getElementById('leadP').textContent =
     (isDemo() && DEMO_LEADS[s.key]) || LEADS[s.key];
   fn(document.getElementById('stepbody'));
+  refreshAdvanceGate();
 }
 
 const LEADS = {
@@ -677,7 +728,7 @@ const LEADS = {
 const DEMO_LEADS = {
   welcome:'Benchmark demo: pick from the generators and test cases bundled with this project, then choose how matchups are judged. Nothing to type, nothing to upload.',
   registry:'Pick which of the bundled generators enter this run. Names, vendors and credit costs come from the committed catalog — you select, you never type. At least 2 models are needed for a matchup.',
-  input:'Pick which bundled test cases to evaluate on. Their meshes ship with the project as zip archives and are extracted automatically on the first run, so there is nothing to upload.',
+  input:'Pick which bundled test cases to evaluate on. Their meshes ship with the project — texture-compressed and ready on disk — so there is nothing to upload or unpack.',
 };
 
 /* ============================================================= *
@@ -704,7 +755,7 @@ RENDERERS.welcome = (el)=>{
     <div class="tiles" id="modeTiles">
       <div class="tile ${demo?'sel':''}" data-m="demo">
         <div class="tcheck">✓</div><div class="ttl">🏁 Benchmark demo (bundled data)</div>
-        <div class="tsub">Pick from the ${nCat} generators and ${nCases} test cases bundled with the repo. Nothing to type and nothing to upload — the meshes come from the packaged <span class="kbd">.zip</span> archives.</div>
+        <div class="tsub">Pick from the ${nCat} generators and ${nCases} test cases bundled with the repo. Nothing to type and nothing to upload — the compressed meshes ship <span class="kbd">ready on disk</span>.</div>
       </div>
       <div class="tile ${demo?'':'sel'}" data-m="byom">
         <div class="tcheck">✓</div><div class="ttl">🧩 Bring your own models</div>
@@ -816,6 +867,7 @@ function demoRegistry(el){
   el.querySelector('#nonem').onclick=()=>{
     cat.forEach(c=>{ if(demoModelSelected(c.id)) toggleDemoModel(c.id); }); demoRegistry(el);
   };
+  refreshAdvanceGate();
 }
 
 function byomRegistry(el){
@@ -898,7 +950,7 @@ function wireL2(el){
 }
 
 // Demo mode: pick bundled test cases. No dropzones — the meshes live in the
-// packaged zips and the server extracts the selected ones on the first run.
+// project as loose, texture-compressed GLBs — ready on disk, nothing to unpack.
 function demoInput(el){
   const cases=catalogCases();
   const models=validModels();
@@ -931,7 +983,7 @@ function demoInput(el){
         : `<span class="hintline" style="margin:0">Pick at least <b style="color:var(--txt)">1</b> test case to evaluate on.</span>`}
     </div>
   </div>
-  <div class="callout"><span class="ci">🗜️</span><div><b>Nothing to upload.</b> The meshes for the cases you pick ship with the project as <span class="kbd">TEST CASES/&lt;TC&gt;.zip</span> and are extracted on the first run — only the ones you selected, and only if they aren't unpacked already.</div></div>
+  <div class="callout"><span class="ci">🗜️</span><div><b>Nothing to upload.</b> The meshes for every case ship with the project, texture-compressed and ready under <span class="kbd">TEST CASES/&lt;TC&gt; GLB/</span> — no unpacking step, the objective pipeline reads them straight from disk.</div></div>
   ${models.length<2
     ? `<div class="callout"><span class="ci">⚠️</span><div>Only ${models.length} generator${models.length===1?'':'s'} selected — go back to the <b>Registry</b> step and pick at least 2, otherwise there is no matchup to vote on.</div></div>`
     : ''}
@@ -949,6 +1001,7 @@ function demoInput(el){
     cases.forEach(c=>{ if(demoCaseSelected(c.id)) toggleDemoCase(c.id); }); demoInput(el);
   };
   wireL2(el);
+  refreshAdvanceGate();
 }
 
 function byomInput(el){
@@ -976,7 +1029,7 @@ function byomInput(el){
   wireL2(el);
 }
 
-function renderInput(){ teardownViewers(); RENDERERS.input(document.getElementById('stepbody')); }
+function renderInput(){ teardownViewers(); RENDERERS.input(document.getElementById('stepbody')); refreshAdvanceGate(); }
 
 // One card per example; header + (BYOM) bulk-zip dropbox + one input row per model.
 function exampleBlock(tc, idx, models, byoa){
@@ -1320,7 +1373,7 @@ RENDERERS.vote = (el)=>{
   <div class="card tint-eval" id="prepcard">
     <h3>⚙️ Preparing evaluation…</h3>
     <p class="desc">${isDemo()
-      ? 'Unpacking the bundled meshes for the test cases you picked (only those, and only if they aren\'t unpacked yet), extracting geometry metrics, and building the blind matchups. Objective analysis (integrity · watertightness · UV · symmetry) runs here too.'
+      ? 'Reading the bundled meshes for the test cases you picked, extracting geometry metrics, and building the blind matchups. Objective analysis (integrity · watertightness · UV · symmetry) runs here too.'
       : byom
       ? 'Reading each uploaded mesh, extracting geometry metrics, and building the blind matchups. Objective analysis (integrity · watertightness · UV · symmetry) runs here too.'
       : 'Generating each model once, caching it, and building the blind matchups.'}
@@ -1342,7 +1395,7 @@ async function runAndVote(el, byom){
   try{
     line('<span class="lg">[persist] saving registry to the pipeline…</span>'); fill.style.width='18%';
     await api.saveRegistry(registryPayload());
-    line(`<span class="lg">[L2→L5] ${isDemo()?'unpack bundled zips → ':''}validate → pairs → extract metrics → cache…</span>`); fill.style.width='45%';
+    line(`<span class="lg">[L2→L5] validate → pairs → extract metrics → cache…</span>`); fill.style.width='45%';
     const r=await api.schedule({});
     fill.style.width='100%';
     line(`<span class="lok">✓ ready — ${r.ready}/${r.matchups} matchups prepared, ${r.viewer_entries} to vote on</span>`);
@@ -1374,19 +1427,54 @@ function mountVoteViewer(host){
 }
 
 /* ---- 7. RESULTS + VIZ ---- */
+// The leaderboard held in memory (FUSED/MODELS) was fused for whatever roster
+// the server last computed — api_results().models. If the visitor has since
+// changed their selection without re-running schedule → vote → refresh, that
+// board is STALE and must not be shown as if it were their result. Compare the
+// two rosters by model name (stable across the wizard/server boundary).
+function resultsMatchSelection(){
+  const sel = validModels().map(m=>(m.name||'').trim().toLowerCase()).filter(Boolean);
+  const res = (MODELS||[]).map(m=>(m.name||'').trim().toLowerCase()).filter(Boolean);
+  if(!sel.length || sel.length!==res.length) return false;
+  const rs = new Set(res);
+  return sel.every(n=>rs.has(n));
+}
+
 RENDERERS.results = (el)=>{
-  if(LIVE && (PENDING || !FUSED.length)){
+  const stale = LIVE && FUSED.length && !PENDING && !resultsMatchSelection();
+  if(LIVE && (PENDING || !FUSED.length || stale)){
+    const selN = validModels().length;
     el.innerHTML=`
     <div class="card tint-output">
-      <h3>🏆 No results yet</h3>
-      <p class="desc">This benchmark has no votes yet, so there's nothing to fuse. Go to the <b>Vote</b> step and cast a few pairwise ballots — the leaderboard builds itself from them.</p>
+      <h3>🏆 No results for this selection yet</h3>
+      <p class="desc">${stale
+        ? `The last computed leaderboard was for a <b>different</b> model set. You've selected <b>${selN}</b> generator${selN===1?'':'s'} — cast pairwise ballots on <em>these</em> matchups, then build the board from your votes.`
+        : `This benchmark has no votes yet, so there's nothing to fuse. Go to the <b>Vote</b> step and cast a few pairwise ballots — the leaderboard builds itself from them.`}</p>
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
         <button class="btn primary" id="goVote">Go to voting</button>
-        <button class="btn sm" id="loadEg">↺ Load the example run instead</button>
+        <button class="btn sm" id="buildLb">↻ Build leaderboard from my votes</button>
+        <button class="btn sm ghost" id="loadEg">↺ Load the example run instead</button>
       </div>
+      <p id="buildMsg" class="hintline" style="margin:10px 0 0"></p>
     </div>`;
     el.querySelector('#goVote').onclick=()=>go(STEPS.findIndex(s=>s.key==='vote'));
     el.querySelector('#loadEg').onclick=()=>document.getElementById('exampleBtn').click();
+    // Recompute the board from whatever votes exist for the CURRENT selection.
+    // If it still doesn't match afterwards (no votes yet for this roster), the
+    // panel simply re-renders — never a stale board.
+    el.querySelector('#buildLb').onclick=async()=>{
+      const msg=el.querySelector('#buildMsg'); const b=el.querySelector('#buildLb');
+      b.disabled=true; msg.textContent='fusing from your votes…';
+      try{
+        await postJSON('/api/refresh',{});
+        const res=await api.results();
+        PENDING=!!res.pending;
+        FUSED=res.fused.map(r=>({rank:r.rank,model:r.model,fused:r.fused,sub:r.sub,obj:r.obj,worst:r.worst}));
+        DIMS=res.dims; PARAM_ELO=res.param_elo; PAIRWISE=res.pairwise||{};
+        MODELS=res.models.map((m,i)=>({id:m.id||('M'+(i+1)),name:m.name,vendor:(m.metadata&&m.metadata.vendor)||'',credits:Math.round((res.gen_seconds&&res.gen_seconds[m.id])||0)}));
+        RENDERERS.results(el);
+      }catch(e){ msg.textContent='could not build yet: '+e.message; b.disabled=false; }
+    };
     return;
   }
   const votesCast=Math.round(Object.values((PAIRWISE.overall||{}).wins||{})
@@ -1683,7 +1771,12 @@ function teardownViewers(){ VIEWERS.forEach(v=>{ v.alive=false; try{v.rnd.dispos
  *  WIRING                                                       *
  * ============================================================= */
 document.getElementById('nextBtn').onclick=async ()=>{
-  if(state.step<STEPS.length-1){ go(state.step+1); return; }
+  // Hard stop: never advance out of an incomplete step (the button is also
+  // visually disabled, this is the belt-and-braces guard for keyboard/edge cases).
+  if(state.step<STEPS.length-1){
+    if(advanceBlock(STEPS[state.step].key)){ refreshAdvanceGate(); return; }
+    go(state.step+1); return;
+  }
   // Finish: reset the wizard flow and return the user to screen one (Welcome).
   teardownViewers(); state=defaultState(); await boot(); go(0);
 };

@@ -74,6 +74,14 @@ EXPECTED_MESHES = 7
 # future re-texture or an extra model can't quietly cross the line.
 MAX_ZIP_MB = 95.0
 
+# Some git hosts (and this project's push target) cap a single file at 50 MB.
+# When a case's compressed meshes exceed this, the case ships as several
+# standalone part-zips `TC00x.partNN.zip` instead of one `TC00x.zip`, each
+# under the cap. Splitting redistributes the SAME compressed .glb bytes across
+# archives — nothing is recompressed — so the 5B metrics stay bit-identical.
+# The margin below 50 leaves room for per-file zip headers.
+MAX_PART_MB = 48.0
+
 CLI = ["npx", "--yes", "@gltf-transform/cli@latest"]
 
 # Codecs trimesh cannot decode. If any of these show up in a packed mesh the
@@ -183,6 +191,107 @@ def write_zip(files: list[str], out: str) -> None:
     os.replace(tmp, out)
 
 
+def part_zip(tc: str, idx: int) -> str:
+    """Path of the idx-th (1-based) part archive for a case."""
+    return os.path.join(TESTCASES_DIR, f"{tc}.part{idx:02d}.zip")
+
+
+def case_zips(tc: str) -> list[str]:
+    """Every archive that makes up a case, in extract order.
+
+    Prefers a single `TC00x.zip`; otherwise returns the sorted
+    `TC00x.partNN.zip` set. Empty if the case is not packed.
+    """
+    single = case_zip(tc)
+    if os.path.exists(single):
+        return [single]
+    parts = sorted(
+        os.path.join(TESTCASES_DIR, e.name)
+        for e in os.scandir(TESTCASES_DIR)
+        if e.is_file()
+        and re.fullmatch(rf"{tc}\.part\d+\.zip", e.name, re.IGNORECASE)
+    )
+    return parts
+
+
+def binpack(items: list[tuple[str, int]], budget: int) -> list[list[str]]:
+    """First-fit-decreasing pack of (path, size) into bins under `budget`.
+
+    Returns a list of bins, each a list of paths. An item larger than the
+    budget on its own gets its own bin (the caller has already guaranteed no
+    single compressed mesh exceeds the cap, so this only happens if misused).
+    """
+    bins: list[dict] = []                       # [{"paths": [...], "size": n}]
+    for path, size in sorted(items, key=lambda t: t[1], reverse=True):
+        placed = False
+        for b in bins:
+            if b["size"] + size <= budget:
+                b["paths"].append(path)
+                b["size"] += size
+                placed = True
+                break
+        if not placed:
+            bins.append({"paths": [path], "size": size})
+    return [b["paths"] for b in bins]
+
+
+def split_existing_zip(tc: str, max_part_mb: float = MAX_PART_MB) -> dict:
+    """Re-partition an oversized `TC00x.zip` into `TC00x.partNN.zip` parts.
+
+    Reads the committed single archive, bin-packs its members by COMPRESSED
+    size into parts under `max_part_mb`, writes each part as a standalone
+    stdlib-DEFLATE zip holding the SAME .glb bytes, then removes the original.
+    Idempotent: a case already split (no single zip) is left alone. A case that
+    already fits under the cap in one file is also left alone.
+    """
+    single = case_zip(tc)
+    if not os.path.exists(single):
+        existing = case_zips(tc)
+        return {"tc": tc, "action": "already split", "parts": len(existing)}
+
+    size_mb = os.path.getsize(single) / MB
+    if size_mb < max_part_mb:
+        return {"tc": tc, "action": "fits, kept single", "size_mb": size_mb}
+
+    budget = int(max_part_mb * MB)
+    stage = tempfile.mkdtemp(prefix=f"split_{tc}_")
+    try:
+        items: list[tuple[str, int]] = []
+        with zipfile.ZipFile(single) as z:
+            for info in z.infolist():
+                if info.is_dir():
+                    continue
+                base = os.path.basename(info.filename.replace("\\", "/"))
+                if not base or base.startswith("._") or base == ".DS_Store":
+                    continue
+                out = os.path.join(stage, base)
+                with z.open(info) as src, open(out, "wb") as dst:
+                    shutil.copyfileobj(src, dst)
+                items.append((out, info.compress_size))
+
+        if any(sz > budget for _, sz in items):
+            biggest = max(items, key=lambda t: t[1])
+            raise RuntimeError(
+                f"{tc}: {os.path.basename(biggest[0])} is "
+                f"{biggest[1]/MB:.1f} MB compressed — larger than the "
+                f"{max_part_mb:.0f} MB part cap; cannot split without "
+                f"recompressing geometry.")
+
+        bins = binpack(items, budget)
+        written = []
+        for i, paths in enumerate(bins, 1):
+            out = part_zip(tc, i)
+            write_zip(sorted(paths), out)
+            written.append(out)
+            print(f"  {tc}: part {i:02d} -> "
+                  f"{os.path.relpath(out, ROOT)}  "
+                  f"({os.path.getsize(out)/MB:.1f} MB, {len(paths)} meshes)")
+        os.remove(single)
+        return {"tc": tc, "action": "split", "parts": len(written)}
+    finally:
+        shutil.rmtree(stage, ignore_errors=True)
+
+
 def pack_case(tc: str, texture_size: int, quality: int,
               keep_dir: str | None = None) -> dict:
     """Compress one case's meshes and write `TEST CASES/<TC>.zip`."""
@@ -204,14 +313,35 @@ def pack_case(tc: str, texture_size: int, quality: int,
                   f"{os.path.getsize(src)/MB:7.1f} MB -> "
                   f"{os.path.getsize(dst)/MB:7.1f} MB")
 
-        out = case_zip(tc)
-        write_zip(packed, out)
+        # Clear any prior archives for this case (single or parts) so a re-pack
+        # never leaves a stale mix on disk.
+        for old in case_zips(tc):
+            os.remove(old)
+
+        # One archive if the whole case fits the part cap; otherwise bin-pack
+        # the compressed meshes into `TC00x.partNN.zip` parts, each under it.
+        # Same bytes either way — splitting never touches the .glb contents.
+        budget = int(MAX_PART_MB * MB)
+        sized = [(p, os.path.getsize(p)) for p in packed]
+        if sum(s for _, s in sized) < budget:
+            out = case_zip(tc)
+            write_zip(packed, out)
+            outputs = [out]
+        else:
+            bins = binpack(sized, budget)
+            outputs = []
+            for i, paths in enumerate(bins, 1):
+                dst = part_zip(tc, i)
+                write_zip(sorted(paths), dst)
+                outputs.append(dst)
+
         return {
             "tc": tc,
             "n": len(packed),
             "src_bytes": before,
             "glb_bytes": sum(os.path.getsize(p) for p in packed),
-            "zip_bytes": os.path.getsize(out),
+            "zip_bytes": sum(os.path.getsize(o) for o in outputs),
+            "parts": len(outputs),
         }
     finally:
         if keep_dir is None:
@@ -231,55 +361,72 @@ def verify_case(tc: str, deep: bool = True) -> list[str]:
     loads in trimesh with a non-zero face count and no forbidden codecs.
     """
     problems: list[str] = []
-    zpath = case_zip(tc)
+    zpaths = case_zips(tc)
 
-    if not os.path.exists(zpath):
-        return [f"{tc}: {zpath} does not exist"]
+    if not zpaths:
+        return [f"{tc}: no {tc}.zip or {tc}.partNN.zip in {TESTCASES_DIR}"]
 
-    size_mb = os.path.getsize(zpath) / MB
-    if size_mb >= MAX_ZIP_MB:
-        problems.append(f"{tc}: zip is {size_mb:.2f} MB "
-                        f"(budget {MAX_ZIP_MB:.0f} MB)")
+    # A case may ship as one zip or as several parts; the meshes are the UNION
+    # across every archive, and EACH archive must clear the 50 MB part cap.
+    all_globs: list[str] = []
+    first_member: tuple[str, str] | None = None      # (zpath, member) for deep check
+    for zpath in zpaths:
+        size_mb = os.path.getsize(zpath) / MB
+        cap = MAX_PART_MB if len(zpaths) > 1 else MAX_ZIP_MB
+        if size_mb >= cap:
+            problems.append(f"{tc}: {os.path.basename(zpath)} is {size_mb:.2f} MB "
+                            f"(budget {cap:.0f} MB)")
+        try:
+            with zipfile.ZipFile(zpath) as z:
+                names = [i.filename for i in z.infolist() if not i.is_dir()]
+                globs = [n for n in names if n.lower().endswith(".glb")]
+                all_globs += globs
+                extra = [n for n in names if n not in globs]
+                if extra:
+                    problems.append(f"{tc}: {os.path.basename(zpath)} has "
+                                    f"non-.glb entries: {extra}")
+                unsafe = [n for n in names
+                          if os.path.isabs(n)
+                          or ".." in n.replace("\\", "/").split("/")]
+                if unsafe:
+                    problems.append(f"{tc}: {os.path.basename(zpath)} unsafe "
+                                    f"member paths: {unsafe}")
+                if z.testzip() is not None:
+                    problems.append(f"{tc}: CRC failure in "
+                                    f"{os.path.basename(zpath)}")
+                if first_member is None and globs:
+                    first_member = (zpath, sorted(globs)[0])
+        except zipfile.BadZipFile as exc:
+            problems.append(f"{tc}: unreadable zip {os.path.basename(zpath)} ({exc})")
 
-    try:
-        with zipfile.ZipFile(zpath) as z:
-            names = [i.filename for i in z.infolist() if not i.is_dir()]
-            globs = [n for n in names if n.lower().endswith(".glb")]
-            if len(globs) != EXPECTED_MESHES:
-                problems.append(f"{tc}: {len(globs)} .glb entries, "
-                                f"expected {EXPECTED_MESHES} ({names})")
-            extra = [n for n in names if n not in globs]
-            if extra:
-                problems.append(f"{tc}: non-.glb entries present: {extra}")
-            unsafe = [n for n in names
-                      if os.path.isabs(n) or ".." in n.replace("\\", "/").split("/")]
-            if unsafe:
-                problems.append(f"{tc}: unsafe member paths: {unsafe}")
-            if z.testzip() is not None:
-                problems.append(f"{tc}: CRC failure in archive")
+    if len(all_globs) != EXPECTED_MESHES:
+        problems.append(f"{tc}: {len(all_globs)} .glb entries across "
+                        f"{len(zpaths)} archive(s), expected {EXPECTED_MESHES} "
+                        f"({sorted(all_globs)})")
+    dups = sorted({n for n in all_globs if all_globs.count(n) > 1})
+    if dups:
+        problems.append(f"{tc}: duplicate meshes across parts: {dups}")
 
-            if deep and globs:
-                member = sorted(globs)[0]
-                tmpdir = tempfile.mkdtemp(prefix=f"verify_{tc}_")
-                try:
-                    out = os.path.join(tmpdir, os.path.basename(member))
-                    with z.open(member) as src, open(out, "wb") as dst:
-                        shutil.copyfileobj(src, dst)
-                    bad = glb_extensions(out) & FORBIDDEN_EXTENSIONS
-                    if bad:
-                        problems.append(f"{tc}: {member} uses {sorted(bad)}")
-                    faces = _trimesh_faces(out)
-                    if faces is None:
-                        problems.append(f"{tc}: {member} did not load in trimesh")
-                    elif faces <= 0:
-                        problems.append(f"{tc}: {member} loaded with 0 faces")
-                    else:
-                        print(f"  {tc}: {member} -> trimesh OK, "
-                              f"{faces:,} faces")
-                finally:
-                    shutil.rmtree(tmpdir, ignore_errors=True)
-    except zipfile.BadZipFile as exc:
-        problems.append(f"{tc}: unreadable zip ({exc})")
+    if deep and first_member:
+        zpath, member = first_member
+        tmpdir = tempfile.mkdtemp(prefix=f"verify_{tc}_")
+        try:
+            out = os.path.join(tmpdir, os.path.basename(member))
+            with zipfile.ZipFile(zpath) as z, \
+                    z.open(member) as src, open(out, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+            bad = glb_extensions(out) & FORBIDDEN_EXTENSIONS
+            if bad:
+                problems.append(f"{tc}: {member} uses {sorted(bad)}")
+            faces = _trimesh_faces(out)
+            if faces is None:
+                problems.append(f"{tc}: {member} did not load in trimesh")
+            elif faces <= 0:
+                problems.append(f"{tc}: {member} loaded with 0 faces")
+            else:
+                print(f"  {tc}: {member} -> trimesh OK, {faces:,} faces")
+        finally:
+            shutil.rmtree(tmpdir, ignore_errors=True)
 
     return problems
 
@@ -304,33 +451,39 @@ def _trimesh_faces(path: str) -> int | None:
 # unpack (standalone mirror of main.py:ensure_testcases)
 # --------------------------------------------------------------------------- #
 def unpack_case(tc: str) -> str:
-    """Extract `TEST CASES/<TC>.zip` -> `TEST CASES/<TC> GLB/` (idempotent)."""
+    """Extract a case's archive(s) -> `TEST CASES/<TC> GLB/` (idempotent).
+
+    Handles both a single `TC00x.zip` and a split `TC00x.partNN.zip` set; the
+    meshes from every part land flat in the same folder.
+    """
     folder = case_dir(tc)
     if os.path.isdir(folder) and meshes_in(folder):
         print(f"  {tc}: already extracted, leaving alone")
         return folder
 
-    zpath = case_zip(tc)
-    if not os.path.exists(zpath):
-        raise RuntimeError(f"{zpath} not found")
+    zpaths = case_zips(tc)
+    if not zpaths:
+        raise RuntimeError(f"no {tc}.zip or {tc}.partNN.zip found")
 
     prefix = f"{tc} GLB/"
     os.makedirs(folder, exist_ok=True)
-    with zipfile.ZipFile(zpath) as z:
-        for info in z.infolist():
-            name = info.filename.replace("\\", "/")
-            if info.is_dir() or name.startswith("__MACOSX/"):
-                continue
-            rel = name[len(prefix):] if name.startswith(prefix) else name
-            base = os.path.basename(rel)
-            if not base or base.startswith("._") or base == ".DS_Store":
-                continue
-            if os.path.isabs(rel) or ".." in rel.split("/"):
-                continue                          # zip-slip guard
-            dest = os.path.join(folder, base)
-            with z.open(info) as src, open(dest, "wb") as out:
-                shutil.copyfileobj(src, out)
-    print(f"  {tc}: extracted -> {os.path.relpath(folder, ROOT)}/")
+    for zpath in zpaths:
+        with zipfile.ZipFile(zpath) as z:
+            for info in z.infolist():
+                name = info.filename.replace("\\", "/")
+                if info.is_dir() or name.startswith("__MACOSX/"):
+                    continue
+                rel = name[len(prefix):] if name.startswith(prefix) else name
+                base = os.path.basename(rel)
+                if not base or base.startswith("._") or base == ".DS_Store":
+                    continue
+                if os.path.isabs(rel) or ".." in rel.split("/"):
+                    continue                      # zip-slip guard
+                dest = os.path.join(folder, base)
+                with z.open(info) as src, open(dest, "wb") as out:
+                    shutil.copyfileobj(src, out)
+    print(f"  {tc}: extracted {len(zpaths)} archive(s) -> "
+          f"{os.path.relpath(folder, ROOT)}/")
     return folder
 
 
@@ -352,7 +505,7 @@ def parse_cases(values: list[str] | None) -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Texture-only compress + zip the benchmark test cases.")
-    ap.add_argument("mode", choices=["pack", "verify", "unpack"],
+    ap.add_argument("mode", choices=["pack", "verify", "unpack", "split"],
                     nargs="?", default="pack")
     ap.add_argument("--cases", nargs="*",
                     help="case ids to process (default: all five)")
@@ -374,6 +527,26 @@ def main() -> int:
     if args.mode == "unpack":
         for tc in cases:
             unpack_case(tc)
+        return 0
+
+    if args.mode == "split":
+        # Re-partition oversized single zips into <50 MB parts WITHOUT
+        # recompressing — the .glb bytes (and every 5B metric) are untouched.
+        print(f"Splitting to parts under {MAX_PART_MB:.0f} MB "
+              f"(git single-file cap)…")
+        for tc in cases:
+            r = split_existing_zip(tc)
+            print(f"  {tc}: {r['action']}")
+        print("\nVerifying…")
+        failures = []
+        for tc in cases:
+            failures += verify_case(tc, deep=not args.no_deep_verify)
+        if failures:
+            print("\nFAILED:")
+            for f in failures:
+                print("  -", f)
+            return 1
+        print("\nAll gates passed.")
         return 0
 
     if args.mode == "verify":

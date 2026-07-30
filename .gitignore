@@ -123,9 +123,24 @@ frontend/app_data.json
 1 - Registry Layer/prompts.json
 1 - Registry Layer/judge.json
 
+# 3D Model Large Assets
+#
+# The benchmark meshes ship LOOSE and texture-compressed under
+# `TEST CASES/<TC> GLB/` (2048px WebP textures, geometry untouched by
+# tools/pack_testcases.py — every mesh is well under the 50 MB per-file git
+# cap). Those folders ARE the committed benchmark, so track them; ignore only
+# stray archives and scratch under `TEST CASES/`.
+TEST CASES/*
+!TEST CASES/*/
+!TEST CASES/*/*.glb
+# never ship zipped packs (loose is the shipping format now) or the obsolete
+# uncompressed "TC00x GLB.zip" raw archives.
+TEST CASES/*.zip
+TEST CASES/* GLB.zip
 
-
-*.glb
+# NOTE: `*.glb` is intentionally NOT globally ignored — the benchmark meshes
+# above and the docs/ demo meshes below are committed. Other heavy 3D interchange
+# formats are still ignored (we never commit them).
 *.gltf
 *.bin
 *.obj
@@ -148,5 +163,3 @@ runs/session/
 !docs/models/
 !docs/models/**/
 !docs/models/**/*.glb
-
-task.md
